@@ -1,0 +1,96 @@
+.exit-button {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #2E2E2E, #1B1B1B);
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-border-color: red;
+    -fx-border-width: 6px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+.exit-button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1B1B1B, #2E2E2E);
+    -fx-text-fill: white;
+    -fx-border-color: darkred;
+    -fx-effect: dropshadow(one-pass-box, rgba(255, 0, 0, 0.8), 10, 0, 0, 0);
+}
+.online-button {
+    -fx-background-color: #1E8228;
+    -fx-background-radius: 100px 100px 30px 30px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 54.0px;
+    -fx-font-weight: bold;
+}
+.easy-button {
+    -fx-background-color: #1E8228;
+    -fx-background-radius: 100px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 54.0px;
+    -fx-font-weight: bold;
+}
+.offline-button {
+    -fx-background-color: #9C0B02;
+    -fx-background-radius: 100px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 54.0px;
+    -fx-font-weight: bold;
+}
+.single-button {
+    -fx-background-color: #0012AF;
+    -fx-background-radius: 100px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 54.0px;
+    -fx-font-weight: bold;
+}
+.records-button {
+    -fx-background-color: #0012AF;
+    -fx-background-radius: 30px 30px 100px 100px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 54.0px;
+    -fx-font-weight: bold;
+}
+.background-style {
+    -fx-background-image: url("test.png");
+    -fx-background-size: cover;
+}
+.back-button {
+    -fx-box-sizing: border-box;
+    -fx-position: absolute;
+    -fx-width: 362px;
+    -fx-height: 151px;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-border-color: #0012AF;
+    -fx-border-radius: 100px;
+}
+.online-button:hover {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
+}
+.easy-button:hover {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
+}
+.offline-button:hover {
+    -fx-background-color: #FF5733;
+    -fx-text-fill: white;
+}
+.single-button:hover {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+}
+.records-button:hover {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+}

@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.sun.tools.javac.Main;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +14,9 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        UIUtils.playBackgroundMusic();
         FXMLLoader splashLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/Splash.fxml"));
-        //FXMLLoader mainLoader = new FXMLLoader(HelloApplication.class.getResource("/com/iti/tictacton_game/MainScreen.fxml"));
+        //FXMLLoader mainLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/menu-view.fxml"));
 
         StackPane root = new StackPane();
         root.getChildren().add(splashLoader.load());
@@ -26,7 +28,7 @@ public class MainApplication extends Application {
         stage.setFullScreen(true);
         stage.show();
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(event -> root.getChildren().get(0).setVisible(false));
         pause.play();
     }
