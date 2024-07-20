@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -19,8 +20,6 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class MenuController {
-    private Stage primaryStage;
-
     @FXML
     private Button onlineButt;
 
@@ -38,7 +37,7 @@ public class MenuController {
 
     @FXML
     private void onBack() {
-        System.exit(0);
+        Platform.exit();
     }
 
     @FXML
@@ -51,18 +50,31 @@ public class MenuController {
             UIUtils.playSoundEffect();
         });
         offlineButt.setOnMouseClicked(event -> UIUtils.playSoundEffect());
-        recordsButt.setOnMouseClicked(event -> UIUtils.playSoundEffect());
-        backLabel.setOnMouseClicked(event -> handleBackImageClick(event));
-        backImage.setOnMouseClicked(event -> handleBackImageClick(event));
+        recordsButt.setOnMouseClicked(event -> {
+            try {
+                UIUtils.playSoundEffect();
+                FXMLLoader fxmlLoader = new FXMLLoader(MenuController.class.getResource("Recordings.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage stage = new Stage();
+                stage.setFullScreen(true);
+                stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+                stage.setResizable(false);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+        backLabel.setOnMouseClicked(this::handleBackImageClick);
+        backImage.setOnMouseClicked(this::handleBackImageClick);
 
         offlineButt.setOnAction(event -> {
             try {
                 UIUtils.playSoundEffect();
                 FXMLLoader fxmlLoader = new FXMLLoader(MenuController.class.getResource("offline-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 2000, 1000);
+                Scene scene = new Scene(fxmlLoader.load());
                 Stage stage = new Stage();
-                stage.setTitle("Offline Mode");
-                stage.setTitle("Neon TIC-TAC-TOE");
                 stage.setFullScreen(true);
                 stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
                 stage.setResizable(false);
@@ -75,15 +87,22 @@ public class MenuController {
                 e.printStackTrace();
             }
         });
-
     }
-
     private void handleBackImageClick(MouseEvent event) {
         UIUtils.playSoundEffect();
-        System.exit(0);
+        try {
+            FXMLLoader menuScreen = new FXMLLoader(getClass().getResource("home screen.fxml"));
+            Scene scene = new Scene(menuScreen.load());
+            Stage stage = new Stage();
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
+
 }
