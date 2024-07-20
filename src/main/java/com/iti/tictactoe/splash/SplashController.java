@@ -1,4 +1,4 @@
-package com.iti.tictactoe;
+package com.iti.tictactoe.splash;
 
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -12,7 +12,7 @@ public class SplashController {
     @FXML
     public void initialize() {
         try {
-            Image image = new Image(getClass().getResource("/com/iti/tictactoe/assest/Splash.png").toExternalForm());
+            Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/Splash.png").toExternalForm());
             splashImage.setImage(image);
         } catch (Exception e) {
             e.printStackTrace();

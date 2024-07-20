@@ -1,0 +1,169 @@
+/* General styles for labels */
+.label {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.neon-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #00A8A8;
+    -fx-border-width: 3;
+    -fx-border-radius: 25;
+    -fx-text-fill: #00FFFF;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 20;
+    -fx-pref-width: 180;
+    -fx-pref-height: 180;
+}
+
+.playerOne-placeholder {
+    -fx-background-color: rgb(128, 128, 128);
+    -fx-border-color: grey;
+    -fx-border-width: 3;
+    -fx-border-radius: 25;
+    -fx-text-fill: white;
+    -fx-font-size: 60px;
+    -fx-font-weight: bold;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.5), 10, 0.5, 0, 0);
+    -fx-pref-width: 135;
+    -fx-pref-height: 135;
+    -fx-alignment: center; /* Center the text */
+}
+
+/* Styles for player 2 placeholders */
+.playerTwo-placeholder {
+    -fx-background-color: rgb(128, 128, 128); /* Grey fill */
+    -fx-border-color: grey; /* Same border color */
+    -fx-border-width: 3;
+    -fx-border-radius: 25; /* Corner radius */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 60px;
+    -fx-font-weight: bold;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 148, 255, 0.5), 10, 0.5, 0, 0); /* Blue drop shadow */
+    -fx-pref-width: 135;
+    -fx-pref-height: 135;
+    -fx-alignment: center; /* Center the text */
+}
+
+/* Styles for draw placeholder */
+.draw-placeholder {
+    -fx-background-color: transparent; /* Transparent fill */
+    -fx-border-color: rgba(128, 128, 128, 0.65); /* Same border color */
+    -fx-border-width: 3;
+    -fx-border-radius: 75; /* Corner radius to make it fully rounded */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 60px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 160;
+    -fx-pref-height: 50;
+    -fx-alignment: center; /* Center the text */
+}
+
+.neon-button:hover {
+    -fx-background-color: rgba(0, 255, 255, 0.1);
+}
+
+/* Styles for exit button */
+.exit-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2); /* Light color with transparency */
+    -fx-border-color: rgba(128, 128, 128, 0.65); /* Border color */
+    -fx-border-width: 3;
+    -fx-border-radius: 75; /* Corner radius for border */
+    -fx-background-radius: 75; /* Corner radius for background */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 50px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 250;
+    -fx-pref-height: 50;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.5), 10, 0.5, 0, 0); /* Drop shadow */
+    -fx-alignment: center; /* Center the text */
+}
+
+/* Hover effect for exit button */
+.exit-button:hover {
+    -fx-background-color: rgba(255, 0, 0, 0.6); /* Red background on hover */
+    -fx-border-color: rgba(255, 0, 0, 0.8); /* Darker red border on hover */
+    -fx-text-fill: rgba(255, 255, 255, 1); /* Ensure text is visible */
+}
+
+/* Styles for restart button */
+.restart-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2); /* Light color with transparency */
+    -fx-border-color: rgba(128, 128, 128, 0.65); /* Border color */
+    -fx-border-width: 3;
+    -fx-border-radius: 75; /* Corner radius for border */
+    -fx-background-radius: 75; /* Corner radius for background */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 50px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 350;
+    -fx-pref-height: 50;
+    -fx-effect: dropshadow(gaussian, rgba(0, 148, 255, 0.5), 10, 0.5, 0, 0); /* Drop shadow */
+    -fx-alignment: center; /* Center the text */
+}
+
+/* Hover effect for restart button */
+.restart-button:hover {
+    -fx-background-color: rgba(0, 148, 255, 0.6); /* Blue background on hover */
+    -fx-border-color: rgba(0, 148, 255, 0.8); /* Darker blue border on hover */
+    -fx-text-fill: rgba(255, 255, 255, 1); /* Ensure text is visible */
+}
+
+.name-text-field {
+    -fx-font-size: 60px;
+    -fx-background-radius: 30px; /* Adjust radius as needed */
+    -fx-padding: 0 15px; /* Adjust padding to ensure content is not cut off */
+    -fx-pref-width: 900;
+    -fx-arc-height: 65;
+    -fx-font-family: "Comic Sans MS";
+    -fx-alignment: center;
+}
+
+.playnow-button {
+    -fx-background-color: rgba(0, 255, 0, 0.2); /* Light green with transparency */
+    -fx-border-color: rgba(0, 128, 0, 0.65); /* Green border color */
+    -fx-border-width: 3;
+    -fx-border-radius: 75; /* Corner radius for border */
+    -fx-background-radius: 75; /* Corner radius for background */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 50px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 350;
+    -fx-pref-height: 50;
+    -fx-effect: dropshadow(gaussian, rgb(0, 103, 0), 10, 0.5, 0, 0); /* Drop shadow */
+    -fx-alignment: center; /* Center the text */
+    -fx-font-family: "Comic Sans MS";
+}
+
+.playnow-button:hover {
+    -fx-background-color: rgba(0, 148, 0, 0.6); /* Darker green background on hover */
+    -fx-border-color: rgba(0, 148, 0, 0.8); /* Darker green border on hover */
+    -fx-text-fill: rgba(255, 255, 255, 1); /* Ensure text is visible */
+}
+
+.button-x-winner {
+    -fx-background-color: rgba(240, 128, 128, 0.31); /* Light red */
+}
+
+.button-o-winner {
+    -fx-background-color: rgba(173, 216, 230, 0.36); /* Light blue */
+}
+
+/* Winning button styles */
+.winning-button-x {
+    -fx-background-color: rgba(255, 0, 0, 0.15); /* Lighter red */
+    -fx-border-color: rgba(255, 0, 0, 0.25);
+    -fx-text-fill: rgba(255, 0, 0, 0.33);
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.30), 5, 0.3, 0, 0);
+}
+
+.winning-button-o {
+    -fx-background-color: rgba(0, 0, 255, 0.15); /* Lighter blue */
+    -fx-border-color: rgba(0, 0, 255, 0.25);
+    -fx-text-fill: rgba(0, 0, 255, 0.33);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 255, 0.30), 5, 0.3, 0, 0);
+}
