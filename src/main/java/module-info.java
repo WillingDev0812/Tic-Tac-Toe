@@ -10,6 +10,7 @@ module com.iti.tictactoe {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires javafx.graphics;
 
     opens com.iti.tictactoe to javafx.fxml;
     exports com.iti.tictactoe;
