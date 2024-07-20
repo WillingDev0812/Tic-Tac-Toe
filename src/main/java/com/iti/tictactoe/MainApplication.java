@@ -1,24 +1,23 @@
 package com.iti.tictactoe;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.IOException;
 
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader splashLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/Splash.fxml"));
+        //  FXMLLoader splashLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/Splash.fxml"));
         //FXMLLoader mainLoader = new FXMLLoader(HelloApplication.class.getResource("/com/iti/tictacton_game/MainScreen.fxml"));
-
+        FXMLLoader gameLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/name-offline-view.fxml"));
         StackPane root = new StackPane();
-        root.getChildren().add(splashLoader.load());
+        //root.getChildren().add(splashLoader.load());
         //root.getChildren().add(mainLoader.load());
+        root.getChildren().add(gameLoader.load());
 
 
         Scene scene = new Scene(root);
@@ -26,9 +25,10 @@ public class MainApplication extends Application {
         stage.setFullScreen(true);
         stage.show();
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        // 3amlaly moshklla kan fl run 3shan el duration (need to handle it in your screen only )
+    /*    PauseTransition pause = new PauseTransition(Duration.seconds(5));
         pause.setOnFinished(event -> root.getChildren().get(0).setVisible(false));
-        pause.play();
+        pause.play();*/
     }
 
     public static void main(String[] args) {
