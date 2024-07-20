@@ -14,11 +14,11 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader splashLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/Splash.fxml"));
-        //FXMLLoader mainLoader = new FXMLLoader(HelloApplication.class.getResource("/com/iti/tictacton_game/MainScreen.fxml"));
+     //   FXMLLoader mainLoader = new FXMLLoader(MainApplication.class.getResource("/com/iti/tictactoe/home screen.fxml"));
 
         StackPane root = new StackPane();
         root.getChildren().add(splashLoader.load());
-        //root.getChildren().add(mainLoader.load());
+     //   root.getChildren().add(mainLoader.load());
 
 
         Scene scene = new Scene(root);

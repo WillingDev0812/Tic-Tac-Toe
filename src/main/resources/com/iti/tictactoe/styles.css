@@ -1,0 +1,20 @@
+.startbtn {
+    -fx-background-color: #1E8228;
+    -fx-background-radius: 100px 100px 30px 30px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+}
+.quitbtn  {
+    -fx-background-color: #9C0B02;
+    -fx-background-radius: 30px 30px 100px 100px;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+}
+.startbtn:hover {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
+}
+.quitbtn:hover {
+    -fx-background-color: #FF5733;
+    -fx-text-fill: white;
+}
