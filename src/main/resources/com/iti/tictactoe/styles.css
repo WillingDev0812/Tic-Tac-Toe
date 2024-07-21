@@ -118,10 +118,12 @@
 /* General styles for labels */
 
 /* General styles for labels */
-.label {
+.playernames {
     -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-font-family: "Comic Sans MS";
+
 }
 
 .gameslabels {
@@ -345,4 +347,10 @@
 .login-button:hover {
     -fx-background-color: #2ECC71;
     -fx-text-fill: white;
+}
+.list-view-recordings {
+
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 25.0px;
+    -fx-font-weight: bold;
 }
