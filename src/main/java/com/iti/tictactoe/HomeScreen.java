@@ -28,12 +28,14 @@ public class HomeScreen {
 
     @FXML
     private void initialize() {
-        addHoverAnimation(startplayingbtn);
-        addHoverAnimation(quitbtn);
+        UIUtils.addHoverAnimation(startplayingbtn);
+        UIUtils.addHoverAnimation(quitbtn);
+
     }
 
     @FXML
     protected void onquitbtn() {
+        UIUtils.playSoundEffect();
         Platform.exit();
     }
     @FXML
@@ -41,27 +43,6 @@ public class HomeScreen {
         UIUtils.playSoundEffect();
         showMenu();
         System.out.println("play");
-    }
-    private void addHoverAnimation(Button button) {
-        button.setOnMouseEntered(e -> {
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(button.translateXProperty(), 0)),
-                    new KeyFrame(Duration.seconds(0.2), new KeyValue(button.translateXProperty(), 10)),
-                    new KeyFrame(Duration.seconds(0.4), new KeyValue(button.translateXProperty(), 0))
-            );
-           timeline.setCycleCount(Timeline.INDEFINITE);
-           timeline.setAutoReverse(true);
-           timeline.play();
-            button.setUserData(timeline); // Store timeline in button's user data
-        });
-
-        button.setOnMouseExited(e -> {
-            Timeline timeline = (Timeline) button.getUserData();
-            if (timeline != null) {
-                timeline.stop();
-                button.setTranslateX(0); // Reset position
-            }
-        });
     }
 
     private  void showMenu() {
