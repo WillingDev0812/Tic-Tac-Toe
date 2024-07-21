@@ -29,7 +29,7 @@ public class NameOfUser {
     public void initialize() {
         try {
             buttonEffectPlayNow = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
-            Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/backGroundNEON.png").toExternalForm());
+            Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/HomeBackground.png").toExternalForm());
             backgroundImage.setImage(image);
 
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class NameOfUser {
 
         // Switch from the current page to the game board page
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/CpmputerGameBoard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/ComputerGameBoard.fxml"));
             Parent root = loader.load();
 
             // Get the controller and initialize it with the player names

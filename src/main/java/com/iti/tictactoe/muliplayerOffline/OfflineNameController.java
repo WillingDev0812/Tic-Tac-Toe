@@ -30,7 +30,7 @@ public class OfflineNameController {
     public void initialize() {
         try {
             buttonEffectPlayNow = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
-            Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/backGroundNEON.png").toExternalForm());
+            Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/HomeBackground.png").toExternalForm());
             backgroundImage.setImage(image);
 
         } catch (Exception e) {
@@ -91,11 +91,13 @@ public class OfflineNameController {
             return false;
         }
 
+
         // Checking both names are different
-        if (playerOne.equalsIgnoreCase(playerTwo)) {
+      /*  if (playerOne.equalsIgnoreCase(playerTwo)) {
             AlertUtils.showWarningAlert("Invalid Names", "Players names must be different.", null);
             return false;
-        }
+        }*/
+
         return true;
     }
 }

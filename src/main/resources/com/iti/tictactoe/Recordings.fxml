@@ -5,14 +5,12 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
+<?import javafx.scene.text.*?>
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.Recordings">
     <children>
         <ImageView fx:id="main_background_img" fitHeight="1080" fitWidth="1920.0" layoutX="-14.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@assets/test.png" />
+                <Image url="@assets/HomeBackground.png"/>
             </image>
         </ImageView>
       <Text fill="WHITE" layoutX="793.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recordings" wrappingWidth="305.6708984375">
