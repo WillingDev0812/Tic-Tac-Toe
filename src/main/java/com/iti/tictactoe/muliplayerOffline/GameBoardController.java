@@ -4,14 +4,24 @@ import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
 import com.iti.tictactoe.muliplayerOffline.models.PlayerNames;
 import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.util.Optional;
 
@@ -248,10 +258,38 @@ public class GameBoardController {
 
     private void handleWinnerState(int[][] coloredButtons) {
         checkHighlightWinningButtons(coloredButtons);
-        System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
+        //  System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
         updateScore();
         winnerSound.play();
         showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : playerNames.getPlayerTwo() + " wins");
+        showVideo("/com/iti/tictactoe/Videos/video2.mp4");
+    }
+
+    public void showVideo(String videoPath) {
+        Media media = new Media(getClass().getResource(videoPath).toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mediaPlayer);
+
+        StackPane root = new StackPane();
+        root.getChildren().add(mediaView);
+
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setFullScreen(true); // Make the stage full screen
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+        stage.setScene(scene);
+        stage.show();
+
+        mediaPlayer.play();
+
+        // Hide the video after 3 seconds
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        delay.setOnFinished(event -> {
+            mediaPlayer.stop();
+            stage.close();
+        });
+        delay.play();
     }
 
     private void handleDrawState() {
