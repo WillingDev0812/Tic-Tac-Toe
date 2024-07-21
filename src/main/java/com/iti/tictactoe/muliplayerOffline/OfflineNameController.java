@@ -2,19 +2,13 @@ package com.iti.tictactoe.muliplayerOffline;
 
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
 import com.iti.tictactoe.muliplayerOffline.models.PlayerNames;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class OfflineNameController {
 
@@ -25,6 +19,8 @@ public class OfflineNameController {
     @FXML
     private TextField playerTwo_txtField;
     private AudioClip buttonEffectPlayNow;
+
+    private NavigationController navController;
 
 
     public void initialize() {
@@ -38,6 +34,10 @@ public class OfflineNameController {
         }
     }
 
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
+    }
+
     public void handlePlayNowButton(ActionEvent actionEvent) {
         String playerOne = playerOne_txtField.getText();
         String playerTwo = playerTwo_txtField.getText();
@@ -49,6 +49,12 @@ public class OfflineNameController {
         System.out.println(playerOne_txtField.getText());
         System.out.println(playerTwo_txtField.getText());
 
+        navController.pushScene("/com/iti/tictactoe/board-game-view.fxml", controller -> {
+            GameBoardController gameBoardController = (GameBoardController) controller;
+            gameBoardController.initialize(playerNames);
+        });
+
+        /*
         // to switch from page to page
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/board-game-view.fxml"));
@@ -65,7 +71,7 @@ public class OfflineNameController {
         } catch (IOException e) {
             e.printStackTrace();
             // Optionally show an alert or log the error
-        }
+        }*/
     }
 
     private void playButtonSound() {

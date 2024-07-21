@@ -1,17 +1,13 @@
 package com.iti.tictactoe;
 
+import com.iti.tictactoe.Single.NameOfUser;
+import com.iti.tictactoe.muliplayerOffline.OfflineNameController;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyCombination;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class OfflineController {
 
@@ -27,71 +23,52 @@ public class OfflineController {
     @FXML
     private Label backLabel;
 
+    private NavigationController navController;
+
     @FXML
     public void initialize() {
         UIUtils.addHoverAnimation(singleButt);
         UIUtils.addHoverAnimation(multiButt);
         multiButt.setOnMouseClicked(event -> {
             UIUtils.playSoundEffect();
-            offlineController();
+            multiPlayerOfflineModeButton();
         });
         backImage.setOnMouseClicked(this::handleBackImageClick);
         backLabel.setOnMouseClicked(this::handleBackImageClick);
         singleButt.setOnAction(event -> {
-            SingleButton();
+            singlePlayerModeButton();
         });
     }
 
-    private void SingleButton() {
-        try {
-            UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/NameOfUser.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
     }
 
-    private void offlineController() {
-        try {
-            UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("name-offline-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void singlePlayerModeButton() {
+        navController.pushScene("/com/iti/tictactoe/NameOfUser.fxml", controller -> {
+            if (controller instanceof NameOfUser) {
+                NameOfUser nameOfUser = (NameOfUser) controller;
+                nameOfUser.setNavController(navController);
+            }
+        });
+    }
+
+    private void multiPlayerOfflineModeButton() {
+        navController.pushScene("/com/iti/tictactoe/name-offline-view.fxml", controller -> {
+            if (controller instanceof OfflineNameController) {
+                OfflineNameController offlineNameController = (OfflineNameController) controller;
+                offlineNameController.setNavController(navController);
+            }
+        });
+
     }
 
     private void handleBackImageClick(MouseEvent event) {
-        try {
+        if (navController == null) {
+            System.out.println("error in navController");
+        } else {
             UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setTitle("Menu");
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-
-            // Close the current stage
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            navController.popScene();
         }
     }
 }

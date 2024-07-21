@@ -1,19 +1,13 @@
 package com.iti.tictactoe.Single;
 
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 
 public class NameOfUser {
@@ -26,6 +20,8 @@ public class NameOfUser {
     private AudioClip buttonEffectPlayNow;
 
 
+    private NavigationController navController;
+
     public void initialize() {
         try {
             buttonEffectPlayNow = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
@@ -36,6 +32,11 @@ public class NameOfUser {
             e.printStackTrace();
         }
     }
+
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
+    }
+
     public void handlePlayNowButton(ActionEvent event) {
         String playerOne = playerOne_txtField.getText();
         if (!validatePlayerNames(playerOne)) {
@@ -44,6 +45,11 @@ public class NameOfUser {
         PlayerName playerName = new PlayerName(playerOne);
         playButtonSound();
 
+        navController.pushScene("/com/iti/tictactoe/ComputerGameBoard.fxml", controller -> {
+            ComputerGameBoard gameBoardController = (ComputerGameBoard) controller;
+            gameBoardController.initialize(playerName);
+        });
+/*
         // Switch from the current page to the game board page
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/ComputerGameBoard.fxml"));
@@ -63,7 +69,7 @@ public class NameOfUser {
         } catch (IOException e) {
             e.printStackTrace();
             // Optionally show an alert or log the error
-        }
+        }*/
     }
 
 
