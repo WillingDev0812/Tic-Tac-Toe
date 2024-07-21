@@ -37,7 +37,25 @@ public class OfflineController {
         });
         backImage.setOnMouseClicked(this::handleBackImageClick);
         backLabel.setOnMouseClicked(this::handleBackImageClick);
-        singleButt.setOnAction(event -> UIUtils.playSoundEffect());
+        singleButt.setOnAction(event -> {
+            SingleButton();
+        });
+    }
+
+    private void SingleButton() {
+        try {
+            UIUtils.playSoundEffect();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/NameOfUser.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void offlineController() {

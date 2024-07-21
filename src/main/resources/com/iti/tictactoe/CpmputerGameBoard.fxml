@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <StackPane xmlns:fx="http://javafx.com/fxml" stylesheets="@StylesJEO.css"
-           fx:controller="com.iti.tictactoe.muliplayerOffline.GameBoardController">
+           fx:controller="com.iti.tictactoe.Single.ComputerGameBoard">
     <ImageView fx:id="gameBackGround" fitWidth="1920" fitHeight="1080"/>
 
     <BorderPane>
@@ -30,7 +30,7 @@
                 </HBox>
             </VBox>
         </left>
-        <!-- Player Two on the right -->
+        <!-- Computer player  on the right -->
         <right>
             <VBox alignment="CENTER" spacing="10" style="-fx-padding: -250 100 0 0;">
                 <Label fx:id="playerTwo" text="PLAYER NAME" stylesheets="@StylesJEO.css"/>
