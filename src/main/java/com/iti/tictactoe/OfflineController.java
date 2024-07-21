@@ -45,7 +45,7 @@ public class OfflineController {
     private void SingleButton() {
         try {
             UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/NameOfUser.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/single-player-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             stage.setFullScreen(true);

@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Font?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="com.iti.tictactoe.muliplayerOffline.OfflineNameController"
@@ -10,6 +12,16 @@
             prefHeight="400.0" prefWidth="600.0">
     <ImageView fx:id="backgroundImage" fitWidth="1920" fitHeight="1080"/>
 
+    <ImageView fx:id="backImage" fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@assets/back-button (1).png"/>
+        </image>
+    </ImageView>
+    <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" text="Back" textFill="WHITE">
+        <font>
+            <Font name="Comic Sans MS Bold" size="40.0" />
+        </font>
+    </Label>
     <VBox alignment="CENTER" spacing="25" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"
           AnchorPane.bottomAnchor="0">
         <Label text="Player One Name"

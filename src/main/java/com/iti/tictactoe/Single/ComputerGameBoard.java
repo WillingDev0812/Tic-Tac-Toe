@@ -1,6 +1,7 @@
 package com.iti.tictactoe.Single;
 
 import com.iti.tictactoe.MenuController;
+import com.iti.tictactoe.AIGame.SinglePlayerController;
 import com.iti.tictactoe.UIUtils;
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
 import javafx.event.ActionEvent;
@@ -20,6 +21,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
+
+import static com.iti.tictactoe.AIGame.SinglePlayerController.flag;
 
 public class ComputerGameBoard {
 
@@ -66,11 +69,13 @@ public class ComputerGameBoard {
     private Button button21;
     @FXML
     private Button button22;
+    @FXML
+    private Button rec_btn;
 
     private final int[][] board = new int[3][3];   // board game
     private PlayerName playerNames;
     private boolean isPlayerOneTurn = true;
-
+    private boolean recording = false;
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
@@ -347,13 +352,35 @@ public class ComputerGameBoard {
     }
 
     private void computerMove() {
-        Random random = new Random();
-        int row, col;
-        do {
-            row = random.nextInt(3);
-            col = random.nextInt(3);
-        } while (board[row][col] != 0);
-        Button button = getButtonAt(row, col);
-        handleButtonAction(button, row, col);
+        if(flag==1) //flag SENT FROM single Player Controller
+        {
+            Random random = new Random();
+            int row, col;
+            do {
+                row = random.nextInt(3);
+                col = random.nextInt(3);
+            } while (board[row][col] != 0);
+            Button button = getButtonAt(row, col);
+            handleButtonAction(button, row, col);
+        }
+        else if(flag==2) //MED
+        {
+            System.out.println("Med");
+        }
+        else if(flag==3) //HARD
+        {
+            System.out.println("Hard");
+        }
     }
+
+//    public void RecButton(ActionEvent actionEvent) {
+//        recording = !recording;  // Toggle the recording state
+//        if (recording) {
+//            rec_btn.getStyleClass().remove("record-button");
+//            rec_btn.getStyleClass().add("record-button-recording");
+//        } else {
+//            rec_btn.getStyleClass().remove("record-button-recording");
+//            rec_btn.getStyleClass().add("exit-button");
+//        }
+//    }
 }

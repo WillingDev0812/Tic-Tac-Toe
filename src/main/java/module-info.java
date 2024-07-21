@@ -12,6 +12,8 @@ module com.iti.tictactoe {
     requires com.almasb.fxgl.all;
     requires javafx.media;
 
+    opens com.iti.tictactoe.AIGame to javafx.fxml;
+
     opens com.iti.tictactoe to javafx.fxml;
     exports com.iti.tictactoe;
     exports com.iti.tictactoe.splash;
