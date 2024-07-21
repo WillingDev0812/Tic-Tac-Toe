@@ -6,15 +6,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<VBox alignment="CENTER" spacing="20.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.OfflineController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" spacing="20.0" styleClass="background-style"
+      stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171"
+      fx:controller="com.iti.tictactoe.OfflineMenuController">
     <AnchorPane prefHeight="1080.0" prefWidth="1920.0">
         <children>
-            <ImageView fx:id="backImage" fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="backImage" fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0"
+                       pickOnBounds="true" preserveRatio="true" onMouseClicked="#onBackClicked">
                 <image>
                     <Image url="@assets/back-button (1).png"/>
                 </image>
             </ImageView>
-            <Button fx:id="singleButt" layoutX="400.0" layoutY="500.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="500.0" styleClass="single-button" stylesheets="@styles.css" text="Single-Player" textAlignment="CENTER">
+            <Button fx:id="singleButt" layoutX="400.0" layoutY="500.0" mnemonicParsing="false" prefHeight="100.0"
+                    prefWidth="500.0" styleClass="single-button"
+                    stylesheets="@styles.css" text="Single-Player" textAlignment="CENTER"
+                    onMouseClicked="#singlePlayerClickedButton">
                 <graphic>
                     <ImageView fx:id="singleImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -22,7 +28,9 @@
                         </image>
                     </ImageView>
                 </graphic></Button>
-            <Button fx:id="multiButt" layoutX="1050.0" layoutY="500.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="500.0" styleClass="offline-button" stylesheets="@styles.css" text=" Mutli-Player" textAlignment="CENTER">
+            <Button fx:id="multiButt" layoutX="1050.0" layoutY="500.0" mnemonicParsing="false"
+                    prefHeight="100.0" prefWidth="500.0" styleClass="offline-button" stylesheets="@styles.css"
+                    text=" Mutli-Player" textAlignment="CENTER" onMouseClicked="#multiPlayerClickedButton">
                 <graphic>
                     <ImageView fx:id="mutliImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -30,7 +38,8 @@
                         </image>
                     </ImageView>
                 </graphic></Button>
-            <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" text="Back" textFill="WHITE">
+            <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" text="Back" textFill="WHITE"
+                   onMouseClicked="#onBackClicked">
                 <font>
                     <Font name="Comic Sans MS Bold" size="40.0" />
                 </font>

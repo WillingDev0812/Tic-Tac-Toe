@@ -35,4 +35,5 @@ public class NavigationHistory {
     public int size() {
         return history.size();
     }
+
 }

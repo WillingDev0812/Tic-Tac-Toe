@@ -25,5 +25,7 @@ module com.iti.tictactoe {
 
     opens com.iti.tictactoe.Single to javafx.fxml;
     exports com.iti.tictactoe.Single;
+    exports com.iti.tictactoe.muliplayerOffline.models;
+    opens com.iti.tictactoe.muliplayerOffline.models to javafx.fxml;
 
 }

@@ -7,22 +7,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<VBox fx:id="rootVBox" alignment="CENTER" spacing="20.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.MenuController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="rootVBox" alignment="CENTER" spacing="20.0" styleClass="background-style"
+      stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171"
+      fx:controller="com.iti.tictactoe.FullMenuController">
     <AnchorPane fx:id="rootPane" prefHeight="1080.0" prefWidth="1920.0" >
         <children>
             <ImageView fx:id="backImage" fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0"
-                       pickOnBounds="true" preserveRatio="true">
+                       pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleBackClick">
                 <image>
                     <Image url="@assets/back-button (1).png"/>
                 </image>
             </ImageView>
-            <Button fx:id="onlineButt" layoutX="725.0" layoutY="375.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="500.0" styleClass="online-button" stylesheets="@styles.css" text="Online" textAlignment="CENTER" />
+            <Button fx:id="onlineButt" layoutX="725.0" layoutY="375.0" mnemonicParsing="false" prefHeight="100.0"
+                    prefWidth="500.0" styleClass="online-button" stylesheets="@styles.css" text="Online"
+                    textAlignment="CENTER" onMouseClicked="#handleOnOnlineButtonClicked"/>
             <Button fx:id="offlineButt" layoutX="725.0" layoutY="500.0" mnemonicParsing="false" prefHeight="100.0"
                     prefWidth="500.0" styleClass="offline-button" stylesheets="@styles.css" text="Offline"
                     textAlignment="CENTER"
-                    onAction="#handleOfflineButton"/>
-            <Button fx:id="recordsButt" layoutX="725.0" layoutY="625.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="500.0" styleClass="records-button" stylesheets="@styles.css" text="Records" textAlignment="CENTER" />
-            <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" text="Back" textFill="WHITE">
+                    onAction="#handleOfflineButtonClicked"/>
+            <Button fx:id="recordsButt" layoutX="725.0" layoutY="625.0" mnemonicParsing="false" prefHeight="100.0"
+                    prefWidth="500.0" styleClass="records-button" stylesheets="@styles.css" text="Records"
+                    textAlignment="CENTER" onMouseClicked="#handleOnRecordButtonClicked"/>
+            <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" text="Back" textFill="WHITE"
+                   onMouseClicked="#handleBackClick">
                 <font>
                     <Font name="Comic Sans MS Bold" size="40.0" />
                 </font>

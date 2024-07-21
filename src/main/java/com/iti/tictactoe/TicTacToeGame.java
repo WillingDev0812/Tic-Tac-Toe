@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
@@ -17,22 +18,22 @@ public class TicTacToeGame extends Application {
     public void start(Stage stage) throws IOException {
         // Intialize Navigation Controller
         navController = new NavigationController(stage);
-        UIUtils.playBackgroundMusic();
+        UiUtils.playBackgroundMusic();
 
-        FXMLLoader splashLoader = new FXMLLoader(TicTacToeGame.class.getResource("/com/iti/tictactoe/Splash.fxml"));
+        FXMLLoader splashLoader = new FXMLLoader(TicTacToeGame.class.getResource("/com/iti/tictactoe/splash.fxml"));
         StackPane root = new StackPane();
         root.getChildren().add(splashLoader.load());
 
         Scene splashScene = new Scene(root);
         stage.setScene(splashScene);
-        stage.setFullScreen(true);
+        stage.setFullScreen(false);
         stage.show();
 
         PauseTransition pause = new PauseTransition(Duration.seconds(5));
         pause.setOnFinished(event -> {
-            navController.pushScene("/com/iti/tictactoe/home screen.fxml", controller -> {
-                if (controller instanceof HomeScreen homeScreen) {
-                    homeScreen.setNavController(navController);
+            navController.pushScene("/com/iti/tictactoe/home-screen.fxml", controller -> {
+                if (controller instanceof HomeScreenController homeScreenController) {
+                    homeScreenController.setNavController(navController);
                 }
             });
         });
