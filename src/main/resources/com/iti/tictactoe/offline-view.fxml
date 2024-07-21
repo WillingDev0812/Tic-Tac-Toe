@@ -20,7 +20,7 @@
                 <graphic>
                     <ImageView fx:id="singleImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@assest/player.png" />
+                            <Image url="@assets/player.png" />
                         </image>
                     </ImageView>
                 </graphic></Button>
@@ -28,7 +28,7 @@
                 <graphic>
                     <ImageView fx:id="mutliImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@assest/multiplayer.png" />
+                            <Image url="@assets/multiplayer.png" />
                         </image>
                     </ImageView>
                 </graphic></Button>

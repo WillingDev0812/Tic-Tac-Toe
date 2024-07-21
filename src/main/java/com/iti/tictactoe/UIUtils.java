@@ -1,14 +1,14 @@
 package com.iti.tictactoe;
 
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+
+import java.util.Objects;
 
 public class UIUtils {
 
@@ -37,9 +37,9 @@ public class UIUtils {
     }
 
     public static void playBackgroundMusic() {
-        String musicFile = "bella-ciao-rise-of-legend-dance-house-version-background-vlog-music.mp3";
+        String musicFile = "/com/iti/tictactoe/Sounds/bella-ciao-rise-of-legend-dance-house-version-background-vlog-music.mp3";
         try {
-            Media media = new Media(UIUtils.class.getResource(musicFile).toExternalForm());
+            Media media = new Media(Objects.requireNonNull(UIUtils.class.getResource(musicFile)).toExternalForm());
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Repeat the music
             mediaPlayer.play();
@@ -49,7 +49,7 @@ public class UIUtils {
     }
 
     public static void playSoundEffect() {
-        String soundFilePath = "buttonSoundEffect.wav";
+        String soundFilePath = "/com/iti/tictactoe/Sounds/buttonSoundEffect.wav";
         try {
             Media sound = new Media(UIUtils.class.getResource(soundFilePath).toExternalForm());
             MediaPlayer soundPlayer = new MediaPlayer(sound);

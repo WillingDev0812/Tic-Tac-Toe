@@ -29,7 +29,7 @@ public class OfflineNameController {
 
     public void initialize() {
         try {
-            buttonEffectPlayNow = new AudioClip(getClass().getResource("/com/iti/tictactoe/assets/buttonSoundEffect.wav").toExternalForm());
+            buttonEffectPlayNow = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
             Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/backGroundNEON.png").toExternalForm());
             backgroundImage.setImage(image);
 

@@ -31,17 +31,36 @@ public class OfflineController {
     public void initialize() {
         UIUtils.addHoverAnimation(singleButt);
         UIUtils.addHoverAnimation(multiButt);
-        multiButt.setOnMouseClicked(event -> UIUtils.playSoundEffect());
+        multiButt.setOnMouseClicked(event -> {
+            UIUtils.playSoundEffect();
+            offlineController();
+        });
         backImage.setOnMouseClicked(this::handleBackImageClick);
         backLabel.setOnMouseClicked(this::handleBackImageClick);
         singleButt.setOnAction(event -> UIUtils.playSoundEffect());
+    }
+
+    private void offlineController() {
+        try {
+            UIUtils.playSoundEffect();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("name-offline-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleBackImageClick(MouseEvent event) {
         try {
             UIUtils.playSoundEffect();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("menu-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 2000, 1000);
+            Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             stage.setTitle("Menu");
             stage.setFullScreen(true);

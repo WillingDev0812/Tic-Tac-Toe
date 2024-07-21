@@ -12,7 +12,7 @@
     <children>
         <ImageView fx:id="main_background_img" fitHeight="1080" fitWidth="1920.0" layoutX="-14.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@assest/test.png" />
+                <Image url="@assets/test.png" />
             </image>
         </ImageView>
       <Text fill="WHITE" layoutX="793.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recordings" wrappingWidth="305.6708984375">
@@ -22,7 +22,7 @@
       </Text>
       <ImageView fx:id="imageView" fitHeight="99.0" fitWidth="93.0" layoutX="207.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image fx:id="backing" url="@assest/back-button (1).png" />  <!--  here -->
+            <Image fx:id="backing" url="@assets/back-button (1).png" />  <!--  here -->
          </image>
       </ImageView>
       <Text fill="WHITE" layoutX="300.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Back" wrappingWidth="84.6708984375">

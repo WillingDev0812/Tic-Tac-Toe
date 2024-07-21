@@ -62,7 +62,7 @@ public class GameBoardController {
     @FXML
     private Button restart_btn;
 
-    private int[][] board = new int[3][3];   // board game
+    private final int[][] board = new int[3][3];   // board game
     private PlayerNames playerNames;
     private boolean isPlayerOneTurn = true;
 
@@ -73,10 +73,10 @@ public class GameBoardController {
 
     public void initialize(PlayerNames playerNames) {
         this.playerNames = playerNames;
-        clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/assets/OTone.mp3").toExternalForm());
-        clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/assets/xTone.mp3").toExternalForm());
-        winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/assets/win.mp3").toExternalForm());
-        buttonSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/assets/buttonSoundEffect.wav").toExternalForm());
+        clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
+        clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
+        winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
+        buttonSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
 
         try {
             Image backgroundImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBackground.png").toExternalForm());
@@ -206,7 +206,7 @@ public class GameBoardController {
             board[row][col] = 2;    // Player O
         }
 
-        System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
+       // System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
     }
 
     private int[][] checkWinner() {
@@ -235,7 +235,7 @@ public class GameBoardController {
 
     private void handleWinnerState(int[][] coloredButtons) {
         checkHighlightWinningButtons(coloredButtons);
-        System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
+      //  System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
         updateScore();
         winnerSound.play();
         showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : playerNames.getPlayerTwo() + " wins");

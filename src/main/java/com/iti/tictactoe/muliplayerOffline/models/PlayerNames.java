@@ -1,8 +1,8 @@
 package com.iti.tictactoe.muliplayerOffline.models;
 
 public class PlayerNames {
-    private String playerOne;
-    private String playerTwo;
+    private final String playerOne;
+    private final String playerTwo;
 
     public PlayerNames(String playerOne, String playerTwo) {
         this.playerOne = playerOne;
