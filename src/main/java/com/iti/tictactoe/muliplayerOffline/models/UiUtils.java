@@ -1,4 +1,4 @@
-package com.iti.tictactoe;
+package com.iti.tictactoe.muliplayerOffline.models;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -10,7 +10,7 @@ import javafx.util.Duration;
 
 import java.util.Objects;
 
-public class UIUtils {
+public class UiUtils {
 
     private static MediaPlayer mediaPlayer;
 
@@ -39,7 +39,7 @@ public class UIUtils {
     public static void playBackgroundMusic() {
         String musicFile = "/com/iti/tictactoe/Sounds/bella-ciao-rise-of-legend-dance-house-version-background-vlog-music.mp3";
         try {
-            Media media = new Media(Objects.requireNonNull(UIUtils.class.getResource(musicFile)).toExternalForm());
+            Media media = new Media(Objects.requireNonNull(UiUtils.class.getResource(musicFile)).toExternalForm());
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Repeat the music
             mediaPlayer.play();
@@ -51,7 +51,7 @@ public class UIUtils {
     public static void playSoundEffect() {
         String soundFilePath = "/com/iti/tictactoe/Sounds/buttonSoundEffect.wav";
         try {
-            Media sound = new Media(UIUtils.class.getResource(soundFilePath).toExternalForm());
+            Media sound = new Media(UiUtils.class.getResource(soundFilePath).toExternalForm());
             MediaPlayer soundPlayer = new MediaPlayer(sound);
             soundPlayer.setOnEndOfMedia(soundPlayer::dispose); // Dispose the player after the sound is played
             soundPlayer.play();

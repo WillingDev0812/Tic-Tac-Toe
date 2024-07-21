@@ -1,24 +1,17 @@
 package com.iti.tictactoe.Single;
 
-import com.iti.tictactoe.MenuController;
-import com.iti.tictactoe.AIGame.SinglePlayerController;
-import com.iti.tictactoe.UIUtils;
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
+import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.media.AudioClip;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
@@ -69,8 +62,13 @@ public class ComputerGameBoard {
     private Button button21;
     @FXML
     private Button button22;
-    @FXML
-    private Button rec_btn;
+
+    private NavigationController navController;
+
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
+    }
+
 
     private final int[][] board = new int[3][3];   // board game
     private PlayerName playerNames;
@@ -79,14 +77,13 @@ public class ComputerGameBoard {
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
-    private AudioClip buttonSound;
+
 
     public void initialize(PlayerName playerName) {
         this.playerNames = playerName;
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
         winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
-        buttonSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
 
         try {
             Image backgroundImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBackground.png").toExternalForm());
@@ -174,22 +171,17 @@ public class ComputerGameBoard {
     }
 
     @FXML
-    private void ExitButton(ActionEvent event) {
-        try {
-            UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(MenuController.class.getResource("offline-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void exitButton(ActionEvent event) {
+        UiUtils.playSoundEffect();
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game", "Are you sure you want to quit playing and leave the game?", "This will moves you to the lobby");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (navController == null) {
+                System.out.println("Error: navController is not set.");
+            } else {
+                UiUtils.playSoundEffect();
+                navController.popScene();
+                navController.popScene();
+            }
         }
     }
 
@@ -344,7 +336,7 @@ public class ComputerGameBoard {
     }
 
     public void handleRestartButton(ActionEvent actionEvent) {
-        buttonSound.play();
+        UiUtils.playSoundEffect();
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             resetGame();
@@ -372,15 +364,4 @@ public class ComputerGameBoard {
             System.out.println("Hard");
         }
     }
-
-//    public void RecButton(ActionEvent actionEvent) {
-//        recording = !recording;  // Toggle the recording state
-//        if (recording) {
-//            rec_btn.getStyleClass().remove("record-button");
-//            rec_btn.getStyleClass().add("record-button-recording");
-//        } else {
-//            rec_btn.getStyleClass().remove("record-button-recording");
-//            rec_btn.getStyleClass().add("exit-button");
-//        }
-//    }
 }

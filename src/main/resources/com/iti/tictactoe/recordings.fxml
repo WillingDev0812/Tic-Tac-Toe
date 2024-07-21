@@ -6,10 +6,10 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.Recordings">
+<?import javafx.scene.text.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style"
+            stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171"
+            fx:controller="com.iti.tictactoe.RecordingsController">
     <children>
 
         <Text fill="WHITE" layoutX="793.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recordings" wrappingWidth="305.6708984375">
@@ -30,12 +30,16 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
             </content>
         </ScrollPane>
-        <Button fx:id="playRecordingbtn" alignment="CENTER" layoutX="160.0" layoutY="838.0" onAction="#onplayrecordingbtn" prefHeight="75.0" styleClass="playrecording-button" stylesheets="@styles.css" text="Play Recording" textAlignment="CENTER" textFill="WHITE">
+        <Button fx:id="playRecordingButton" alignment="CENTER" layoutX="160.0" layoutY="838.0"
+                onAction="#onPlayRecordingButton" prefHeight="75.0" styleClass="playrecording-button"
+                stylesheets="@styles.css" text="Play Recording" textAlignment="CENTER" textFill="WHITE">
             <font>
                 <Font name="Comic Sans MS Bold" size="25.0" />
             </font>
         </Button>
-        <Button fx:id="deleteRecordingbtn" alignment="CENTER" layoutX="1468.0" layoutY="875.0" onAction="#ondeleterecordingbtn" prefHeight="75.0" styleClass="deleterecording-button" stylesheets="@styles.css" text="Delete Recording" textAlignment="CENTER" textFill="WHITE">
+        <Button fx:id="deleteRecordingButton" alignment="CENTER" layoutX="1468.0" layoutY="875.0"
+                onAction="#onDeleteRecordingButton" prefHeight="75.0" styleClass="deleterecording-button"
+                stylesheets="@styles.css" text="Delete Recording" textAlignment="CENTER" textFill="WHITE">
             <font>
                 <Font name="Comic Sans MS Bold" size="30.0" />
             </font>

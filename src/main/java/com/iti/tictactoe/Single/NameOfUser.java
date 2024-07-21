@@ -1,34 +1,26 @@
 package com.iti.tictactoe.Single;
 
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
+import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.AudioClip;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.input.MouseEvent;
 
 
 public class NameOfUser {
     @FXML
     private ImageView backgroundImage;
-
     @FXML
     private TextField playerOne_txtField;
 
-    private AudioClip buttonEffectPlayNow;
-
+    private NavigationController navController;
 
     public void initialize() {
         try {
-            buttonEffectPlayNow = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
             Image image = new Image(getClass().getResource("/com/iti/tictactoe/assets/HomeBackground.png").toExternalForm());
             backgroundImage.setImage(image);
 
@@ -36,36 +28,24 @@ public class NameOfUser {
             e.printStackTrace();
         }
     }
+
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
+    }
+
     public void handlePlayNowButton(ActionEvent event) {
         String playerOne = playerOne_txtField.getText();
         if (!validatePlayerNames(playerOne)) {
             return;
         }
         PlayerName playerName = new PlayerName(playerOne);
-        playButtonSound();
-
-        // Switch from the current page to the game board page
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/ComputerGameBoard.fxml"));
-            Parent root = loader.load();
-
-            // Get the controller and initialize it with the player names
-            ComputerGameBoard gameBoardController = loader.getController();
+        UiUtils.playSoundEffect();
+        navController.pushScene("/com/iti/tictactoe/board-game-computer.fxml", controller -> {
+            ComputerGameBoard gameBoardController = (ComputerGameBoard) controller;
+            gameBoardController.setNavController(navController);
             gameBoardController.initialize(playerName);
-
-            // Get the current stage and set the new scene
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene newScene = new Scene(root);
-
-            stage.setScene(newScene);
-            stage.setFullScreen(true);  // Ensure the stage is in full screen mode
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Optionally show an alert or log the error
-        }
+        });
     }
-
 
     private boolean validatePlayerNames(String playerOne) {
         //checking textfield empty or not
@@ -82,13 +62,13 @@ public class NameOfUser {
         return true;
     }
 
-    private void playButtonSound() {
-        // Check if the sound is initialized and play it
-        if (buttonEffectPlayNow != null) {
-            System.out.println("Playing button sound");
-            buttonEffectPlayNow.play();
+
+    public void onBackClick(MouseEvent mouseEvent) {
+        if (navController == null) {
+            System.out.println("error in navController");
         } else {
-            System.out.println("Button sound is not initialized");
+            UiUtils.playSoundEffect();
+            navController.popScene();
         }
     }
 }

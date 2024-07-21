@@ -1,24 +1,18 @@
 package com.iti.tictactoe.muliplayerOffline;
 
-import com.iti.tictactoe.MenuController;
-import com.iti.tictactoe.UIUtils;
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
 import com.iti.tictactoe.muliplayerOffline.models.PlayerNames;
+import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.media.AudioClip;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.Optional;
 
 public class GameBoardController {
@@ -66,6 +60,13 @@ public class GameBoardController {
     @FXML
     private Button button22;
 
+    private NavigationController navController;
+
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
+    }
+
+
     private final int[][] board = new int[3][3];   // board game
     private PlayerNames playerNames;
     private boolean isPlayerOneTurn = true;
@@ -73,14 +74,12 @@ public class GameBoardController {
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
-    private AudioClip buttonSound;
 
     public void initialize(PlayerNames playerNames) {
         this.playerNames = playerNames;
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
         winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
-        buttonSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/buttonSoundEffect.wav").toExternalForm());
 
         try {
             Image backgroundImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBackground.png").toExternalForm());
@@ -167,23 +166,19 @@ public class GameBoardController {
         handleButtonAction(button22, 2, 2);
     }
 
+
     @FXML
     private void ExitButton(ActionEvent event) {
-        try {
-            UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(MenuController.class.getResource("offline-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        UiUtils.playSoundEffect();
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game", "Are you sure you want to quit playing and leave the game?", "This will moves you to the lobby");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (navController == null) {
+                System.out.println("Error: navController is not set.");
+            } else {
+                UiUtils.playSoundEffect();
+                navController.popScene();
+                navController.popScene();
+            }
         }
     }
 
@@ -224,8 +219,7 @@ public class GameBoardController {
         } else {
             board[row][col] = 2;    // Player O
         }
-
-       // System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
+        System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
     }
 
     private int[][] checkWinner() {
@@ -254,7 +248,7 @@ public class GameBoardController {
 
     private void handleWinnerState(int[][] coloredButtons) {
         checkHighlightWinningButtons(coloredButtons);
-      //  System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
+        System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
         updateScore();
         winnerSound.play();
         showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : playerNames.getPlayerTwo() + " wins");
@@ -265,29 +259,6 @@ public class GameBoardController {
         updateDrawCount(); // Increment draw counter
         showResultAlert("It's a draw!"); // Display draw message
     }
-
-  /*  private boolean checkWinner() {
-        for (int i = 0; i < 3; i++) {
-            // Check rows
-            if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
-                return true;
-            }
-            // Check columns
-            if (board[0][i] != 0 && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
-                return true;
-            }
-        }
-        // Check diagonals
-        if (board[0][0] != 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-            updateScore();
-            return true;
-        }
-        if (board[0][2] != 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-            updateScore();
-            return true;
-        }
-        return false;
-    }*/
 
     private void checkHighlightWinningButtons(int[][] winningButtons) {
         for (int i = 0; i < winningButtons.length; i++) {
@@ -364,7 +335,7 @@ public class GameBoardController {
     }
 
     public void handleRestartButton(ActionEvent actionEvent) {
-        buttonSound.play();
+        UiUtils.playSoundEffect();
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             resetGame();

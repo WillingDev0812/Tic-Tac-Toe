@@ -1,110 +1,71 @@
 package com.iti.tictactoe.AIGame;
 
-import com.iti.tictactoe.Single.ComputerGameBoard;
-import com.iti.tictactoe.UIUtils;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import com.iti.tictactoe.Single.NameOfUser;
+import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.io.IOException;
+import javafx.scene.input.MouseEvent;
 
 public class SinglePlayerController {
     @FXML
     private Button easyButt;
-
     @FXML
     private Button medButt;
-
     @FXML
     private Button hardButt;
 
-    @FXML
-    private ImageView backImage;
-
-    @FXML
-    private Label backLabel;
+    private NavigationController navController;
 
     public static int flag = 0; ///1 FOR EASY - 2 FOR MED - 3 FOR HARD
 
     public void initialize() {
-        UIUtils.addHoverAnimation(easyButt);
-        UIUtils.addHoverAnimation(medButt);
-        UIUtils.addHoverAnimation(hardButt);
-        easyButt.setOnMouseClicked(this::handleEasy);
-        medButt.setOnMouseClicked(this::handleMedium);
-        hardButt.setOnMouseClicked(this::handleHard);
-        backImage.setOnMouseClicked(this::handleBackImageClick);
-        backLabel.setOnMouseClicked(this::handleBackImageClick);
+        UiUtils.addHoverAnimation(easyButt);
+        UiUtils.addHoverAnimation(medButt);
+        UiUtils.addHoverAnimation(hardButt);
     }
 
+    @FXML
     private void handleEasy(javafx.scene.input.MouseEvent event) {
-        UIUtils.playSoundEffect();
+        UiUtils.playSoundEffect();
         flag = 1;
-        navigateTONamePage(event);
+        navigateToGameLevelMenu();
+
     }
 
+    @FXML
     private void handleMedium(javafx.scene.input.MouseEvent event) {
-        UIUtils.playSoundEffect();
+        UiUtils.playSoundEffect();
         flag = 2;
-        navigateTONamePage(event);
+        navigateToGameLevelMenu();
     }
 
+    @FXML
     private void handleHard(javafx.scene.input.MouseEvent event) {
-        UIUtils.playSoundEffect();
+        UiUtils.playSoundEffect();
         flag = 3;
-        navigateTONamePage(event);
+        navigateToGameLevelMenu();
     }
 
-    private void navigateTONamePage(javafx.scene.input.MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/NameOfUser.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setTitle("Offline Mode");
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
+    private void navigateToGameLevelMenu() {
+        navController.pushScene("/com/iti/tictactoe/name-of-user.fxml", controller -> {
+            if (controller instanceof NameOfUser nameOfUser) {
+                nameOfUser.setNavController(navController);
+            }
 
-            // Close the current stage
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        });
+    }
+
+    public void onBackClick(MouseEvent mouseEvent) {
+        if (navController == null) {
+            System.out.println("error in navController");
+        } else {
+            UiUtils.playSoundEffect();
+            navController.popScene();
         }
     }
 
-    private void handleBackImageClick(javafx.scene.input.MouseEvent event) {
-        try {
-            UIUtils.playSoundEffect();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/iti/tictactoe/offline-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            stage.setTitle("Offline Mode");
-            stage.setFullScreen(true);
-            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-
-            // Close the current stage
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
     }
-
 }
