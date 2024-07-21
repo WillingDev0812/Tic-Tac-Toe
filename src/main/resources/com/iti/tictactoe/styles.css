@@ -117,7 +117,7 @@
 
 
 /* General styles for labels */
-.label {
+.gameslabels {
     -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
@@ -284,4 +284,58 @@
     -fx-border-color: rgba(0, 0, 255, 0.25);
     -fx-text-fill: rgba(0, 0, 255, 0.33);
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 255, 0.30), 5, 0.3, 0, 0);
+}
+.playrecording-button {
+    -fx-background-color: #1E8228;
+    -fx-background-radius: 75px;
+    -fx-border-radius: 75px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-size: 25.0px;
+    -fx-font-weight: bold;
+}
+.playrecording-button:hover {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
+}
+.deleterecording-button {
+    -fx-background-color: #9C0B02;
+    -fx-background-radius: 75px;
+    -fx-border-radius: 75px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-size: 25.0px;
+    -fx-font-weight: bold;
+}
+.deleterecording-button:hover {
+    -fx-background-color: #FF5733;
+    -fx-text-fill: white;
+}
+.signup-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 75px;
+    -fx-border-color: white;
+    -fx-border-radius: 75px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-size: 33.0px;
+    -fx-font-weight: bold;
+}
+.signup-button:hover {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+.login-button {
+    -fx-background-color: #1E8228;
+    -fx-background-radius: 75px;
+    -fx-border-radius: 75px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-size: 33.0px;
+    -fx-font-weight: bold;
+}
+.login-button:hover {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: white;
 }
