@@ -1,9 +1,8 @@
-package com.iti.tictactoe.muliplayerOffline;
+package com.iti.tictactoe.Single;
 
 import com.iti.tictactoe.MenuController;
 import com.iti.tictactoe.UIUtils;
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
-import com.iti.tictactoe.muliplayerOffline.models.PlayerNames;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,8 +19,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Random;
 
-public class GameBoardController {
+public class ComputerGameBoard {
+
     @FXML
     private ImageView gameBackGround;
     @FXML
@@ -67,7 +68,7 @@ public class GameBoardController {
     private Button button22;
 
     private final int[][] board = new int[3][3];   // board game
-    private PlayerNames playerNames;
+    private PlayerName playerNames;
     private boolean isPlayerOneTurn = true;
 
     private AudioClip clickXSound;
@@ -75,8 +76,8 @@ public class GameBoardController {
     private AudioClip winnerSound;
     private AudioClip buttonSound;
 
-    public void initialize(PlayerNames playerNames) {
-        this.playerNames = playerNames;
+    public void initialize(PlayerName playerName) {
+        this.playerNames = playerName;
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
         winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
@@ -103,14 +104,19 @@ public class GameBoardController {
         setPlayerTwoName();
     }
 
-    public void updateDrawCount() {
-        drawCounter++;
-        drawScore.setText(String.valueOf(drawCounter));
-    }
-
     // Method to set player name
     public void setPlayerOneName() {
         playerOne.setText(playerNames.getPlayerOne());
+    }
+
+    // Method to set the second player name
+    public void setPlayerTwoName() {
+        playerTwo.setText("Computer");
+    }
+
+    public void updateDrawCount() {
+        drawCounter++;
+        drawScore.setText(String.valueOf(drawCounter));
     }
 
     // Method to update player one score
@@ -119,12 +125,7 @@ public class GameBoardController {
         playerOneScore.setText(String.valueOf(playerOneScoreCount));
     }
 
-    //Method to set the second player name
-    public void setPlayerTwoName() {
-        playerTwo.setText(playerNames.getPlayerTwo());
-    }
-
-    //Method to update player two score
+    // Method to update player two score
     public void updatePlayerTwoScore() {
         playerTwoScoreCount++;
         playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
@@ -199,6 +200,9 @@ public class GameBoardController {
                 handleDrawState();
             } else {
                 isPlayerOneTurn = !isPlayerOneTurn;
+                if (!isPlayerOneTurn) {
+                    computerMove();
+                }
             }
         }
     }
@@ -224,12 +228,10 @@ public class GameBoardController {
         } else {
             board[row][col] = 2;    // Player O
         }
-
-       // System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
     }
 
     private int[][] checkWinner() {
-        //checking rows
+        // checking rows
         for (int i = 0; i < 3; i++) {
             if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
                 return new int[][]{{i, 0}, {i, 1}, {i, 2}};
@@ -241,7 +243,7 @@ public class GameBoardController {
                 return new int[][]{{0, i}, {1, i}, {2, i}};
             }
         }
-        //checking first diagonal
+        // checking first diagonal
         if (board[0][0] != 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             return new int[][]{{0, 0}, {1, 1}, {2, 2}};
         }
@@ -249,51 +251,30 @@ public class GameBoardController {
         if (board[0][2] != 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
             return new int[][]{{0, 2}, {1, 1}, {2, 0}};
         }
-        return null;    //return null if draw
+        return null;    // return null if draw
     }
 
     private void handleWinnerState(int[][] coloredButtons) {
         checkHighlightWinningButtons(coloredButtons);
-      //  System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
         updateScore();
         winnerSound.play();
-        showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : playerNames.getPlayerTwo() + " wins");
+        showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : "Computer wins");
     }
 
     private void handleDrawState() {
-        System.out.println("el mfrood kda draw");
         updateDrawCount(); // Increment draw counter
         showResultAlert("It's a draw!"); // Display draw message
     }
 
-  /*  private boolean checkWinner() {
-        for (int i = 0; i < 3; i++) {
-            // Check rows
-            if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
-                return true;
-            }
-            // Check columns
-            if (board[0][i] != 0 && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
-                return true;
-            }
-        }
-        // Check diagonals
-        if (board[0][0] != 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-            updateScore();
-            return true;
-        }
-        if (board[0][2] != 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-            updateScore();
-            return true;
-        }
-        return false;
-    }*/
+    private void showResultAlert(String message) {
+        AlertUtils.showInformationAlert("Game Over", message, null);
+        resetGame(); // Clear the game after confirmation
+    }
 
     private void checkHighlightWinningButtons(int[][] winningButtons) {
-        for (int i = 0; i < winningButtons.length; i++) {
-            int row = winningButtons[i][0];
-            int col = winningButtons[i][1];
-            // getting row ,col indices of the button to get colored later
+        for (int[] buttonIndices : winningButtons) {
+            int row = buttonIndices[0];
+            int col = buttonIndices[1];
             Button button = getButtonAt(row, col);
             if (isPlayerOneTurn) {
                 button.getStyleClass().add("winning-button-x");
@@ -304,15 +285,15 @@ public class GameBoardController {
     }
 
     private Button getButtonAt(int row, int col) {
-        if (row == 0 & col == 0) return button00;
-        if (row == 0 & col == 1) return button01;
-        if (row == 0 & col == 2) return button02;
-        if (row == 1 & col == 0) return button10;
-        if (row == 1 & col == 1) return button11;
-        if (row == 1 & col == 2) return button12;
-        if (row == 2 & col == 0) return button20;
-        if (row == 2 & col == 1) return button21;
-        if (row == 2 & col == 2) return button22;
+        if (row == 0 && col == 0) return button00;
+        if (row == 0 && col == 1) return button01;
+        if (row == 0 && col == 2) return button02;
+        if (row == 1 && col == 0) return button10;
+        if (row == 1 && col == 1) return button11;
+        if (row == 1 && col == 2) return button12;
+        if (row == 2 && col == 0) return button20;
+        if (row == 2 && col == 1) return button21;
+        if (row == 2 && col == 2) return button22;
         return null;
     }
 
@@ -325,9 +306,9 @@ public class GameBoardController {
     }
 
     private boolean isBoardFull() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == 0) {
+        for (int[] row : board) {
+            for (int cell : row) {
+                if (cell == 0) {
                     return false;
                 }
             }
@@ -335,17 +316,12 @@ public class GameBoardController {
         return true;
     }
 
-    private void showResultAlert(String message) {
-        AlertUtils.showInformationAlert("Game Over", message, null);
-        resetGame(); // bat'kd en el game cleared b3d el confirmation
-    }
-
     private void resetGame() {
         Button[] buttons = {button00, button01, button02,
                 button10, button11, button12,
                 button20, button21, button22};
-        for (int i = 0; i < buttons.length; i++) {
-            resetButtonToItsOriginalState(buttons[i]);
+        for (Button button : buttons) {
+            resetButtonToItsOriginalState(button);
         }
         isPlayerOneTurn = true;  // Reset to player one's turn
         // Reset the board
@@ -355,7 +331,6 @@ public class GameBoardController {
             }
         }
         winnerSound.stop();
-
     }
 
     private void resetButtonToItsOriginalState(Button button) {
@@ -369,5 +344,16 @@ public class GameBoardController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             resetGame();
         }
+    }
+
+    private void computerMove() {
+        Random random = new Random();
+        int row, col;
+        do {
+            row = random.nextInt(3);
+            col = random.nextInt(3);
+        } while (board[row][col] != 0);
+        Button button = getButtonAt(row, col);
+        handleButtonAction(button, row, col);
     }
 }

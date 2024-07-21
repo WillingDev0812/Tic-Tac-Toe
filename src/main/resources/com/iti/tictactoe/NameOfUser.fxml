@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
-            fx:controller="com.iti.tictactoe.muliplayerOffline.OfflineNameController"
+            fx:controller="com.iti.tictactoe.Single.NameOfUser"
             stylesheets="@StylesJEO.css"
             prefHeight="400.0" prefWidth="600.0">
     <ImageView fx:id="backgroundImage" fitWidth="1920" fitHeight="1080"/>
@@ -17,16 +17,7 @@
         <HBox alignment="CENTER" spacing="20">
             <TextField fx:id="playerOne_txtField" promptText="Enter your name" styleClass="name-text-field"/>
         </HBox>
-        <VBox alignment="CENTER" spacing="25" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
-            <Label text="Player Two Name"
-                   style="-fx-font-size: 65px; -fx-font-family: 'Comic Sans MS';  -fx-font-weight: bold; -fx-text-fill: #ffffff;"/>
-            <HBox alignment="CENTER" spacing="20">
-                <TextField fx:id="playerTwo_txtField" promptText="Enter your name" styleClass="name-text-field"/>
-            </HBox>
-        </VBox>
     </VBox>
-
     <Button text="PLAY NOW" styleClass="playnow-button"
             AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20" onAction="#handlePlayNowButton"/>
 
