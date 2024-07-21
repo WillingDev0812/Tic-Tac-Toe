@@ -3,14 +3,24 @@ package com.iti.tictactoe.Single;
 import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
 import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.util.Optional;
 import java.util.Random;
@@ -255,7 +265,41 @@ public class ComputerGameBoard {
         checkHighlightWinningButtons(coloredButtons);
         updateScore();
         winnerSound.play();
-        showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : "Computer wins");
+        //showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : "Computer wins");
+        if(isPlayerOneTurn)
+        {
+            showResultAlert(playerNames.getPlayerOne() + " wins");
+            showVideo("/com/iti/tictactoe/Videos/video2.mp4");
+        } else {
+            showResultAlert("Computer wins");
+        }
+    }
+
+    public void showVideo(String videoPath) {
+        Media media = new Media(getClass().getResource(videoPath).toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mediaPlayer);
+
+        StackPane root = new StackPane();
+        root.getChildren().add(mediaView);
+
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setFullScreen(true); // Make the stage full screen
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+        stage.setScene(scene);
+        stage.show();
+
+        mediaPlayer.play();
+
+        // Hide the video after 3 seconds
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        delay.setOnFinished(event -> {
+            mediaPlayer.stop();
+            stage.close();
+        });
+        delay.play();
     }
 
     private void handleDrawState() {
@@ -344,24 +388,50 @@ public class ComputerGameBoard {
     }
 
     private void computerMove() {
-        if(flag==1) //flag SENT FROM single Player Controller
+
+        if(flag==1) //flag SENT FROM single Player Controller 1 --> EASY
         {
-            Random random = new Random();
-            int row, col;
-            do {
-                row = random.nextInt(3);
-                col = random.nextInt(3);
-            } while (board[row][col] != 0);
-            Button button = getButtonAt(row, col);
-            handleButtonAction(button, row, col);
+            easyMove();
         }
-        else if(flag==2) //MED
+        else if(flag==2) //2 --> MED
         {
-            System.out.println("Med");
+            medMove();
         }
-        else if(flag==3) //HARD
+        else if(flag==3) //3 --> HARD
         {
-            System.out.println("Hard");
+            hardMove();
         }
+    }
+    private void easyMove()
+    {
+        Random random = new Random();
+        int row, col;
+        do {
+            row = random.nextInt(3);
+            col = random.nextInt(3);
+        } while (board[row][col] != 0);
+        Button button = getButtonAt(row, col);
+        handleButtonAction(button, row, col);
+    }
+    private void medMove()
+    {
+        Random random = new Random();
+        if(random.nextInt(100)<70) //Medium Level : 70% random 30% minimax algorithm
+        {
+            easyMove();
+        }
+        else
+        {
+            minimaxMove();
+        }
+    }
+    private void hardMove()
+    {
+        minimaxMove();
+    }
+
+    private void minimaxMove()
+    {
+
     }
 }
