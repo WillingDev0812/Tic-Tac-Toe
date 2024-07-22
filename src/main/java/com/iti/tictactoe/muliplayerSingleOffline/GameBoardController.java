@@ -1,7 +1,8 @@
-package com.iti.tictactoe.Single;
+package com.iti.tictactoe.muliplayerSingleOffline;
 
-import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
-import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.models.AlertUtils;
+import com.iti.tictactoe.models.PlayerNames;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
@@ -25,10 +26,10 @@ import javafx.util.Duration;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.iti.tictactoe.AIGame.SinglePlayerController.flag;
+import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
 
-public class ComputerGameBoard {
 
+public class GameBoardController {
     @FXML
     private ImageView gameBackGround;
     @FXML
@@ -75,22 +76,25 @@ public class ComputerGameBoard {
 
     private NavigationController navController;
 
+    private boolean isSinglePlayer = false;
+
+
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
 
-
     private final int[][] board = new int[3][3];   // board game
-    private PlayerName playerNames;
+    private PlayerNames playerName;
     private boolean isPlayerOneTurn = true;
-    private boolean recording = false;
+
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
 
+    public void initialize(PlayerNames playerName, boolean isSinglePlayer, int difficultyFlag) {
+        this.playerName = playerName;
+        this.isSinglePlayer = isSinglePlayer;
 
-    public void initialize(PlayerName playerName) {
-        this.playerNames = playerName;
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
         winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
@@ -107,23 +111,16 @@ public class ComputerGameBoard {
 
             Image oPlayer = new Image(getClass().getResource("/com/iti/tictactoe/assets/Circle.png").toExternalForm());
             circle.setImage(oPlayer);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        setPlayerOneName();
-        setPlayerTwoName();
+        setPlayerNames();
     }
 
-    // Method to set player name
-    public void setPlayerOneName() {
-        playerOne.setText(playerNames.getPlayerOne());
-    }
-
-    // Method to set the second player name
-    public void setPlayerTwoName() {
-        playerTwo.setText("Computer");
+    private void setPlayerNames() {
+        playerOne.setText(playerName.getPlayerOne());
+        playerTwo.setText(playerName.getPlayerTwo());
     }
 
     public void updateDrawCount() {
@@ -137,7 +134,7 @@ public class ComputerGameBoard {
         playerOneScore.setText(String.valueOf(playerOneScoreCount));
     }
 
-    // Method to update player two score
+    //Method to update player two score
     public void updatePlayerTwoScore() {
         playerTwoScoreCount++;
         playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
@@ -180,14 +177,13 @@ public class ComputerGameBoard {
         handleButtonAction(button22, 2, 2);
     }
 
+
     @FXML
-    private void exitButton(ActionEvent event) {
+    private void ExitButton(ActionEvent event) {
         UiUtils.playSoundEffect();
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game", "Are you sure you want to quit playing and leave the game?", "This will moves you to the lobby");
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (navController == null) {
-                System.out.println("Error: navController is not set.");
-            } else {
+            if (navController != null) {
                 UiUtils.playSoundEffect();
                 navController.popScene();
                 navController.popScene();
@@ -200,15 +196,18 @@ public class ComputerGameBoard {
             updateButtonGraphic(button);
             playClickSound();
             updateBoardStateForPlayers(row, col);
-            int[][] coloredButtons = checkWinner();  // retrieve the winning array of buttons
+            int[][] coloredButtons = checkWinner();
             if (coloredButtons != null) {
                 handleWinnerState(coloredButtons);
             } else if (isBoardFull()) {
                 handleDrawState();
             } else {
                 isPlayerOneTurn = !isPlayerOneTurn;
-                if (!isPlayerOneTurn) {
-                    computerMove();
+                if (!isPlayerOneTurn && isSinglePlayer) {
+                    setButtonDisabledToPreventUserAtComputerTurns(true);
+                    delayComputerMove();
+                } else {
+                    setButtonDisabledToPreventUserAtComputerTurns(false);
                 }
             }
         }
@@ -235,10 +234,11 @@ public class ComputerGameBoard {
         } else {
             board[row][col] = 2;    // Player O
         }
+        System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
     }
 
     private int[][] checkWinner() {
-        // checking rows
+        //checking rows
         for (int i = 0; i < 3; i++) {
             if (board[i][0] != 0 && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
                 return new int[][]{{i, 0}, {i, 1}, {i, 2}};
@@ -250,7 +250,7 @@ public class ComputerGameBoard {
                 return new int[][]{{0, i}, {1, i}, {2, i}};
             }
         }
-        // checking first diagonal
+        //checking first diagonal
         if (board[0][0] != 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
             return new int[][]{{0, 0}, {1, 1}, {2, 2}};
         }
@@ -258,21 +258,15 @@ public class ComputerGameBoard {
         if (board[0][2] != 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
             return new int[][]{{0, 2}, {1, 1}, {2, 0}};
         }
-        return null;    // return null if draw
+        return null;    //return null if draw
     }
 
     private void handleWinnerState(int[][] coloredButtons) {
         checkHighlightWinningButtons(coloredButtons);
         updateScore();
         winnerSound.play();
-        //showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : "Computer wins");
-        if(isPlayerOneTurn)
-        {
-            showResultAlert(playerNames.getPlayerOne() + " wins");
-            showVideo("/com/iti/tictactoe/Videos/video2.mp4");
-        } else {
-            showResultAlert("Computer wins");
-        }
+        showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
+        showVideo("/com/iti/tictactoe/Videos/video2.mp4");
     }
 
     public void showVideo(String videoPath) {
@@ -303,19 +297,16 @@ public class ComputerGameBoard {
     }
 
     private void handleDrawState() {
+        System.out.println("el mfrood kda draw");
         updateDrawCount(); // Increment draw counter
         showResultAlert("It's a draw!"); // Display draw message
     }
 
-    private void showResultAlert(String message) {
-        AlertUtils.showInformationAlert("Game Over", message, null);
-        resetGame(); // Clear the game after confirmation
-    }
-
     private void checkHighlightWinningButtons(int[][] winningButtons) {
-        for (int[] buttonIndices : winningButtons) {
-            int row = buttonIndices[0];
-            int col = buttonIndices[1];
+        for (int i = 0; i < winningButtons.length; i++) {
+            int row = winningButtons[i][0];
+            int col = winningButtons[i][1];
+            // getting row ,col indices of the button to get colored later
             Button button = getButtonAt(row, col);
             if (isPlayerOneTurn) {
                 button.getStyleClass().add("winning-button-x");
@@ -326,15 +317,15 @@ public class ComputerGameBoard {
     }
 
     private Button getButtonAt(int row, int col) {
-        if (row == 0 && col == 0) return button00;
-        if (row == 0 && col == 1) return button01;
-        if (row == 0 && col == 2) return button02;
-        if (row == 1 && col == 0) return button10;
-        if (row == 1 && col == 1) return button11;
-        if (row == 1 && col == 2) return button12;
-        if (row == 2 && col == 0) return button20;
-        if (row == 2 && col == 1) return button21;
-        if (row == 2 && col == 2) return button22;
+        if (row == 0 & col == 0) return button00;
+        if (row == 0 & col == 1) return button01;
+        if (row == 0 & col == 2) return button02;
+        if (row == 1 & col == 0) return button10;
+        if (row == 1 & col == 1) return button11;
+        if (row == 1 & col == 2) return button12;
+        if (row == 2 & col == 0) return button20;
+        if (row == 2 & col == 1) return button21;
+        if (row == 2 & col == 2) return button22;
         return null;
     }
 
@@ -347,9 +338,9 @@ public class ComputerGameBoard {
     }
 
     private boolean isBoardFull() {
-        for (int[] row : board) {
-            for (int cell : row) {
-                if (cell == 0) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == 0) {
                     return false;
                 }
             }
@@ -357,12 +348,17 @@ public class ComputerGameBoard {
         return true;
     }
 
+    private void showResultAlert(String message) {
+        AlertUtils.showInformationAlert("Game Over", message, null);
+        resetGame(); // bat'kd en el game cleared b3d el confirmation
+    }
+
     private void resetGame() {
         Button[] buttons = {button00, button01, button02,
                 button10, button11, button12,
                 button20, button21, button22};
-        for (Button button : buttons) {
-            resetButtonToItsOriginalState(button);
+        for (int i = 0; i < buttons.length; i++) {
+            resetButtonToItsOriginalState(buttons[i]);
         }
         isPlayerOneTurn = true;  // Reset to player one's turn
         // Reset the board
@@ -372,6 +368,7 @@ public class ComputerGameBoard {
             }
         }
         winnerSound.stop();
+
     }
 
     private void resetButtonToItsOriginalState(Button button) {
@@ -387,21 +384,39 @@ public class ComputerGameBoard {
         }
     }
 
-    private void computerMove() {
-
-        if(flag==1) //flag SENT FROM single Player Controller 1 --> EASY
-        {
-            easyMove();
-        }
-        else if(flag==2) //2 --> MED
-        {
-            medMove();
-        }
-        else if(flag==3) //3 --> HARD
-        {
-            hardMove();
-        }
+    private void setButtonDisabledToPreventUserAtComputerTurns(boolean disabled) {
+        button00.setDisable(disabled);
+        button01.setDisable(disabled);
+        button02.setDisable(disabled);
+        button10.setDisable(disabled);
+        button11.setDisable(disabled);
+        button12.setDisable(disabled);
+        button20.setDisable(disabled);
+        button21.setDisable(disabled);
+        button22.setDisable(disabled);
     }
+
+    private void delayComputerMove() {
+        Duration duration = switch (flag) {
+            case 1 -> Duration.seconds(0.5);
+            case 2 -> Duration.seconds(0.7);
+            case 3 -> Duration.seconds(1);
+            default -> null;
+        };
+
+        PauseTransition delay = new PauseTransition(duration);
+        delay.setOnFinished(event -> {
+            if (flag == 1) {
+                easyMove();
+            } else if (flag == 2) {
+                medMove();
+            } else if (flag == 3) {
+                hardMove();
+            }
+        });
+        delay.play();
+    }
+
     private void easyMove() {
         Random random = new Random();
         int row, col;

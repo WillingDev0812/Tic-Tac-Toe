@@ -116,6 +116,11 @@
 }
 
 /* General styles for labels */
+.playernames {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
 
 /* General styles for labels */
 .playernames {

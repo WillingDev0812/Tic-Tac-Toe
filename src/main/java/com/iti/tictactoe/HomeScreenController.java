@@ -1,6 +1,6 @@
 package com.iti.tictactoe;
 
-import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

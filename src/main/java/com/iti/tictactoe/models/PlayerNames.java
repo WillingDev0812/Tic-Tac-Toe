@@ -1,4 +1,4 @@
-package com.iti.tictactoe.muliplayerOffline.models;
+package com.iti.tictactoe.models;
 
 public class PlayerNames {
     private final String playerOne;

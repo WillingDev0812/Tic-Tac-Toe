@@ -1,4 +1,4 @@
-package com.iti.tictactoe.muliplayerOffline.models;
+package com.iti.tictactoe.models;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <StackPane xmlns:fx="http://javafx.com/fxml" stylesheets="@styles.css"
-           fx:controller="com.iti.tictactoe.muliplayerOffline.GameBoardController">
+           fx:controller="com.iti.tictactoe.muliplayerSingleOffline.GameBoardController">
 
 <ImageView fx:id="gameBackGround" fitWidth="1920" fitHeight="1080"/>
 

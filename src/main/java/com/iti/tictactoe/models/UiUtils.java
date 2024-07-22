@@ -1,4 +1,4 @@
-package com.iti.tictactoe.muliplayerOffline.models;
+package com.iti.tictactoe.models;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
