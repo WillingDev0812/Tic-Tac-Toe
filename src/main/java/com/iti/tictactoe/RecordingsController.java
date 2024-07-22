@@ -33,18 +33,18 @@ public class RecordingsController {
     List<String> allFilesNames;
     Map<String, String> locationNameMap =  new HashMap<>();
     public void initialize(){
-        try {
+       /* try {
             allFilesNames = Files.list(Path.of("src/main/resources/com/iti/tictactoe/Recordings")).map(Path::toString).toList();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
 
-        for (var file : allFilesNames) {
+        /*for (var file : allFilesNames) {
             locationNameMap.put("Recording game " + file.substring(file.lastIndexOf(System.getProperty("file.separator") ) + 1 , file.lastIndexOf('.') ),file);
-        }
-        RecordingListview.getItems().addAll(locationNameMap.keySet());
+        }*/
+       /* RecordingListview.getItems().addAll(locationNameMap.keySet());*/
         // RecordingListview.getSelectionModel().getSelectedItem();
         // System.out.println(RecordingListview.getSelectionModel().getSelectedItem());
         UiUtils.addHoverAnimation(deleteRecordingButton);
