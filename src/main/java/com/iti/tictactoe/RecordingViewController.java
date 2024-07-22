@@ -17,7 +17,6 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Objects;
 
-
 public class RecordingViewController {
     private NavigationController navController;
     @FXML
@@ -60,11 +59,16 @@ public class RecordingViewController {
     @FXML
     private Button button22;
 
+    private Timeline timeline; // Reference to the Timeline
+
+    boolean isRecording = false;
+
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
 
     public void initialize(PlayerNames playerNames, List<int[]> moves) {
+        isRecording = true;
         this.playerNames = playerNames;
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
@@ -104,9 +108,31 @@ public class RecordingViewController {
         UiUtils.playSoundEffect();
         if (navController != null) {
             UiUtils.playSoundEffect();
+            isRecording = false;
+            if (timeline != null) {
+                timeline.stop();
+            }
             navController.popScene();
         }
     }
+
+//    private void stopTimeline() {
+//        if (timeline != null) {
+//            timeline.stop(); // Stop the timeline
+//        }
+//    }
+
+//    private void stopAudioClips() {
+//        if (clickXSound != null) {
+//            clickXSound.stop();
+//        }
+//        if (clickOSound != null) {
+//            clickOSound.stop();
+//        }
+//        if (winnerSound != null) {
+//            winnerSound.stop();
+//        }
+//    }
 
     private void updateButtonGraphic(Button button) {
         ImageView image = new ImageView((isPlayerOneTurn ? cross : circle).getImage());
@@ -171,7 +197,6 @@ public class RecordingViewController {
         return null;    //return null if draw
     }
 
-
     private void updateBoardStateForPlayers(int row, int col) {
         if (isPlayerOneTurn) {
             board[row][col] = 1;    // Player X
@@ -222,7 +247,7 @@ public class RecordingViewController {
     }
 
     private void playMoves(List<int[]> moves) {
-        Timeline timeline = new Timeline();
+        timeline = new Timeline(); // Initialize the timeline
         for (int i = 0; i < moves.size(); i++) {
             int[] move = moves.get(i); // moves[0] = {1,1} moves[1] = {2,2} >>>>....
             int row = move[0]; //first number in array
