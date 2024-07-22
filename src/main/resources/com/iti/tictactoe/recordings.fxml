@@ -24,7 +24,9 @@
         </ImageView>
         <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" onMouseClicked="#onBackImageClick" text="Back" textFill="WHITE">
             <font><Font name="Comic Sans MS Bold" size="40.0" /></font></Label>
-        <Button fx:id="playRecordingButton" alignment="CENTER" layoutX="506.0" layoutY="128.0" onAction="#onPlayRecordingButton" prefHeight="75.0" styleClass="playrecording-button" stylesheets="@styles.css" text="Play Recording" textAlignment="CENTER" textFill="WHITE">
+        <Button fx:id="playRecordingButton" alignment="CENTER" layoutX="506.0" layoutY="128.0"
+                onAction="#onPlayRecordingButton" prefHeight="75.0" styleClass="playrecording-button"
+                stylesheets="@styles.css" text="Play Recording" textAlignment="CENTER" textFill="WHITE">
             <font>
                 <Font name="Comic Sans MS Bold" size="25.0" />
             </font>
@@ -35,11 +37,20 @@
             </font>
         </Button>
         <ListView fx:id="RecordingListview" editable="true" fixedCellSize="50.0" layoutX="506.0" layoutY="242.0" opacity="0.25" prefHeight="754.0" prefWidth="909.0" styleClass="list-view-recordings" stylesheets="@styles.css" />
-        <Label fx:id="DeleteRecordWarning" layoutX="774.0" layoutY="1005.0" opacity="0.0" prefHeight="21.0" prefWidth="372.0" text="select a record to delete" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="DeleteRecordWarning" layoutX="795.0" layoutY="200.0" opacity="0.0" prefHeight="21.0" prefWidth="372.0" text="Please select a record to delete" textAlignment="CENTER" textFill="RED">
             <font>
-                <Font name="Comic Sans MS" size="21.0" />
+                <Font name="Comic Sans MS" size="25.0" />
             </font>
         </Label>
-
+        <Label fx:id="PlayRecordWarning" layoutX="800.0" layoutY="200.0" opacity="0.0" prefHeight="21.0" prefWidth="372.0" text="Please select a record to play" textAlignment="CENTER" textFill="RED">
+            <font>
+                <Font name="Comic Sans MS" size="25.0" />
+            </font>
+        </Label>
+        <Label fx:id="EmptyFileWarning" layoutX="780.0" layoutY="200.0" opacity="0.0" prefHeight="21.0" prefWidth="400.0" text="The record you chose is empty, delete it" textAlignment="CENTER" textFill="RED">
+            <font>
+                <Font name="Comic Sans MS" size="20.0" />
+            </font>
+        </Label>
     </children>
 </AnchorPane>
