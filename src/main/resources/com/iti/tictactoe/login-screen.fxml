@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.LoginScreen">
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.auth.LoginScreen">
     <children>
 
         <Text fill="WHITE" layoutX="671.0" layoutY="188.0" strokeType="OUTSIDE" text="Login to play online" textAlignment="CENTER">

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.text.Text?>
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.auth.SignUp">
+    <children>
+
+        <Text fill="WHITE" layoutX="671.0" layoutY="188.0" strokeType="OUTSIDE" text="Welcome to Neon" textAlignment="CENTER">
+            <font>
+                <Font name="Comic Sans MS Bold" size="44.0" />
+            </font>
+        </Text>
+
+
+        <TextField fx:id="usernameField" layoutX="551.0" layoutY="300.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Username" style="-fx-background-radius: 30;">
+            <font>
+                <Font name="Comic Sans MS" size="19.0" />
+            </font>
+        </TextField>
+
+        <TextField fx:id="emailField" layoutX="551.0" layoutY="400.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter your Email" style="-fx-background-radius: 30;">
+            <font>
+                <Font name="Comic Sans MS" size="19.0" />
+            </font>
+        </TextField>
+
+        <PasswordField fx:id="passwordField" layoutX="551.0" layoutY="500.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Password" style="-fx-background-radius: 30;">
+            <font>
+                <Font name="Comic Sans MS" size="19.0" />
+            </font>
+        </PasswordField>
+
+        <PasswordField fx:id="confirmPasswordField" layoutX="551.0" layoutY="600.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Confirm Password" style="-fx-background-radius: 30;">
+            <font>
+                <Font name="Comic Sans MS" size="19.0" />
+            </font>
+        </PasswordField>
+
+        <Label fx:id="passwordFeedbackLabel" layoutX="551.0" layoutY="680.0" textFill="RED" textAlignment="CENTER">
+            <font>
+                <Font name="Comic Sans MS" size="18.0" />
+            </font>
+        </Label>
+
+        <Button fx:id="signUpBtn" layoutX="621.0" layoutY="750.0" onAction="#handleSignUp" styleClass="signup-button" text="Sign Up" />
+
+        <Button fx:id="showLoginBtn" layoutX="968.0" layoutY="750.0" onAction="#handleShowLogin" styleClass="login-button" text="Login" />
+        <Label fx:id="warningTextlabel" layoutX="710.0" layoutY="661.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0" text="Please enter vaild information" textAlignment="CENTER" textFill="RED" stylesheets="styles.css" styleClass="warninglabel">
+            <font>
+                <Font name="Comic Sans MS" size="18.0" />
+            </font>
+        </Label>
+
+    </children>
+</AnchorPane>

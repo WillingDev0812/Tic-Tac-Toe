@@ -1,16 +1,14 @@
-package com.iti.tictactoe;
+package com.iti.tictactoe.auth;
 
+import com.iti.tictactoe.RecordingsController;
 import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.paint.Color;
 
 public class LoginScreen {
 
@@ -55,7 +53,14 @@ public class LoginScreen {
     }
 
     public void onSignupBtn(ActionEvent actionEvent) {
-        // implements late ...
+        UiUtils.playSoundEffect();
+        if (navController != null) {
+            navController.pushScene("/com/iti/tictactoe/SignUp.fxml", controller -> {
+                if (controller instanceof SignUp sighUp) {
+                    sighUp.setNavController(navController);
+                }
+            });
+        }
     }
 
 
