@@ -30,7 +30,7 @@ public class NavigationController {
             navHistory.pushScene(scene); // push it to be saved in out stack
             stage.setScene(scene);
             //      stage.setResizable(false);
-            stage.setFullScreen(false);
+            stage.setFullScreen(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,12 +44,12 @@ public class NavigationController {
             if (currentScene != null) {
                 stage.setScene(currentScene);
                 stage.show();
-                stage.setFullScreen(false);
+                stage.setFullScreen(true);
             } else {
-                System.out.println("No scene available to display.");
+                System.out.println("No scene available to display."); // will be deleted in the master
             }
         } else {
-            System.out.println("Navigation history has only one scene. Cannot pop the last scene.");
+            System.out.println("Navigation history has only one scene. Cannot pop the last scene."); // will be deleted in the master
         }
     }
 

@@ -402,8 +402,7 @@ public class ComputerGameBoard {
             hardMove();
         }
     }
-    private void easyMove()
-    {
+    private void easyMove() {
         Random random = new Random();
         int row, col;
         do {
@@ -411,10 +410,11 @@ public class ComputerGameBoard {
             col = random.nextInt(3);
         } while (board[row][col] != 0);
         Button button = getButtonAt(row, col);
+        assert button != null;
         handleButtonAction(button, row, col);
     }
-    private void medMove()
-    {
+
+    private void medMove() {
         Random random = new Random();
         if(random.nextInt(100)<70) //Medium Level : 70% random 30% minimax algorithm
         {
@@ -425,13 +425,80 @@ public class ComputerGameBoard {
             minimaxMove();
         }
     }
+
     private void hardMove()
     {
         minimaxMove();
     }
 
-    private void minimaxMove()
-    {
+    private void minimaxMove() {
+        int bestScore = Integer.MIN_VALUE;
+        int bestRow = -1;
+        int bestCol = -1;
 
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board[row][col] == 0) {
+                    board[row][col] = 2; // Computer's move
+                    int score = minimax(board, 0, false);
+                    board[row][col] = 0; // Undo move
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestRow = row;
+                        bestCol = col;
+                    }
+                }
+            }
+        }
+
+        if (bestRow != -1 && bestCol != -1) {
+            Button button = getButtonAt(bestRow, bestCol);
+            assert button != null;
+            handleButtonAction(button, bestRow, bestCol);
+        }
     }
+
+    private int minimax(int[][] board, int depth, boolean isMaximizing) {
+        int[][] winningCombo = checkWinner();
+        if (winningCombo != null) {
+            if (isMaximizing) {
+                return -10 + depth; // If maximizing, minimize the score
+            } else {
+                return 10 - depth; // If minimizing, maximize the score
+            }
+        }
+
+        if (isBoardFull()) {
+            return 0; // Draw
+        }
+
+        if (isMaximizing) {
+            int bestScore = Integer.MIN_VALUE;
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (board[row][col] == 0) {
+                        board[row][col] = 2; // Computer's move
+                        int score = minimax(board, depth + 1, false);
+                        board[row][col] = 0; // Undo move
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+            }
+            return bestScore;
+        } else {
+            int bestScore = Integer.MAX_VALUE;
+            for (int row = 0; row < 3; row++) {
+                for (int col = 0; col < 3; col++) {
+                    if (board[row][col] == 0) {
+                        board[row][col] = 1; // Player's move
+                        int score = minimax(board, depth + 1, true);
+                        board[row][col] = 0; // Undo move
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+            }
+            return bestScore;
+        }
+    }
+
 }
