@@ -1,7 +1,7 @@
 package com.iti.tictactoe;
 
 import com.iti.tictactoe.auth.LoginScreen;
-import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -1,7 +1,6 @@
 package com.iti.tictactoe.auth;
 
-import com.iti.tictactoe.RecordingsController;
-import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

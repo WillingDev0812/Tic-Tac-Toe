@@ -19,14 +19,11 @@ module com.iti.tictactoe {
     exports com.iti.tictactoe.splash;
     opens com.iti.tictactoe.splash to javafx.fxml;
 
+    opens com.iti.tictactoe.muliplayerSingleOffline to javafx.fxml;
+    exports com.iti.tictactoe.muliplayerSingleOffline;
 
-    opens com.iti.tictactoe.muliplayerOffline to javafx.fxml;
-    exports com.iti.tictactoe.muliplayerOffline;
-
-    opens com.iti.tictactoe.Single to javafx.fxml;
-    exports com.iti.tictactoe.Single;
-    exports com.iti.tictactoe.muliplayerOffline.models;
-    opens com.iti.tictactoe.muliplayerOffline.models to javafx.fxml;
+    exports com.iti.tictactoe.models;
+    opens com.iti.tictactoe.models to javafx.fxml;
     exports com.iti.tictactoe.auth;
     opens com.iti.tictactoe.auth to javafx.fxml;
 
