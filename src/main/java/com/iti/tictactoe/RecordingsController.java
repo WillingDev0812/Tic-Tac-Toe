@@ -103,7 +103,7 @@ public class RecordingsController {
                     .skip(1) // Skip the first line with player names
                     .map(line -> line.split(","))
                     .map(parts -> new int[]{Integer.parseInt(parts[0]), Integer.parseInt(parts[1])})
-                    .toList();
+                    .toList(); ////////////////////LIST OF ARRAY OF INTEGERS ////// List<int[]> moves = List.of( new int[]{1, 1} new int[]{0, 1} >>>....)
         } catch (IOException e) {
             throw new RuntimeException("Error reading moves from file", e);
         }

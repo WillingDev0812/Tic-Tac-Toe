@@ -222,9 +222,9 @@ public class RecordingViewController {
     private void playMoves(List<int[]> moves) {
         Timeline timeline = new Timeline();
         for (int i = 0; i < moves.size(); i++) {
-            int[] move = moves.get(i);
-            int row = move[0];
-            int col = move[1];
+            int[] move = moves.get(i); // moves[0] = {1,1} moves[1] = {2,2} >>>>....
+            int row = move[0]; //first number in array
+            int col = move[1]; //second number in array
             Button button = getButtonAt(row, col);
             KeyFrame keyFrame = new KeyFrame(Duration.seconds(i), e -> viewRecordMoves(button, row, col));
             timeline.getKeyFrames().add(keyFrame);
