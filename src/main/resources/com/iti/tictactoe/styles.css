@@ -158,6 +158,8 @@
     -fx-pref-width: 135;
     -fx-pref-height: 135;
     -fx-alignment: center; /* Center the text */
+    -fx-font-family: "Comic Sans MS";
+
 }
 
 /* Styles for player 2 placeholders */
@@ -174,6 +176,8 @@
     -fx-pref-width: 135;
     -fx-pref-height: 135;
     -fx-alignment: center;
+    -fx-font-family: "Comic Sans MS";
+
 }
 
 /* Styles for draw placeholder */
@@ -187,7 +191,10 @@
     -fx-font-weight: bold;
     -fx-pref-width: 160;
     -fx-pref-height: 50;
+    -fx-font-family: "Comic Sans MS";
     -fx-alignment: center;
+    -fx-font-family: "Comic Sans MS";
+
 }
 
 .neon-button:hover {
@@ -196,48 +203,41 @@
 
 /* Styles for exit button */
 .exit-button {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-border-color: rgba(128, 128, 128, 0.65);
-    -fx-border-width: 3;
-    -fx-border-radius: 75;
-    -fx-background-radius: 75;
+    -fx-background-color: #9C0B02;
+    -fx-background-radius: 75px;
+    -fx-border-radius: 75px;
+    -fx-border-color: transparent;
+    -fx-font-family: "Comic Sans MS";
     -fx-text-fill: white;
-    -fx-font-size: 50px;
+    -fx-font-size: 40px;
     -fx-font-weight: bold;
-    -fx-pref-width: 250;
-    -fx-pref-height: 50;
-    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 0.5), 10, 0.5, 0, 0); /* Drop shadow */
-    -fx-alignment: center;
 }
 
 /* Hover effect for exit button */
 .exit-button:hover {
-    -fx-background-color: rgba(255, 0, 0, 0.6);
-    -fx-border-color: rgba(255, 0, 0, 0.8);
-    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-background-color: #FF5733;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+
 }
 
 /* Styles for restart button */
 .restart-button {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-border-color: rgba(128, 128, 128, 0.65);
-    -fx-border-width: 3;
-    -fx-border-radius: 75;
-    -fx-background-radius: 75;
+    -fx-background-color: #0012AF;
+    -fx-background-radius: 75px;
+    -fx-border-radius: 75px;
+    -fx-border-color: transparent;
+    -fx-font-family: "Comic Sans MS";
     -fx-text-fill: white;
-    -fx-font-size: 50px;
+    -fx-font-size: 40px;
     -fx-font-weight: bold;
-    -fx-pref-width: 350;
-    -fx-pref-height: 50;
-    -fx-effect: dropshadow(gaussian, rgba(0, 148, 255, 0.5), 10, 0.5, 0, 0);
-    -fx-alignment: center; /* Center the text */
 }
 
 /* Hover effect for restart button */
 .restart-button:hover {
-    -fx-background-color: rgba(0, 148, 255, 0.6);
-    -fx-border-color: rgba(0, 148, 255, 0.8);
-    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+
 }
 
 .name-text-field {
