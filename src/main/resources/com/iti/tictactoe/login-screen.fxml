@@ -21,7 +21,7 @@
 
         <ImageView fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0" onMouseClicked="#onBackImageClick" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@assets/back-button%20(1).png" />  <!--  here -->
+                <Image url="@assets/back-button (1).png" />  <!--  here -->
             </image>
         </ImageView>
         <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" onMouseClicked="#onBackImageClick" text="Back" textFill="WHITE">
