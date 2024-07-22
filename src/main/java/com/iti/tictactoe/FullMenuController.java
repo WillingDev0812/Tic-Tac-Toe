@@ -27,7 +27,17 @@ public class FullMenuController {
     }
 
     public void handleOnOnlineButtonClicked(MouseEvent mouseEvent) {
-        // implements Later ...
+        UiUtils.playSoundEffect();
+        if (navController == null) {
+            System.out.println("error in navController \n");
+        } else {
+            navController.pushScene("/com/iti/tictactoe/login-screen.fxml", controller -> {
+                if (controller instanceof LoginScreen) {
+                    LoginScreen r = (LoginScreen) controller;
+                    r.setNavController(navController);
+                }
+            });
+        }
     }
 
     public void handleOnRecordButtonClicked(MouseEvent mouseEvent) {

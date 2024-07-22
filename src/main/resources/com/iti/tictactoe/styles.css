@@ -354,3 +354,9 @@
     -fx-font-size: 25.0px;
     -fx-font-weight: bold;
 }
+.warning-label {
+    -fx-font-size: 20px;
+    -fx-text-alignment: CENTER;
+    -fx-text-fill: red;
+    -fx-font-family: "Comic Sans MS";
+}
