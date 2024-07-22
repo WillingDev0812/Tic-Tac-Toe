@@ -516,4 +516,11 @@ public class GameBoardController {
         }
     }
 
+
+    //**************************************************************************************************************/
+    // implement functionality ya ahmmed ya gamallllll
+    public void handleRecordButton(ActionEvent actionEvent) {
+        System.out.println("Record button is working on click");
+        // implements here
+    }
 }

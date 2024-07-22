@@ -1,15 +1,13 @@
 package com.iti.tictactoe;
 
-import com.iti.tictactoe.muliplayerOffline.models.AlertUtils;
-import com.iti.tictactoe.muliplayerOffline.models.PlayerNames;
-import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.models.PlayerNames;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +16,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 
 public class RecordingViewController {
     private NavigationController navController;
@@ -133,6 +131,7 @@ public class RecordingViewController {
             }
         }
     }
+
     private boolean isBoardFull() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -143,10 +142,11 @@ public class RecordingViewController {
         }
         return true;
     }
-    private void handleDrawState()
-    {
+
+    private void handleDrawState() {
         drawLabel.setOpacity(1.0);
     }
+
     private int[][] checkWinner() {
         //checking rows
         for (int i = 0; i < 3; i++) {
@@ -207,6 +207,7 @@ public class RecordingViewController {
             }
         }
     }
+
     private Button getButtonAt(int row, int col) {
         if (row == 0 & col == 0) return button00;
         if (row == 0 & col == 1) return button01;
@@ -219,6 +220,7 @@ public class RecordingViewController {
         if (row == 2 & col == 2) return button22;
         return null;
     }
+
     private void playMoves(List<int[]> moves) {
         Timeline timeline = new Timeline();
         for (int i = 0; i < moves.size(); i++) {

@@ -1,9 +1,7 @@
 package com.iti.tictactoe;
 
-import com.iti.tictactoe.muliplayerOffline.GameBoardController;
-import com.iti.tictactoe.RecordingViewController;
-import com.iti.tictactoe.muliplayerOffline.models.PlayerNames;
-import com.iti.tictactoe.muliplayerOffline.models.UiUtils;
+import com.iti.tictactoe.models.PlayerNames;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
