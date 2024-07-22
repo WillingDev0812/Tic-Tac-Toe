@@ -46,8 +46,7 @@ public class FullMenuController {
             System.out.println("error in navController \n");
         } else {
             navController.pushScene("/com/iti/tictactoe/recordings.fxml", controller -> {
-                if (controller instanceof RecordingsController) {
-                    RecordingsController r = (RecordingsController) controller;
+                if (controller instanceof RecordingsController r) {
                     r.setNavController(navController);
                 }
             });

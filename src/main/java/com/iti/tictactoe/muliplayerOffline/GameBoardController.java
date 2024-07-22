@@ -182,9 +182,7 @@ public class GameBoardController {
         UiUtils.playSoundEffect();
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game", "Are you sure you want to quit playing and leave the game?", "This will moves you to the lobby");
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (navController == null) {
-                System.out.println("Error: navController is not set.");
-            } else {
+            if (navController != null) {
                 UiUtils.playSoundEffect();
                 navController.popScene();
                 navController.popScene();
@@ -258,7 +256,6 @@ public class GameBoardController {
 
     private void handleWinnerState(int[][] coloredButtons) {
         checkHighlightWinningButtons(coloredButtons);
-        //  System.out.println("feee 7ad kesb " + (isPlayerOneTurn ? "Player One (X)" : "Player Two (O)"));
         updateScore();
         winnerSound.play();
         showResultAlert(isPlayerOneTurn ? playerNames.getPlayerOne() + " wins" : playerNames.getPlayerTwo() + " wins");

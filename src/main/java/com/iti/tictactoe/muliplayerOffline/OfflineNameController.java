@@ -62,11 +62,7 @@ public class OfflineNameController {
             AlertUtils.showWarningAlert("Invalid Names", "Player names cannot start with a number.", null);
             return false;
         }
-        // Checking both names are different
-      /*  if (playerOne.equalsIgnoreCase(playerTwo)) {
-            AlertUtils.showWarningAlert("Invalid Names", "Players names must be different.", null);
-            return false;
-        }*/
+
         return true;
     }
 
