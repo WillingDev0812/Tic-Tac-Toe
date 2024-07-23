@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 import java.util.regex.Pattern;
 
@@ -76,6 +77,11 @@ public class SignUp {
         clearFieldErrorStyles();
         warningTextlabel.setText("Sign-up successful!");
         warningTextlabel.setOpacity(1.0);
+        UiUtils.playSoundEffect();
+        if (navController != null) {
+            UiUtils.playSoundEffect();
+            navController.popScene();
+        }
         // Handle successful signup logic here (e.g., save user data)
     }
 
@@ -108,7 +114,6 @@ public class SignUp {
         if (feedback.length() > 0) {
             feedback.setLength(feedback.length() - 2); // Remove trailing comma and space
         }
-
         return feedback.toString();
     }
 
@@ -126,16 +131,25 @@ public class SignUp {
         confirmPasswordField.setStyle("");
     }
 
-    @FXML
-    private void handleShowLogin() {
+//    @FXML
+//    private void handleShowLogin() {
+//        UiUtils.playSoundEffect();
+//        if (navController != null) {
+//            UiUtils.playSoundEffect();
+//            navController.popScene();
+//        }
+//    }
+    public void onBackImageClick(MouseEvent mouseEvent) {
         UiUtils.playSoundEffect();
         if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();
         }
     }
-
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
+
+
+
 }

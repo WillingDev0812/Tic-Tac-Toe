@@ -4,19 +4,30 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
 <?import javafx.scene.text.Text?>
+
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.auth.SignUp">
     <children>
 
-        <Text fill="WHITE" layoutX="671.0" layoutY="188.0" strokeType="OUTSIDE" text="Welcome to Neon" textAlignment="CENTER">
+        <Text fill="WHITE" layoutX="671.0" layoutY="188.0" strokeType="OUTSIDE" text="Signup to play online" textAlignment="CENTER">
             <font>
                 <Font name="Comic Sans MS Bold" size="44.0" />
             </font>
         </Text>
-
+        <ImageView fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0" onMouseClicked="#onBackImageClick" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@assets/back-button (1).png" />  <!--  here -->
+            </image>
+        </ImageView>
+        <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" onMouseClicked="#onBackImageClick" text="Back" textFill="WHITE">
+            <font>
+                <Font name="Comic Sans MS Bold" size="40.0" />
+            </font>
+        </Label>
 
         <TextField fx:id="usernameField" layoutX="551.0" layoutY="300.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Username" style="-fx-background-radius: 30;">
             <font>
@@ -42,16 +53,15 @@
             </font>
         </PasswordField>
 
-        <Label fx:id="passwordFeedbackLabel" layoutX="551.0" layoutY="680.0" textFill="RED" textAlignment="CENTER">
+        <Label fx:id="passwordFeedbackLabel" layoutX="551.0" layoutY="680.0" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>
         </Label>
+<!--        <Button fx:id="loginBtn" layoutX="621.0" layoutY="724.0" onAction="#handleShowLogin"  stylesheets="@styles.css" styleClass="login-button" text="Login" />-->
+        <Button fx:id="signupBtn" layoutX="795.0" layoutY="732.0" onAction="#handleSignUp" styleClass="signup-button" stylesheets="@styles.css" text="Sign up" />
 
-        <Button fx:id="signUpBtn" layoutX="621.0" layoutY="750.0" onAction="#handleSignUp" styleClass="signup-button" text="Sign Up" />
-
-        <Button fx:id="showLoginBtn" layoutX="968.0" layoutY="750.0" onAction="#handleShowLogin" styleClass="login-button" text="Login" />
-        <Label fx:id="warningTextlabel" layoutX="710.0" layoutY="661.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0" text="Please enter vaild information" textAlignment="CENTER" textFill="RED" stylesheets="styles.css" styleClass="warninglabel">
+        <Label fx:id="warningTextlabel" layoutX="746.0" layoutY="680.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0"  stylesheets="styles.css" styleClass="warninglabel" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>
