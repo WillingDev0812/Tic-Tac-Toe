@@ -29,7 +29,7 @@ public class TicTacToeGame extends Application {
 
             Scene splashScene = new Scene(root);
             stage.setScene(splashScene);
-            stage.setFullScreen(true);
+            stage.setFullScreen(false);
             stage.show();
 
             // Transition to the home screen after a delay

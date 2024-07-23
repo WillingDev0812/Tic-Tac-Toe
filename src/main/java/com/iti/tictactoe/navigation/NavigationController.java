@@ -30,7 +30,7 @@ public class NavigationController {
             navHistory.pushScene(scene); // push it to be saved in out stack
             stage.setScene(scene);
             //      stage.setResizable(false);
-            stage.setFullScreen(true);
+            stage.setFullScreen(false);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class NavigationController {
             if (currentScene != null) {
                 stage.setScene(currentScene);
                 stage.show();
-                stage.setFullScreen(true);
+                stage.setFullScreen(false);
             } else {
                 System.out.println("No scene available to display."); // will be deleted in the master
             }
