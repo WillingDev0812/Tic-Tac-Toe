@@ -136,20 +136,21 @@ public class GameBoardController {
 
     public void updateDrawCount() {
         drawCounter++;
-        drawScore.setText(valueOf(drawCounter));
+        drawScore.setText(String.valueOf(drawCounter));
     }
 
     // Method to update player one score
     public void updatePlayerOneScore() {
         playerOneScoreCount++;
-        playerOneScore.setText(valueOf(playerOneScoreCount));
+        playerOneScore.setText(String.valueOf(playerOneScoreCount));
     }
 
     //Method to update player two score
     public void updatePlayerTwoScore() {
         playerTwoScoreCount++;
-        playerTwoScore.setText(valueOf(playerTwoScoreCount));
+        playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
     }
+
 
     @FXML
     private void handleButton00Action(ActionEvent event) {
