@@ -28,12 +28,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
 import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
-import static java.lang.String.valueOf;
 
 
 public class GameBoardController {
@@ -281,8 +279,13 @@ public class GameBoardController {
         checkHighlightWinningButtons(coloredButtons);
         updateScore();
         winnerSound.play();
-        showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
-       showVideo("/com/iti/tictactoe/Videos/video2.mp4");
+        // these line to prevent the aler to be popped when someone wins to see the highlighted buttons
+        //  showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+        pause.setOnFinished(event -> {
+            showVideo("/com/iti/tictactoe/Videos/video2.mp4");
+        });
+        pause.play();
     }
 
     public void showVideo(String videoPath) {
@@ -370,8 +373,6 @@ public class GameBoardController {
         writingRecordedMoves();
        record_btn.setDisable(false);
         isRecording = false;
-
-
     }
 
     private void resetGame() {
@@ -402,11 +403,10 @@ public class GameBoardController {
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             resetGame();
+            setButtonDisabledToPreventUserAtComputerTurns(false);
             record_btn.setDisable(false);
             writingRecordedMoves();
             isRecording = false;
-
-
         }
     }
 
@@ -476,7 +476,6 @@ public class GameBoardController {
         int bestScore = Integer.MIN_VALUE;
         int bestRow = -1;
         int bestCol = -1;
-
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == 0) {
@@ -491,7 +490,6 @@ public class GameBoardController {
                 }
             }
         }
-
         if (bestRow != -1 && bestCol != -1) {
             Button button = getButtonAt(bestRow, bestCol);
             assert button != null;
