@@ -23,10 +23,17 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
 import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
+import static java.lang.String.valueOf;
 
 
 public class GameBoardController {
@@ -54,7 +61,8 @@ public class GameBoardController {
     @FXML
     private Label playerTwoScore;
     private int playerTwoScoreCount = 0;
-
+    @FXML
+    Button record_btn;
     @FXML
     private Button button00;
     @FXML
@@ -73,6 +81,9 @@ public class GameBoardController {
     private Button button21;
     @FXML
     private Button button22;
+
+    String movesRecorded ="";
+    boolean isRecording = false;
 
     private NavigationController navController;
 
@@ -125,19 +136,19 @@ public class GameBoardController {
 
     public void updateDrawCount() {
         drawCounter++;
-        drawScore.setText(String.valueOf(drawCounter));
+        drawScore.setText(valueOf(drawCounter));
     }
 
     // Method to update player one score
     public void updatePlayerOneScore() {
         playerOneScoreCount++;
-        playerOneScore.setText(String.valueOf(playerOneScoreCount));
+        playerOneScore.setText(valueOf(playerOneScoreCount));
     }
 
     //Method to update player two score
     public void updatePlayerTwoScore() {
         playerTwoScoreCount++;
-        playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
+        playerTwoScore.setText(valueOf(playerTwoScoreCount));
     }
 
     @FXML
@@ -187,12 +198,16 @@ public class GameBoardController {
                 UiUtils.playSoundEffect();
                 navController.popScene();
                 navController.popScene();
+                record_btn.setDisable(false);
+
             }
         }
     }
-
     private void handleButtonAction(Button button, int row, int col) {
         if (button.getGraphic() == null && board[row][col] == 0) {
+            record_btn.setDisable(true);
+        if(isRecording)
+            movesRecorded +=row+","+col +"\n";
             updateButtonGraphic(button);
             playClickSound();
             updateBoardStateForPlayers(row, col);
@@ -234,7 +249,7 @@ public class GameBoardController {
         } else {
             board[row][col] = 2;    // Player O
         }
-        System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
+     //   System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
     }
 
     private int[][] checkWinner() {
@@ -266,7 +281,7 @@ public class GameBoardController {
         updateScore();
         winnerSound.play();
         showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
-        showVideo("/com/iti/tictactoe/Videos/video2.mp4");
+       showVideo("/com/iti/tictactoe/Videos/video2.mp4");
     }
 
     public void showVideo(String videoPath) {
@@ -350,7 +365,12 @@ public class GameBoardController {
 
     private void showResultAlert(String message) {
         AlertUtils.showInformationAlert("Game Over", message, null);
-        resetGame(); // bat'kd en el game cleared b3d el confirmation
+        resetGame();// bat'kd en el game cleared b3d el confirmation
+        writingRecordedMoves();
+       record_btn.setDisable(false);
+        isRecording = false;
+
+
     }
 
     private void resetGame() {
@@ -381,6 +401,11 @@ public class GameBoardController {
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             resetGame();
+            record_btn.setDisable(false);
+            writingRecordedMoves();
+            isRecording = false;
+
+
         }
     }
 
@@ -520,7 +545,29 @@ public class GameBoardController {
     //**************************************************************************************************************/
     // implement functionality ya ahmmed ya gamallllll
     public void handleRecordButton(ActionEvent actionEvent) {
-        System.out.println("Record button is working on click");
-        // implements here
+        UiUtils.playSoundEffect();
+        record_btn.setDisable(true);
+        //remove this 2 lines if u want to change style
+        record_btn.setStyle("-fx-background-color: #ff0000");
+        record_btn.setText("Recording");
+         isRecording = true;
+
+    }
+    public void writingRecordedMoves() {
+        if (isRecording) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy' @'HH','mm");
+            String timeStamp = dtf.format(LocalDateTime.now());
+            try {
+                BufferedWriter rec = new BufferedWriter(new FileWriter("src/main/resources/com/iti/tictactoe/Recordings/" + timeStamp + ".txt")); //this will cause a problem
+                rec.write(playerName.getPlayerOne() + "," + playerName.getPlayerTwo() + "\n");
+                rec.write(movesRecorded);
+                rec.close();
+                movesRecorded = "";
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            record_btn.setStyle(" -fx-background-color: #0012AF");
+            record_btn.setText("REC");
+        }
     }
 }
