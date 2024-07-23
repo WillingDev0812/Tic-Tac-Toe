@@ -13,7 +13,7 @@
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.auth.SignUp">
     <children>
 
-        <Text fill="WHITE" layoutX="671.0" layoutY="188.0" strokeType="OUTSIDE" text="Signup to play online" textAlignment="CENTER">
+        <Text fill="WHITE" layoutX="756.0" layoutY="204.0" strokeType="OUTSIDE" text="Signup to play online" textAlignment="CENTER">
             <font>
                 <Font name="Comic Sans MS Bold" size="44.0" />
             </font>
@@ -29,39 +29,39 @@
             </font>
         </Label>
 
-        <TextField fx:id="usernameField" layoutX="551.0" layoutY="300.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Username" style="-fx-background-radius: 30;">
+        <TextField fx:id="usernameField" layoutX="636.0" layoutY="316.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Username" style="-fx-background-radius: 30;">
             <font>
                 <Font name="Comic Sans MS" size="19.0" />
             </font>
         </TextField>
 
-        <TextField fx:id="emailField" layoutX="551.0" layoutY="400.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter your Email" style="-fx-background-radius: 30;">
+        <TextField fx:id="emailField" layoutX="636.0" layoutY="416.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter your Email" style="-fx-background-radius: 30;">
             <font>
                 <Font name="Comic Sans MS" size="19.0" />
             </font>
         </TextField>
 
-        <PasswordField fx:id="passwordField" layoutX="551.0" layoutY="500.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Password" style="-fx-background-radius: 30;">
+        <PasswordField fx:id="passwordField" layoutX="636.0" layoutY="516.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Enter Password" style="-fx-background-radius: 30;">
             <font>
                 <Font name="Comic Sans MS" size="19.0" />
             </font>
         </PasswordField>
 
-        <PasswordField fx:id="confirmPasswordField" layoutX="551.0" layoutY="600.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Confirm Password" style="-fx-background-radius: 30;">
+        <PasswordField fx:id="confirmPasswordField" layoutX="636.0" layoutY="616.0" opacity="0.5" prefHeight="61.0" prefWidth="649.0" promptText=" Confirm Password" style="-fx-background-radius: 30;">
             <font>
                 <Font name="Comic Sans MS" size="19.0" />
             </font>
         </PasswordField>
 
-        <Label fx:id="passwordFeedbackLabel" layoutX="551.0" layoutY="680.0" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="passwordFeedbackLabel" layoutX="869.0" layoutY="684.0" prefHeight="25.0" prefWidth="163.0" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>
         </Label>
 <!--        <Button fx:id="loginBtn" layoutX="621.0" layoutY="724.0" onAction="#handleShowLogin"  stylesheets="@styles.css" styleClass="login-button" text="Login" />-->
-        <Button fx:id="signupBtn" layoutX="795.0" layoutY="732.0" onAction="#handleSignUp" styleClass="signup-button" stylesheets="@styles.css" text="Sign up" />
+        <Button fx:id="signupBtn" layoutX="880.0" layoutY="748.0" onAction="#handleSignUp" styleClass="signup-button" stylesheets="@styles.css" text="Sign up" />
 
-        <Label fx:id="warningTextlabel" layoutX="746.0" layoutY="680.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0"  stylesheets="styles.css" styleClass="warninglabel" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="warningTextlabel" layoutX="831.0" layoutY="696.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0" styleClass="warninglabel" stylesheets="styles.css" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>
