@@ -198,7 +198,7 @@ public class GameBoardController {
                 navController.popScene();
                 navController.popScene();
                 record_btn.setDisable(false);
-
+                winnerSound.stop();    // to stop sound when quit
             }
         }
     }
