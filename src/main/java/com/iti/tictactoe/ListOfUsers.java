@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.iti.tictactoe.auth.SignUp;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
@@ -10,9 +11,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +32,7 @@ public class ListOfUsers {
     private Button inviteBtn;
 
     @FXML
-    private ListView<?> PlayerList;
+    private ListView<String> PlayerListView;
 
     @FXML
     private Label invitePlayerWarning;
@@ -35,21 +40,40 @@ public class ListOfUsers {
     @FXML
     private Text playerName;
 
+    List<String> playerList = new ArrayList<>();
+
+    public static String currentUserEmail;
+    public String username;
     List allFilesNames;
+    public static void setCurrentUserEmail(String email) {
+        currentUserEmail = email;
+    }
     public void initialize(){
-        try {
-            allFilesNames = Files.list(Path.of("src/main/resources/com/iti/tictactoe/Recordings")).map(Path::toString).toList();
+        try (Socket socket = new Socket("localhost", 12345);
+             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+             DataInputStream dis = new DataInputStream(socket.getInputStream())) {
 
+             dos.writeUTF("showUsers");
+             dos.writeUTF(currentUserEmail);
+             username = dis.readUTF();
+             playerName.setText("Hello " + username);
+             int size = dis.readInt();
+             for (int i = 0; i < size; i++) {
+                playerList.add(dis.readUTF());
+             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        PlayerList.getItems().addAll(allFilesNames);
+        //PlayerList.getItems().addAll(allFilesNames);
+        for (String playerName : playerList) {
+            System.out.println(playerName);
+        }
 
-         System.out.println(PlayerList.getSelectionModel().getSelectedItem());
+        PlayerListView.getItems().setAll(playerList);
+
+        //System.out.println(PlayerList.getSelectionModel().getSelectedItem());
         UiUtils.addHoverAnimation(inviteBtn);
     }
-
-
 
 
     public void onBackImageClick(MouseEvent mouseEvent) {

@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-
+import com.iti.tictactoe.ListOfUsers;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -57,10 +57,17 @@ public class LoginScreen {
                 dos.writeUTF("login");
                 dos.writeUTF(emailTextField.getText()); // email
                 dos.writeUTF(passwordTextField.getText());
-
+                ListOfUsers.setCurrentUserEmail(emailTextField.getText());
                 boolean success = dis.readBoolean();
                 if (success) {
                     showAlert("Login Successful", "Welcome back!");
+                    if (navController != null) {
+                        navController.pushScene("/com/iti/tictactoe/listOfUsers.fxml", controller -> {
+                            if (controller instanceof SignUp sighUp) {
+                                sighUp.setNavController(navController);
+                            }
+                        });
+                    }
                 } else {
                     showAlert("Login Failed", "Invalid email or password.");
                 }
