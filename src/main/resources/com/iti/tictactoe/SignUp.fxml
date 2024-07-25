@@ -12,17 +12,18 @@
 
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" styleClass="background-style" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iti.tictactoe.auth.SignUp">
     <children>
-
         <Text fill="WHITE" layoutX="756.0" layoutY="204.0" strokeType="OUTSIDE" text="Signup to play online" textAlignment="CENTER">
             <font>
                 <Font name="Comic Sans MS Bold" size="44.0" />
             </font>
         </Text>
+
         <ImageView fitHeight="92.0" fitWidth="98.0" layoutX="160.0" layoutY="110.0" onMouseClicked="#onBackImageClick" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@assets/back-button (1).png" />  <!--  here -->
+                <Image url="@assets/back-button (1).png" />
             </image>
         </ImageView>
+
         <Label fx:id="backLabel" layoutX="247.0" layoutY="128.0" onMouseClicked="#onBackImageClick" text="Back" textFill="WHITE">
             <font>
                 <Font name="Comic Sans MS Bold" size="40.0" />
@@ -53,19 +54,18 @@
             </font>
         </PasswordField>
 
-        <Label fx:id="passwordFeedbackLabel" layoutX="869.0" layoutY="684.0" prefHeight="25.0" prefWidth="163.0" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="passwordFeedbackLabel" layoutX="869.0" layoutY="684.0" prefHeight="25.0" prefWidth="1500.0" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>
         </Label>
-<!--        <Button fx:id="loginBtn" layoutX="621.0" layoutY="724.0" onAction="#handleShowLogin"  stylesheets="@styles.css" styleClass="login-button" text="Login" />-->
+
         <Button fx:id="signupBtn" layoutX="880.0" layoutY="748.0" onAction="#handleSignUp" styleClass="signup-button" stylesheets="@styles.css" text="Sign up" />
 
-        <Label fx:id="warningTextlabel" layoutX="831.0" layoutY="696.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0" styleClass="warninglabel" stylesheets="styles.css" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="warningTextlabel" alignment="CENTER" layoutX="405.0" layoutY="696.0" opacity="0.0" prefHeight="25.0" prefWidth="1135.0" styleClass="warninglabel" stylesheets="styles.css" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>
         </Label>
-
     </children>
 </AnchorPane>
