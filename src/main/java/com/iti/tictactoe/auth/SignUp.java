@@ -152,7 +152,6 @@ public class SignUp {
 
     @FXML
     private void handleShowLogin() {
-        UiUtils.playSoundEffect();
         if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();
@@ -163,8 +162,8 @@ public class SignUp {
         this.navController = navController;
     }
 
+
     public void onBackImageClick(MouseEvent mouseEvent) {
-        UiUtils.playSoundEffect();
         if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();
