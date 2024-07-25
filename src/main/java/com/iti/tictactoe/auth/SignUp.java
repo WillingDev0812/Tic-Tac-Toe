@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -151,7 +152,6 @@ public class SignUp {
 
     @FXML
     private void handleShowLogin() {
-        UiUtils.playSoundEffect();
         if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();
@@ -160,6 +160,13 @@ public class SignUp {
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
+    }
+
+    public void onBackImageClick(MouseEvent mouseEvent) {
+        if (navController != null) {
+            UiUtils.playSoundEffect();
+            navController.popScene();
+        }
     }
 }
 
