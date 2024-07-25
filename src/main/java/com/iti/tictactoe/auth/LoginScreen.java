@@ -24,11 +24,10 @@ public class LoginScreen {
     @FXML
     private TextField emailTextField;
     @FXML
-    private TextField passwordTextField ;
-       @FXML
-   private Label warningTextlabel;
+    private TextField passwordTextField;
+    @FXML
+    private Label warningTextlabel;
     private NavigationController navController;
-
 
     @FXML
     private void initialize() {
@@ -73,7 +72,6 @@ public class LoginScreen {
         }
     }
 
-
     public void onSignupBtn(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();
         if (navController != null) {
@@ -84,7 +82,6 @@ public class LoginScreen {
             });
         }
     }
-
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
@@ -97,12 +94,4 @@ public class LoginScreen {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
-
-
-
-
-
-
-
