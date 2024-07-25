@@ -43,9 +43,7 @@ public class FullMenuController {
 
     public void handleOnRecordButtonClicked(MouseEvent mouseEvent) {
         UiUtils.playSoundEffect();
-        if (navController == null) {
-            System.out.println("error in navController \n");
-        } else {
+        if (navController != null) {
             navController.pushScene("/com/iti/tictactoe/recordings.fxml", controller -> {
                 if (controller instanceof RecordingsController r) {
                     r.setNavController(navController);
