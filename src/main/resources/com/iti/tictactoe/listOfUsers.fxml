@@ -30,13 +30,13 @@
             </font>
         </Button>
 
-        <ListView fx:id="PlayerList" editable="true" fixedCellSize="50.0" layoutX="506.0" layoutY="242.0" opacity="0.25" prefHeight="754.0" prefWidth="909.0" styleClass="list-view-recordings" stylesheets="@styles.css" />
+        <ListView fx:id="PlayerListView" editable="true" fixedCellSize="50.0" layoutX="506.0" layoutY="242.0" opacity="0.25" prefHeight="754.0" prefWidth="909.0" styleClass="list-view-recordings" stylesheets="@styles.css" />
         <Label fx:id="invitePlayerWarning" layoutX="794.0" layoutY="1010.0" opacity="0.0" prefHeight="21.0" prefWidth="372.0" text="Please select a player to invite" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="25.0" />
             </font>
         </Label>
-      <Text fx:id="playerName" fill="RED" layoutX="1593.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello gg" wrappingWidth="170.6708984375">
+      <Text fx:id="playerName" fill="RED" layoutX="1554.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello gg" wrappingWidth="305.6709051132202">
          <font>
             <Font name="Comic Sans MS Bold" size="32.0" />
          </font>

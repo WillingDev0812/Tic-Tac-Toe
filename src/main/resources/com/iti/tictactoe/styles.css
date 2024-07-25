@@ -74,6 +74,16 @@
     -fx-border-color: #0012AF;
     -fx-border-radius: 100px;
 }
+.invite-button{
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+    -fx-border-radius: 75px;
+    -fx-border-color: transparent;
+    -fx-font-family: "Comic Sans MS";
+    -fx-background-radius: 75px;
+    -fx-font-size: 30.0px;
+    -fx-font-weight: bold;
+}
 .online-button:hover {
     -fx-background-color: #2ECC71;
     -fx-text-fill: white;
