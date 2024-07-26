@@ -38,7 +38,7 @@ public class ListOfUsers implements Runnable {
 
     @FXML
     private Text playerName;
-
+    public String invitedPlayerName;
     private DataOutputStream dos;
     private DataInputStream dis;
     private List<String> playerList = new ArrayList<>();
@@ -126,6 +126,11 @@ public class ListOfUsers implements Runnable {
     @FXML
     public void inviteBtn(ActionEvent actionEvent) {
         String selectedPlayer = PlayerListView.getSelectionModel().getSelectedItem();
+        if (selectedPlayer != null) {
+            String[] parts = selectedPlayer.split(" ", 2); // Split into at most 2 parts
+            invitedPlayerName = parts[0]; // This will be "jeo"
+            System.out.println(playerName);
+        }
         if (selectedPlayer == null) {
             AlertUtils.showWarningAlert("No Player Selected", null, "Please select a player to invite.");
             return;
@@ -146,20 +151,23 @@ public class ListOfUsers implements Runnable {
                 DataInputStream dis = new DataInputStream(socket.getInputStream());
 
                 dos.writeUTF("invite");
-                dos.writeUTF(currentUserEmail);
-                dos.writeUTF(selectedPlayer);
+                //dos.writeUTF(currentUserEmail);
+                dos.writeUTF(invitedPlayerName);
 
                 // Handle response from the server
                 String response = dis.readUTF();
+                if (response.equals("online")) {
+                    Platform.runLater(() -> {
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
+                    });
+                }
+                else
+                {
+                    Platform.runLater(() -> {
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation was not sent", "The invitation was not sent.");
+                    });
+                }
 
-                Platform.runLater(() -> {
-                    AlertUtils.showInformationAlert("Invitation Status", null, response);
-                    if (response.startsWith("Invitation sent")) {
-                        // Handle successful invitation (e.g., navigate to another scene or update UI)
-                    } else {
-                        // Handle failure (e.g., show an error message)
-                    }
-                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
