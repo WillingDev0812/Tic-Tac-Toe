@@ -84,6 +84,18 @@
     -fx-font-size: 30.0px;
     -fx-font-weight: bold;
 }
+
+.signout-button {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: white;
+    -fx-border-radius: 75px;
+    -fx-border-color: transparent;
+    -fx-font-family: "Comic Sans MS";
+    -fx-background-radius: 75px;
+    -fx-font-size: 30.0px;
+    -fx-font-weight: bold;
+}
+
 .online-button:hover {
     -fx-background-color: #2ECC71;
     -fx-text-fill: white;

@@ -1,5 +1,6 @@
 package com.iti.tictactoe.auth;
 
+import com.iti.tictactoe.ListOfUsers;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
@@ -9,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import com.iti.tictactoe.ListOfUsers;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -63,10 +64,12 @@ public class LoginScreen {
                     showAlert("Login Successful", "Welcome back!");
                     if (navController != null) {
                         navController.pushScene("/com/iti/tictactoe/listOfUsers.fxml", controller -> {
-                            if (controller instanceof SignUp sighUp) {
-                                sighUp.setNavController(navController);
+                            if (controller instanceof ListOfUsers list) {
+                                list.setNavController(navController);
                             }
                         });
+                        emailTextField.clear();
+                        passwordTextField.clear();
                     }
                 } else {
                     showAlert("Login Failed", "Invalid email or password.");
