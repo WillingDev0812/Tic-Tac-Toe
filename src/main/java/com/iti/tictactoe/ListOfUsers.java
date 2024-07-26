@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
@@ -60,7 +61,7 @@ public class ListOfUsers implements Runnable {
             while (true) {
                 refreshPlayerList();
                 try {
-                    Thread.sleep(1000); // Refresh every 3 seconds
+                    Thread.sleep(3000); // Refresh every 1 second
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -84,14 +85,25 @@ public class ListOfUsers implements Runnable {
             Platform.runLater(() -> playerName.setText("Hello " + username));
 
             int size = dis.readInt();
-            playerList.clear();
+            List<String> newPlayerList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 String player = dis.readUTF();
-                playerList.add(player);
+                newPlayerList.add(player);
             }
 
-            // Update UI on the JavaFX Application Thread
-            Platform.runLater(() -> PlayerListView.getItems().setAll(playerList));
+            Platform.runLater(() -> {
+                if (!playerList.equals(newPlayerList)) {
+                    // Preserve the selected item
+                    String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
+                    playerList = newPlayerList;
+                    PlayerListView.getItems().setAll(newPlayerList);
+
+                    // Restore the selected item
+                    if (selectedItem != null && newPlayerList.contains(selectedItem)) {
+                        PlayerListView.getSelectionModel().select(selectedItem);
+                    }
+                }
+            });
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,10 +123,49 @@ public class ListOfUsers implements Runnable {
         }).start();
     }
 
-
+    @FXML
     public void inviteBtn(ActionEvent actionEvent) {
-        // Implement invite button functionality
+        String selectedPlayer = PlayerListView.getSelectionModel().getSelectedItem();
+        if (selectedPlayer == null) {
+            AlertUtils.showWarningAlert("No Player Selected", null, "Please select a player to invite.");
+            return;
+        }
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
+                "Send Invitation", "Do you want to send an invitation to " + selectedPlayer + "?",
+                "Click 'Yes' to send the invitation or 'Cancel' to cancel."
+        );
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            sendInvitation(selectedPlayer);
+        }
     }
+
+    private void sendInvitation(String selectedPlayer) {
+        new Thread(() -> {
+            try (Socket socket = new Socket("localhost", 12345)) {
+                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                DataInputStream dis = new DataInputStream(socket.getInputStream());
+
+                dos.writeUTF("invite");
+                dos.writeUTF(currentUserEmail);
+                dos.writeUTF(selectedPlayer);
+
+                // Handle response from the server
+                String response = dis.readUTF();
+
+                Platform.runLater(() -> {
+                    AlertUtils.showInformationAlert("Invitation Status", null, response);
+                    if (response.startsWith("Invitation sent")) {
+                        // Handle successful invitation (e.g., navigate to another scene or update UI)
+                    } else {
+                        // Handle failure (e.g., show an error message)
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
@@ -122,9 +173,10 @@ public class ListOfUsers implements Runnable {
 
     @Override
     public void run() {
-
+        // Implementation for Runnable if needed
     }
 
+    @FXML
     public void signOut(ActionEvent actionEvent) {
         // Show confirmation alert
         Optional<ButtonType> result = showConfirmationAlert(
