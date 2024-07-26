@@ -39,7 +39,7 @@ public class ListOfUsers {
 
     @FXML
     private Text playerName;
-
+   static DataOutputStream dos;
     List<String> playerList = new ArrayList<>();
 
     public static String currentUserEmail;
@@ -50,8 +50,8 @@ public class ListOfUsers {
     }
     public void initialize(){
         try (Socket socket = new Socket("localhost", 12345);
-             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
              DataInputStream dis = new DataInputStream(socket.getInputStream())) {
+            dos = new DataOutputStream(socket.getOutputStream());
 
              dos.writeUTF("showUsers");
              dos.writeUTF(currentUserEmail);
@@ -73,6 +73,28 @@ public class ListOfUsers {
 
         //System.out.println(PlayerList.getSelectionModel().getSelectedItem());
         UiUtils.addHoverAnimation(inviteBtn);
+
+    }
+
+    public  void logout() {
+        if(currentUserEmail==null)
+            return;
+        try {
+            Socket socket = new Socket("localhost", 12345);
+            dos = new DataOutputStream(socket.getOutputStream());
+            dos.writeUTF("offline");
+            dos.writeUTF(currentUserEmail);
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+//        try {
+//            this.dos.writeUTF("offline");
+//            this.dos.writeUTF(currentUserEmail);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
 
@@ -89,7 +111,7 @@ public class ListOfUsers {
 
     }
     public void setNavController(NavigationController navController) {
-        this.navController = navController;
+            this.navController = navController;
     }
 
 }

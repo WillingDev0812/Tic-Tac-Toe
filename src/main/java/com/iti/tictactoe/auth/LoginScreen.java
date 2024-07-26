@@ -76,6 +76,8 @@ public class LoginScreen {
                 e.printStackTrace();
                 showAlert("Connection Error", "Unable to connect to server.");
             }
+            UiUtils.playSoundEffect();
+
         }
     }
 

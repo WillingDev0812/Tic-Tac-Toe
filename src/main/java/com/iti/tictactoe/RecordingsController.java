@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 public class RecordingsController {
@@ -37,7 +38,7 @@ public class RecordingsController {
     private NavigationController navController;
 
     List<String> allFilesNames;
-    Map<String, String> locationNameMap =  new HashMap<>();
+    Map<String, String> locationNameMap =  new TreeMap<>();
     public void initialize(){
         try {
             allFilesNames = Files.list(Path.of("src/main/resources/com/iti/tictactoe/Recordings")).map(Path::toString).toList();
