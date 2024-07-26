@@ -6,21 +6,29 @@ import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
 
+
 public class TicTacToeGame extends Application {
     private NavigationController navController;
+
+    @Override
+    public void stop() throws Exception {
+        new ListOfUsers().logout();
+        super.stop();
+    }
 
     @Override
     public void start(Stage stage) {
         try {
             // Initialize Navigation Controller
             navController = new NavigationController(stage);
-           // UiUtils.playBackgroundMusic();
+          //  UiUtils.playBackgroundMusic();
 
             // Load and display the splash screen
             FXMLLoader splashLoader = new FXMLLoader(TicTacToeGame.class.getResource("/com/iti/tictactoe/splash.fxml"));
@@ -29,11 +37,14 @@ public class TicTacToeGame extends Application {
 
             Scene splashScene = new Scene(root);
             stage.setScene(splashScene);
-            stage.setFullScreen(false);
+
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
+
             stage.show();
 
             // Transition to the home screen after a delay
-            PauseTransition pause = new PauseTransition(Duration.seconds(5));
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
             pause.setOnFinished(event -> {
                 navController.pushScene("/com/iti/tictactoe/home-screen.fxml", controller -> {
                     if (controller instanceof HomeScreenController homeScreenController) {
