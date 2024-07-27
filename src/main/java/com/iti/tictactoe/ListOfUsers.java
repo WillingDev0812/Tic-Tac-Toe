@@ -164,25 +164,29 @@ public class ListOfUsers implements Runnable {
                 DataOutputStream dos = socketManager.getDataOutputStream();
                 DataInputStream dis = socketManager.getDataInputStream();
 
+                // Send invitation command to the server
                 dos.writeUTF("invite");
                 dos.writeUTF(invitedPlayerName);
                 dos.flush(); // Ensure data is sent immediately
 
-                // Handle response from the server
+                // Wait for the server response
                 String response = dis.readUTF();
                 Platform.runLater(() -> {
                     if (response.equals("online")) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
-                        //IMPLEMENT INVITE HERE
+                        // Handle additional UI updates or game logic here
+                    } else if (response.equals("offline")) {
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
-                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invitation was not sent.");
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
                     }
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.printf("error: %s\n", e.getMessage());
             }
         }).start();
     }
+
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
