@@ -160,17 +160,17 @@ public class ListOfUsers implements Runnable {
 
         String[] parts = selectedPlayer.split(" ", 2);
         invitedPlayerName = parts[0];
-
+        System.out.println("Invitingggg : " + invitedPlayerName);
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
                 "Send Invitation", "Do you want to send an invitation to " + selectedPlayer + "?",
                 "Click 'Yes' to send the invitation or 'Cancel' to cancel."
         );
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            sendInvitation(selectedPlayer);
+            sendInvitation(invitedPlayerName);
         }
     }
 
-    private void sendInvitation(String selectedPlayer) {
+    private void sendInvitation(String invitedPlayerName) {
         new Thread(() -> {
             SocketManager socketManager = SocketManager.getInstance();
 
@@ -178,19 +178,19 @@ public class ListOfUsers implements Runnable {
                 // Create JSON object for invite request
                 JsonObject jsonRequest = new JsonObject();
                 jsonRequest.addProperty("action", "invite");
-                jsonRequest.addProperty("player", selectedPlayer);
-
+                jsonRequest.addProperty("player", invitedPlayerName);
+                System.out.println(jsonRequest+" the sent json request");
                 // Send JSON request
                 socketManager.sendJson(jsonRequest);
 
                 // Read and parse the response
                 JsonObject jsonResponse = socketManager.receiveJson(JsonObject.class);
-                String response = jsonResponse.get("status").getAsString();
-
+                String response = jsonResponse.get("message").getAsString();
+                System.out.println("Invitation response: " + response);
                 Platform.runLater(() -> {
-                    if (response.equals("online")) {
+                    if ("online".equals(response)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
-                    } else if (response.equals("offline")) {
+                    } else if ("offline".equals(response)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
