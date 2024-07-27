@@ -77,6 +77,21 @@ public class ListOfUsers implements Runnable {
         SocketManager socketManager = SocketManager.getInstance();
 
         try {
+            // Request username from the server
+            JsonObject usernameRequest = new JsonObject();
+            usernameRequest.addProperty("action", "getUsername");
+            usernameRequest.addProperty("email", currentUserEmail);
+            socketManager.sendJson(usernameRequest);
+
+            // Read username response
+            JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
+            if (usernameResponse.get("success").getAsBoolean()) {
+                String username = usernameResponse.get("message").getAsString();
+                Platform.runLater(() -> playerName.setText("Hello " + username));
+            } else {
+                Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
+            }
+
             // Create JSON object for showUsers request
             JsonObject jsonRequest = new JsonObject();
             jsonRequest.addProperty("action", "showUsers");
@@ -110,13 +125,13 @@ public class ListOfUsers implements Runnable {
                     if (selectedItem != null && newPlayerList.contains(selectedItem)) {
                         PlayerListView.getSelectionModel().select(selectedItem);
                     }
-                    playerName.setText("Hello " + currentUserEmail);
                 });
             }
         } catch (IOException e) {
             System.err.println("Connection to server lost: " + e.getMessage());
         }
     }
+
 
     @FXML
     public void inviteBtn(ActionEvent actionEvent) {
