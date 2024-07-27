@@ -38,15 +38,14 @@ public class ListOfUsers implements Runnable {
 
     public static String currentUserEmail;
     private NavigationController navController;
-    private volatile boolean disconnectionHandled = false;
-    private AtomicBoolean keepRefreshing = new AtomicBoolean(true);
-
+    private final AtomicBoolean keepRefreshing = new AtomicBoolean(true);
 
     public static void setCurrentUserEmail(String email) {
         currentUserEmail = email;
     }
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
         UiUtils.addHoverAnimation(inviteBtn);
         UiUtils.addHoverAnimation(signOut);
         startRefreshingPlayerList();
@@ -54,18 +53,22 @@ public class ListOfUsers implements Runnable {
 
     private void startRefreshingPlayerList() {
         Thread refreshThread = new Thread(() -> {
-            try {
-                while (keepRefreshing.get()) {
+            while (keepRefreshing.get()) {
+                try {
                     refreshPlayerList();
                     Thread.sleep(3000); // Refresh every 3 seconds
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore interrupt status
+                    System.out.println("Refresh thread interrupted: " + e.getMessage());
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.out.println("Refresh thread interrupted: " + e.getMessage());
             }
         });
         refreshThread.setDaemon(true);
         refreshThread.start();
+    }
+
+    private void stopRefreshingPlayerList() {
+        keepRefreshing.set(false);
     }
 
     private void refreshPlayerList() {
@@ -83,70 +86,35 @@ public class ListOfUsers implements Runnable {
             socketManager.sendJson(jsonRequest);
 
             // Read and parse the response
-            JsonArray jsonResponseArray = socketManager.receiveJson(JsonArray.class);
-            List<String> newPlayerList = new ArrayList<>();
+            JsonElement jsonResponse = socketManager.receiveJson(JsonElement.class);
 
-            for (JsonElement element : jsonResponseArray) {
-                if (element.isJsonObject()) {
-                    JsonObject userObject = element.getAsJsonObject();
-                    String username = userObject.get("username").getAsString();
-                    String status = userObject.get("status").getAsString();
-                    newPlayerList.add(username + "      " + status);
-                } else {
-                    // Handle unexpected element types if necessary
-                    System.err.println("Unexpected JSON element type: " + element.toString());
+            if (jsonResponse.isJsonArray()) {
+                JsonArray jsonResponseArray = jsonResponse.getAsJsonArray();
+                List<String> newPlayerList = new ArrayList<>();
+
+                for (JsonElement element : jsonResponseArray) {
+                    if (element.isJsonObject()) {
+                        JsonObject userObject = element.getAsJsonObject();
+                        String username = userObject.get("username").getAsString();
+                        String status = userObject.get("status").getAsString();
+                        newPlayerList.add(username + "                          " + status);
+                    }
                 }
+
+                // Update UI if needed
+                Platform.runLater(() -> {
+                    String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
+                    playerList = newPlayerList;
+                    PlayerListView.getItems().setAll(newPlayerList);
+
+                    if (selectedItem != null && newPlayerList.contains(selectedItem)) {
+                        PlayerListView.getSelectionModel().select(selectedItem);
+                    }
+                    playerName.setText("Hello " + currentUserEmail);
+                });
             }
-
-            // Update UI if needed
-            Platform.runLater(() -> {
-                String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
-                playerList = newPlayerList;
-                PlayerListView.getItems().setAll(newPlayerList);
-
-                if (selectedItem != null && newPlayerList.contains(selectedItem)) {
-                    PlayerListView.getSelectionModel().select(selectedItem);
-                }
-                playerName.setText("Hello " + currentUserEmail);
-            });
-
         } catch (IOException e) {
             System.err.println("Connection to server lost: " + e.getMessage());
-            // Handle server disconnection
-        }
-    }
-
-    private void handleServerDisconnection() {
-        if (disconnectionHandled) {
-            return;
-        }
-        disconnectionHandled = true;
-        keepRefreshing.set(false);
-
-        Platform.runLater(() -> {
-            AlertUtils.showWarningAlert("Server Disconnected", "Connection to the server was lost.", "You will be returned to the main menu.");
-            navController.popScene();
-        });
-    }
-    public void logout() {
-        // Implementation of logout logic
-        sendLogoutRequest();
-    }
-
-    private void sendLogoutRequest() {
-        SocketManager socketManager = SocketManager.getInstance();
-
-        try {
-            // Create JSON object for logout request
-            JsonObject jsonRequest = new JsonObject();
-            jsonRequest.addProperty("action", "offline");
-            jsonRequest.addProperty("email", currentUserEmail);
-
-            // Send JSON request
-            socketManager.sendJson(jsonRequest);
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -202,14 +170,6 @@ public class ListOfUsers implements Runnable {
         }).start();
     }
 
-    public void setNavController(NavigationController navController) {
-        this.navController = navController;
-    }
-
-    @Override
-    public void run() {
-        // Implementation for Runnable if needed
-    }
 
     @FXML
     public void signOut(ActionEvent actionEvent) {
@@ -219,8 +179,40 @@ public class ListOfUsers implements Runnable {
                 "Click 'OK' to proceed or 'Cancel' to stay logged in."
         );
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            sendLogoutRequest();
-            navController.popScene();
+            logout();
+            if (navController != null) {
+                stopRefreshingPlayerList(); // Ensure refreshing stops
+                navController.popScene();
+                navController.popScene();
+            }
         }
+    }
+
+    public void logout() {
+        if (currentUserEmail == null) return;
+        new Thread(() -> {
+            try {
+                SocketManager socketManager = SocketManager.getInstance();
+                JsonObject requestJson = new JsonObject();
+                requestJson.addProperty("action", "offline");
+                requestJson.addProperty("email", currentUserEmail);
+
+                // Send JSON request
+                socketManager.sendJson(requestJson);
+                socketManager.reinitializeConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+
+    public void setNavController(NavigationController navController) {
+        this.navController = navController;
+    }
+
+    @Override
+    public void run() {
+        // Implement Runnable if needed
     }
 }

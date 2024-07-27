@@ -2,7 +2,10 @@ package com.iti.tictactoe;
 
 import com.google.gson.Gson;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class SocketManager {
@@ -13,13 +16,8 @@ public class SocketManager {
     private final Gson gson = new Gson(); // Gson instance for JSON handling
 
     private SocketManager() {
-        try {
-            socket = new Socket("localhost", 12345);
-            pw = new PrintWriter(socket.getOutputStream(), true);
-            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Initialize the socket connection
+        initializeSocket();
     }
 
     public static synchronized SocketManager getInstance() {
@@ -27,6 +25,22 @@ public class SocketManager {
             instance = new SocketManager();
         }
         return instance;
+    }
+
+    private void initializeSocket() {
+        try {
+            // Close existing socket and streams if they are not closed
+            if (socket != null && !socket.isClosed()) {
+                close();
+            }
+
+            // Reinitialize the socket and streams
+            socket = new Socket("localhost", 12345);
+            pw = new PrintWriter(socket.getOutputStream(), true);
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public PrintWriter getPrintWriter() {
@@ -52,11 +66,22 @@ public class SocketManager {
 
     public void close() {
         try {
+            if (br != null) {
+                br.close();
+            }
+            if (pw != null) {
+                pw.close();
+            }
             if (socket != null && !socket.isClosed()) {
                 socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void reinitializeConnection() {
+        close();
+        initializeSocket();
     }
 }

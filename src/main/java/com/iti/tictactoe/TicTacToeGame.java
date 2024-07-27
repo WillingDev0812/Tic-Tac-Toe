@@ -45,7 +45,7 @@ public class TicTacToeGame extends Application {
             stage.show();
 
             // Transition to the home screen after a delay
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
             pause.setOnFinished(event -> navController.pushScene("/com/iti/tictactoe/home-screen.fxml", controller -> {
                 if (controller instanceof HomeScreenController homeScreenController) {
                     homeScreenController.setNavController(navController);
