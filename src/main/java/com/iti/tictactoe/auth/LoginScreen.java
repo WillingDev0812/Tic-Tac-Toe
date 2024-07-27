@@ -48,8 +48,7 @@ public class LoginScreen {
 
     public void onLoginBtn(ActionEvent actionEvent) {
         if (emailTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
-            AlertUtils.showWarningAlert("error", "error", "error");
-            //  warningTextLabel.setOpacity(1.0);
+            warningTextLabel.setOpacity(1.0);
             emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
             passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
         } else {
