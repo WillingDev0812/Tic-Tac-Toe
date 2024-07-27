@@ -58,7 +58,7 @@
 
         <Button fx:id="signupBtn" layoutX="880.0" layoutY="748.0" onAction="#handleSignUp" styleClass="signup-button" stylesheets="@styles.css" text="Sign up" />
 
-        <Label fx:id="warningTextlabel" alignment="CENTER" layoutX="405.0" layoutY="696.0" opacity="0.0" prefHeight="25.0" prefWidth="1135.0" styleClass="warninglabel" stylesheets="styles.css" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
+        <Label fx:id="warningTextLabel" alignment="CENTER" layoutX="405.0" layoutY="696.0" opacity="0.0" prefHeight="25.0" prefWidth="1135.0" styleClass="warning-label" stylesheets="styles.css" text="Don't leave empty fields" textAlignment="CENTER" textFill="RED">
             <font>
                 <Font name="Comic Sans MS" size="18.0" />
             </font>

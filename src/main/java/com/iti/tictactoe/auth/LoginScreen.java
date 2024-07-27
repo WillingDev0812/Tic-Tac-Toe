@@ -50,8 +50,8 @@ public class LoginScreen {
     public void onLoginBtn(ActionEvent actionEvent) {
         if (emailTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
             warningTextLabel.setOpacity(1.0);
-            emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
-            passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
+            emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px; -fx-border-radius: 75; -fx-background-radius: 75;");
+            passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;-fx-border-radius: 75;  -fx-background-radius: 75;");
         } else {
             SocketManager socketManager = SocketManager.getInstance();
             PrintWriter pw = socketManager.getPrintWriter();

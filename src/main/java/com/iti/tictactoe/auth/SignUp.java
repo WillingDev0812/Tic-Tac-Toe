@@ -34,7 +34,6 @@ public class SignUp {
 
     @FXML
     private void handleSignUp() {
-        // Get user input
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -42,12 +41,12 @@ public class SignUp {
 
         // Validate input
         if (username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
-            warningTextLabel.setText("All fields are required.");
+            setFieldErrorStyles();
+          //  warningTextLabel.setText("All fields are required.");
             warningTextLabel.setOpacity(1.0);
             setFieldErrorStyles();
             return;
         }
-
         if (!isValidEmail(email)) {
             warningTextLabel.setText("Invalid email format.");
             warningTextLabel.setOpacity(1.0);
@@ -69,7 +68,7 @@ public class SignUp {
             confirmPasswordField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
             return;
         }
-
+        else{
         SocketManager socketManager = SocketManager.getInstance();
         PrintWriter pw = socketManager.getPrintWriter();
         BufferedReader br = socketManager.getBufferedReader();
@@ -108,6 +107,8 @@ public class SignUp {
             e.printStackTrace();
             showAlert("Connection Error", "Unable to connect to server. Please try again later.");
         }
+        }
+
     }
 
     private boolean isValidEmail(String email) {
@@ -165,13 +166,7 @@ public class SignUp {
         alert.showAndWait();
     }
 
-    @FXML
-    private void handleShowLogin() {
-        if (navController != null) {
-            UiUtils.playSoundEffect();
-            navController.popScene();
-        }
-    }
+
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;

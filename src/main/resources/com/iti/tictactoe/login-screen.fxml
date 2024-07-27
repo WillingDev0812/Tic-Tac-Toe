@@ -42,7 +42,7 @@
       </PasswordField>
         <Button fx:id="loginBtn" layoutX="705.0" layoutY="745.0" onAction="#onLoginBtn" styleClass="login-button" stylesheets="@styles.css" text="Login" />
         <Button fx:id="signupBtn" layoutX="1052.0" layoutY="744.0" onAction="#onSignupBtn" styleClass="signup-button" stylesheets="@styles.css" text="Sign up" />
-      <Label fx:id="warningTextLabel" layoutX="710.0" layoutY="661.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0" styleClass="warning-label" stylesheets="styles.css" text="Please enter vaild information" textAlignment="CENTER" textFill="RED">
+      <Label fx:id="warningTextLabel" layoutX="829.0" layoutY="685.0" opacity="0.0" prefHeight="25.0" prefWidth="332.0" styleClass="warning-label" stylesheets="styles.css" text="Please enter vaild information" textAlignment="CENTER" textFill="RED">
          <font>
             <Font name="Comic Sans MS" size="18.0" />
          </font>
