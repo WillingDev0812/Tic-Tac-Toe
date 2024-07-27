@@ -1,9 +1,11 @@
 package com.iti.tictactoe;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
-import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +41,7 @@ public class ListOfUsers implements Runnable {
     private volatile boolean disconnectionHandled = false;
     private AtomicBoolean keepRefreshing = new AtomicBoolean(true);
 
+
     public static void setCurrentUserEmail(String email) {
         currentUserEmail = email;
     }
@@ -57,6 +60,7 @@ public class ListOfUsers implements Runnable {
                     Thread.sleep(3000); // Refresh every 3 seconds
                 }
             } catch (InterruptedException e) {
+                e.printStackTrace();
                 System.out.println("Refresh thread interrupted: " + e.getMessage());
             }
         });
@@ -65,7 +69,7 @@ public class ListOfUsers implements Runnable {
     }
 
     private void refreshPlayerList() {
-        if (currentUserEmail == null || !keepRefreshing.get()) return;
+        if (currentUserEmail == null) return;
 
         SocketManager socketManager = SocketManager.getInstance();
 
@@ -79,31 +83,36 @@ public class ListOfUsers implements Runnable {
             socketManager.sendJson(jsonRequest);
 
             // Read and parse the response
-            JsonObject jsonResponse = socketManager.receiveJson(JsonObject.class);
-            String username = jsonResponse.get("username").getAsString();
-            int size = jsonResponse.get("size").getAsInt();
-
+            JsonArray jsonResponseArray = socketManager.receiveJson(JsonArray.class);
             List<String> newPlayerList = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                newPlayerList.add(jsonResponse.get("player" + i).getAsString());
+
+            for (JsonElement element : jsonResponseArray) {
+                if (element.isJsonObject()) {
+                    JsonObject userObject = element.getAsJsonObject();
+                    String username = userObject.get("username").getAsString();
+                    String status = userObject.get("status").getAsString();
+                    newPlayerList.add(username + "      " + status);
+                } else {
+                    // Handle unexpected element types if necessary
+                    System.err.println("Unexpected JSON element type: " + element.toString());
+                }
             }
 
+            // Update UI if needed
             Platform.runLater(() -> {
-                if (!playerList.equals(newPlayerList)) {
-                    String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
-                    playerList = newPlayerList;
-                    PlayerListView.getItems().setAll(newPlayerList);
+                String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
+                playerList = newPlayerList;
+                PlayerListView.getItems().setAll(newPlayerList);
 
-                    if (selectedItem != null && newPlayerList.contains(selectedItem)) {
-                        PlayerListView.getSelectionModel().select(selectedItem);
-                    }
+                if (selectedItem != null && newPlayerList.contains(selectedItem)) {
+                    PlayerListView.getSelectionModel().select(selectedItem);
                 }
-                playerName.setText("Hello " + username);
+                playerName.setText("Hello " + currentUserEmail);
             });
 
         } catch (IOException e) {
             System.err.println("Connection to server lost: " + e.getMessage());
-            handleServerDisconnection();
+            // Handle server disconnection
         }
     }
 
