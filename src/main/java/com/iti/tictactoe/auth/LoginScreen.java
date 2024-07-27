@@ -32,6 +32,7 @@ public class LoginScreen {
     private Label warningTextLabel;
     private NavigationController navController;
 
+
     @FXML
     private void initialize() {
         UiUtils.addHoverAnimation(loginBtn);
@@ -59,6 +60,7 @@ public class LoginScreen {
 
             try {
                 // Create JSON object for login request
+                ListOfUsers.setCurrentUserEmail(emailTextField.getText());
                 JsonObject jsonRequest = new JsonObject();
                 jsonRequest.addProperty("action", "login");
                 jsonRequest.addProperty("email", emailTextField.getText());
