@@ -1,21 +1,22 @@
 package com.iti.tictactoe;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import com.google.gson.Gson;
+
+import java.io.*;
 import java.net.Socket;
 
 public class SocketManager {
     private static SocketManager instance;
     private Socket socket;
-    private DataOutputStream dos;
-    private DataInputStream dis;
+    private PrintWriter pw;
+    private BufferedReader br;
+    private final Gson gson = new Gson(); // Gson instance for JSON handling
 
     private SocketManager() {
         try {
             socket = new Socket("localhost", 12345);
-            dos = new DataOutputStream(socket.getOutputStream());
-            dis = new DataInputStream(socket.getInputStream());
+            pw = new PrintWriter(socket.getOutputStream(), true);
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -28,12 +29,25 @@ public class SocketManager {
         return instance;
     }
 
-    public DataOutputStream getDataOutputStream() {
-        return dos;
+    public PrintWriter getPrintWriter() {
+        return pw;
     }
 
-    public DataInputStream getDataInputStream() {
-        return dis;
+    public BufferedReader getBufferedReader() {
+        return br;
+    }
+
+    public void sendJson(Object object) throws IOException {
+        // Serialize the object to JSON and send it
+        String json = gson.toJson(object);
+        pw.println(json);
+        pw.flush();
+    }
+
+    public <T> T receiveJson(Class<T> clazz) throws IOException {
+        // Read JSON from the stream and deserialize it
+        String json = br.readLine();
+        return gson.fromJson(json, clazz);
     }
 
     public void close() {
