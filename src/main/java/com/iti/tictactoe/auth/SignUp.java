@@ -1,5 +1,6 @@
 package com.iti.tictactoe.auth;
 
+import com.google.gson.JsonObject;
 import com.iti.tictactoe.SocketManager;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
@@ -10,9 +11,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 public class SignUp {
@@ -28,7 +29,7 @@ public class SignUp {
     @FXML
     private Label passwordFeedbackLabel;
     @FXML
-    private Label warningTextlabel;
+    private Label warningTextLabel;
     private NavigationController navController;
 
     @FXML
@@ -41,54 +42,72 @@ public class SignUp {
 
         // Validate input
         if (username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
-            warningTextlabel.setText("All fields are required.");
-            warningTextlabel.setOpacity(1.0);
+            warningTextLabel.setText("All fields are required.");
+            warningTextLabel.setOpacity(1.0);
             setFieldErrorStyles();
             return;
         }
 
         if (!isValidEmail(email)) {
-            warningTextlabel.setText("Invalid email format.");
-            warningTextlabel.setOpacity(1.0);
+            warningTextLabel.setText("Invalid email format.");
+            warningTextLabel.setOpacity(1.0);
             emailField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
             return;
         }
 
         String passwordFeedback = getPasswordFeedback(password);
         if (!passwordFeedback.isEmpty()) {
-            warningTextlabel.setText("Password does not meet requirements: " + passwordFeedback);
-            warningTextlabel.setOpacity(1.0);
+            warningTextLabel.setText("Password does not meet requirements: " + passwordFeedback);
+            warningTextLabel.setOpacity(1.0);
             passwordField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            warningTextlabel.setText("Passwords do not match.");
-            warningTextlabel.setOpacity(1.0);
+            warningTextLabel.setText("Passwords do not match.");
+            warningTextLabel.setOpacity(1.0);
             confirmPasswordField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
             return;
         }
 
-        // Use SocketManager for socket operations
         SocketManager socketManager = SocketManager.getInstance();
+        PrintWriter pw = socketManager.getPrintWriter();
+        BufferedReader br = socketManager.getBufferedReader();
+
         try {
-            DataOutputStream dos = socketManager.getDataOutputStream();
-            DataInputStream dis = socketManager.getDataInputStream();
+            // Create JSON object for signup request
+            JsonObject jsonRequest = new JsonObject();
+            jsonRequest.addProperty("action", "signup");
+            jsonRequest.addProperty("username", username);
+            jsonRequest.addProperty("email", email);
+            jsonRequest.addProperty("password", password);
 
-            dos.writeUTF("signup");
-            dos.writeUTF(username);
-            dos.writeUTF(email);
-            dos.writeUTF(password);
-            dos.flush(); // Ensure data is sent immediately
+            // Send JSON request
+            socketManager.sendJson(jsonRequest);
 
-            // Handle response
-            boolean success = dis.readBoolean();
-            if (success) {
-                showAlert("Sign-Up Successful", "Your account has been created.");
-            } else {
-                showAlert("Sign-Up Failed", "Unable to create your account.");
+            // Read and parse the response
+            JsonObject jsonResponse = socketManager.receiveJson(JsonObject.class);
+
+            if (jsonResponse == null) {
+                showAlert("Sign-Up Failed", "No response from the server. Please try again later.");
+                return;
             }
 
+            boolean success = jsonResponse.get("success").getAsBoolean();
+
+            if (success) {
+                showAlert("Sign-Up Successful", "Your account has been created.");
+                clearFields();
+                if (navController != null) {
+                    navController.pushScene("/com/iti/tictactoe/LoginScreen.fxml", controller -> {
+                        if (controller instanceof LoginScreen loginScreen) {
+                            loginScreen.setNavController(navController);
+                        }
+                    });
+                }
+            } else {
+                showAlert("Sign-Up Failed", jsonResponse.get("message").getAsString());
+            }
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Connection Error", "Unable to connect to server. Please try again later.");
@@ -135,11 +154,11 @@ public class SignUp {
         confirmPasswordField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
     }
 
-    private void clearFieldErrorStyles() {
-        usernameField.setStyle("");
-        emailField.setStyle("");
-        passwordField.setStyle("");
-        confirmPasswordField.setStyle("");
+    private void clearFields() {
+        usernameField.clear();
+        emailField.clear();
+        passwordField.clear();
+        confirmPasswordField.clear();
     }
 
     private void showAlert(String title, String message) {
@@ -162,7 +181,8 @@ public class SignUp {
         this.navController = navController;
     }
 
-    public void onBackImageClick(MouseEvent mouseEvent) {
+    @FXML
+    private void onBackImageClick(MouseEvent mouseEvent) {
         if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();
