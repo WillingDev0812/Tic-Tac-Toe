@@ -1,5 +1,7 @@
 package com.iti.tictactoe;
 
+import com.google.gson.Gson;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +12,7 @@ public class SocketManager {
     private Socket socket;
     private DataOutputStream dos;
     private DataInputStream dis;
+    private final Gson gson = new Gson(); // Gson instance for JSON handling
 
     private SocketManager() {
         try {
@@ -34,6 +37,19 @@ public class SocketManager {
 
     public DataInputStream getDataInputStream() {
         return dis;
+    }
+
+    public void sendJson(Object object) throws IOException {
+        // Serialize the object to JSON and send it
+        String json = gson.toJson(object);
+        dos.writeUTF(json);
+        dos.flush();
+    }
+
+    public <T> T receiveJson(Class<T> clazz) throws IOException {
+        // Read JSON from the stream and deserialize it
+        String json = dis.readUTF();
+        return gson.fromJson(json, clazz);
     }
 
     public void close() {

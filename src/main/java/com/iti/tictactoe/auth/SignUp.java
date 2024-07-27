@@ -71,20 +71,31 @@ public class SignUp {
 
         // Use SocketManager for socket operations
         SocketManager socketManager = SocketManager.getInstance();
+        DataOutputStream dos = null;
+        DataInputStream dis = null;
+
         try {
-            DataOutputStream dos = socketManager.getDataOutputStream();
-            DataInputStream dis = socketManager.getDataInputStream();
+            dos = socketManager.getDataOutputStream();
+            dis = socketManager.getDataInputStream();
 
             dos.writeUTF("signup");
             dos.writeUTF(username);
             dos.writeUTF(email);
             dos.writeUTF(password);
-            dos.flush(); // Ensure data is sent immediately
+            dos.flush();
 
             // Handle response
             boolean success = dis.readBoolean();
             if (success) {
                 showAlert("Sign-Up Successful", "Your account has been created.");
+                clearFields();
+                if (navController != null) {
+                    navController.pushScene("/com/iti/tictactoe/LoginScreen.fxml", controller -> {
+                        if (controller instanceof LoginScreen loginScreen) {
+                            loginScreen.setNavController(navController);
+                        }
+                    });
+                }
             } else {
                 showAlert("Sign-Up Failed", "Unable to create your account.");
             }
@@ -92,8 +103,17 @@ public class SignUp {
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Connection Error", "Unable to connect to server. Please try again later.");
+        } finally {
+            try {
+                if (dos != null) dos.close();
+                if (dis != null) dis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
 
     private boolean isValidEmail(String email) {
         // Regular expression for email validation
@@ -135,11 +155,11 @@ public class SignUp {
         confirmPasswordField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
     }
 
-    private void clearFieldErrorStyles() {
-        usernameField.setStyle("");
-        emailField.setStyle("");
-        passwordField.setStyle("");
-        confirmPasswordField.setStyle("");
+    private void clearFields() {
+        usernameField.clear();
+        emailField.clear();
+        passwordField.clear();
+        confirmPasswordField.clear();
     }
 
     private void showAlert(String title, String message) {
@@ -162,7 +182,8 @@ public class SignUp {
         this.navController = navController;
     }
 
-    public void onBackImageClick(MouseEvent mouseEvent) {
+    @FXML
+    private void onBackImageClick(MouseEvent mouseEvent) {
         if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();

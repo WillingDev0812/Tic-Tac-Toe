@@ -1,8 +1,9 @@
 package com.iti.tictactoe.auth;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.iti.tictactoe.ListOfUsers;
 import com.iti.tictactoe.SocketManager;
-import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
@@ -30,6 +31,7 @@ public class LoginScreen {
     @FXML
     private Label warningTextLabel;
     private NavigationController navController;
+    private final Gson gson = new Gson(); // Gson instance
 
     @FXML
     private void initialize() {
@@ -52,19 +54,30 @@ public class LoginScreen {
             emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
             passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
         } else {
-            try {
-                // Get SocketManager instance
-                SocketManager socketManager = SocketManager.getInstance();
-                DataOutputStream dos = socketManager.getDataOutputStream();
-                DataInputStream dis = socketManager.getDataInputStream();
+            SocketManager socketManager = SocketManager.getInstance();
+            DataOutputStream dos = null;
+            DataInputStream dis = null;
 
-                dos.writeUTF("login");
-                dos.writeUTF(emailTextField.getText());
-                dos.writeUTF(passwordTextField.getText());
+            try {
+                dos = socketManager.getDataOutputStream();
+                dis = socketManager.getDataInputStream();
+
+                // Create JSON object for login request
+                JsonObject jsonRequest = new JsonObject();
+                jsonRequest.addProperty("action", "login");
+                jsonRequest.addProperty("email", emailTextField.getText());
+                jsonRequest.addProperty("password", passwordTextField.getText());
+
+                // Send JSON request
+                dos.writeUTF(gson.toJson(jsonRequest));
                 dos.flush(); // Ensure data is sent immediately
 
                 ListOfUsers.setCurrentUserEmail(emailTextField.getText());
-                boolean success = dis.readBoolean();
+
+                // Read and parse the response
+                String response = dis.readUTF();
+                JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
+                boolean success = jsonResponse.get("success").getAsBoolean();
 
                 if (success) {
                     showAlert("Login Successful", "Welcome back!");
@@ -85,9 +98,16 @@ public class LoginScreen {
                 showAlert("Connection Error", "Unable to connect to the server.");
             } finally {
                 UiUtils.playSoundEffect();
+                try {
+                    if (dos != null) dos.close();
+                    if (dis != null) dis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
+
 
     public void onSignupBtn(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();

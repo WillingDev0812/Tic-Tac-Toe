@@ -11,6 +11,7 @@ module com.iti.tictactoe {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires javafx.media;
+    requires com.google.gson;
 
     opens com.iti.tictactoe.AIGame to javafx.fxml;
 

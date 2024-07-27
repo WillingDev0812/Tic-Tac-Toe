@@ -38,9 +38,7 @@ public class ListOfUsers implements Runnable {
     public static String currentUserEmail;
     private NavigationController navController;
     private volatile boolean disconnectionHandled = false;
-    private AtomicBoolean keepRefreshing = new AtomicBoolean(true); // Add this flag
-
-
+    private AtomicBoolean keepRefreshing = new AtomicBoolean(true);
 
     public static void setCurrentUserEmail(String email) {
         currentUserEmail = email;
@@ -63,21 +61,24 @@ public class ListOfUsers implements Runnable {
                 System.out.println("Refresh thread interrupted: " + e.getMessage());
             }
         });
-        refreshThread.setDaemon(true);  // Ensure the thread doesn't block application termination
+        refreshThread.setDaemon(true);
         refreshThread.start();
     }
 
     private void refreshPlayerList() {
-        if (currentUserEmail == null || !keepRefreshing.get()) return; // Check the flag
+        if (currentUserEmail == null || !keepRefreshing.get()) return;
+
+        SocketManager socketManager = SocketManager.getInstance();
+        DataOutputStream dos = null;
+        DataInputStream dis = null;
 
         try {
-            SocketManager socketManager = SocketManager.getInstance();
-            DataOutputStream dos = socketManager.getDataOutputStream();
-            DataInputStream dis = socketManager.getDataInputStream();
+            dos = socketManager.getDataOutputStream();
+            dis = socketManager.getDataInputStream();
 
             dos.writeUTF("showUsers");
             dos.writeUTF(currentUserEmail);
-            dos.flush(); // Ensure data is sent immediately
+            dos.flush();
 
             String username = dis.readUTF();
             Platform.runLater(() -> playerName.setText("Hello " + username));
@@ -90,12 +91,10 @@ public class ListOfUsers implements Runnable {
 
             Platform.runLater(() -> {
                 if (!playerList.equals(newPlayerList)) {
-                    // Preserve the selected item
                     String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
                     playerList = newPlayerList;
                     PlayerListView.getItems().setAll(newPlayerList);
 
-                    // Restore the selected item
                     if (selectedItem != null && newPlayerList.contains(selectedItem)) {
                         PlayerListView.getSelectionModel().select(selectedItem);
                     }
@@ -105,20 +104,27 @@ public class ListOfUsers implements Runnable {
         } catch (IOException e) {
             System.err.println("Connection to server lost: " + e.getMessage());
             handleServerDisconnection();
+        } finally {
+            try {
+                if (dos != null) dos.close();
+                if (dis != null) dis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     private void handleServerDisconnection() {
         if (disconnectionHandled) {
             return;
         }
         disconnectionHandled = true;
-        keepRefreshing.set(false); // Stop the refresh thread
+        keepRefreshing.set(false);
 
         Platform.runLater(() -> {
             AlertUtils.showWarningAlert("Server Disconnected", "Connection to the server was lost.", "You will be returned to the main menu.");
             navController.popScene();
-            // Add any additional navigation actions needed on disconnection
         });
     }
 
@@ -130,7 +136,7 @@ public class ListOfUsers implements Runnable {
                 DataOutputStream dos = socketManager.getDataOutputStream();
                 dos.writeUTF("offline");
                 dos.writeUTF(currentUserEmail);
-                dos.flush(); // Ensure data is sent immediately
+                dos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -145,8 +151,8 @@ public class ListOfUsers implements Runnable {
             return;
         }
 
-        String[] parts = selectedPlayer.split(" ", 2); // Split into at most 2 parts
-        invitedPlayerName = parts[0]; // This will be the username part
+        String[] parts = selectedPlayer.split(" ", 2);
+        invitedPlayerName = parts[0];
 
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
                 "Send Invitation", "Do you want to send an invitation to " + selectedPlayer + "?",
@@ -164,17 +170,14 @@ public class ListOfUsers implements Runnable {
                 DataOutputStream dos = socketManager.getDataOutputStream();
                 DataInputStream dis = socketManager.getDataInputStream();
 
-                // Send invitation command to the server
                 dos.writeUTF("invite");
-                dos.writeUTF(invitedPlayerName);
-                dos.flush(); // Ensure data is sent immediately
+                dos.writeUTF(selectedPlayer);
+                dos.flush();
 
-                // Wait for the server response
                 String response = dis.readUTF();
                 Platform.runLater(() -> {
                     if (response.equals("online")) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
-                        // Handle additional UI updates or game logic here
                     } else if (response.equals("offline")) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
@@ -182,11 +185,10 @@ public class ListOfUsers implements Runnable {
                     }
                 });
             } catch (IOException e) {
-                System.out.printf("error: %s\n", e.getMessage());
+                System.out.printf("Error: %s\n", e.getMessage());
             }
         }).start();
     }
-
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
@@ -199,7 +201,6 @@ public class ListOfUsers implements Runnable {
 
     @FXML
     public void signOut(ActionEvent actionEvent) {
-        // Show confirmation alert
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
                 "Sign Out",
                 "Are you sure you want to sign out?",
