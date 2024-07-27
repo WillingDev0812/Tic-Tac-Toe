@@ -99,11 +99,7 @@ public class SignUp {
                 showAlert("Sign-Up Successful", "Your account has been created.");
                 clearFields();
                 if (navController != null) {
-                    navController.pushScene("/com/iti/tictactoe/LoginScreen.fxml", controller -> {
-                        if (controller instanceof LoginScreen loginScreen) {
-                            loginScreen.setNavController(navController);
-                        }
-                    });
+                    navController.popScene();
                 }
             } else {
                 showAlert("Sign-Up Failed", jsonResponse.get("message").getAsString());

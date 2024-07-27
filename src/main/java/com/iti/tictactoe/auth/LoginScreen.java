@@ -3,7 +3,6 @@ package com.iti.tictactoe.auth;
 import com.google.gson.JsonObject;
 import com.iti.tictactoe.ListOfUsers;
 import com.iti.tictactoe.SocketManager;
-import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
@@ -15,7 +14,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class LoginScreen {
 
@@ -93,13 +94,6 @@ public class LoginScreen {
             } catch (IOException e) {
                 e.printStackTrace();
                 Platform.runLater(() -> showAlert("Connection Error", "Unable to connect to the server."));
-            } finally {
-                // Close the socket or handle any necessary cleanup
-                try {
-                    socketManager.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
