@@ -283,9 +283,16 @@ public class GameBoardController {
         winnerSound.play();
         // these line to prevent the aler to be popped when someone wins to see the highlighted buttons
         //  showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
+        String videoPath;
+        if(isSinglePlayer && isPlayerOneTurn) {
+            videoPath = "/com/iti/tictactoe/Videos/video2.mp4";
+        }
+        else
+            videoPath = "/com/iti/tictactoe/Videos/video4.mp4";
+
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
         pause.setOnFinished(event -> {
-            showVideo("/com/iti/tictactoe/Videos/video2.mp4");
+            showVideo(videoPath);
         });
         pause.play();
     }
