@@ -1,5 +1,6 @@
 package com.iti.tictactoe.auth;
 
+import com.iti.tictactoe.SocketManager;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.fxml.FXML;
@@ -12,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.regex.Pattern;
 
 public class SignUp {
@@ -69,9 +69,11 @@ public class SignUp {
             return;
         }
 
-        try (Socket socket = new Socket("localhost", 12345);
-             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-             DataInputStream dis = new DataInputStream(socket.getInputStream())) {
+        // Use SocketManager for socket operations
+        SocketManager socketManager = SocketManager.getInstance();
+        try {
+            DataOutputStream dos = socketManager.getDataOutputStream();
+            DataInputStream dis = socketManager.getDataInputStream();
 
             dos.writeUTF("signup");
             dos.writeUTF(username);
@@ -92,8 +94,6 @@ public class SignUp {
             showAlert("Connection Error", "Unable to connect to server. Please try again later.");
         }
     }
-
-
 
     private boolean isValidEmail(String email) {
         // Regular expression for email validation
@@ -161,7 +161,6 @@ public class SignUp {
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
-
 
     public void onBackImageClick(MouseEvent mouseEvent) {
         if (navController != null) {

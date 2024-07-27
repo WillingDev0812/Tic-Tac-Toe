@@ -6,6 +6,7 @@ import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -15,17 +16,13 @@ import javafx.scene.text.Text;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.iti.tictactoe.models.AlertUtils.showConfirmationAlert;
-
 public class ListOfUsers implements Runnable {
-    public Button signOut;
-
-    private NavigationController navController;
+    @FXML
+    private Button signOut;
 
     @FXML
     private Button inviteBtn;
@@ -38,13 +35,12 @@ public class ListOfUsers implements Runnable {
 
     @FXML
     private Text playerName;
-    public String invitedPlayerName;
-    private DataOutputStream dos;
-    private DataInputStream dis;
+
+    private String invitedPlayerName;
     private List<String> playerList = new ArrayList<>();
 
     public static String currentUserEmail;
-    public String username;
+    private NavigationController navController;
 
     public static void setCurrentUserEmail(String email) {
         currentUserEmail = email;
@@ -61,34 +57,35 @@ public class ListOfUsers implements Runnable {
             while (true) {
                 refreshPlayerList();
                 try {
-                    Thread.sleep(3000); // Refresh every 1 second
+                    Thread.sleep(3000); // Refresh every 3 seconds
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
-        refreshThread.setDaemon(true);  // to doesn't block the application
+        refreshThread.setDaemon(true);  // to ensure the thread doesn't block application termination
         refreshThread.start();
     }
 
     private void refreshPlayerList() {
         if (currentUserEmail == null) return;
 
-        try (Socket socket = new Socket("localhost", 12345)) {
-            dos = new DataOutputStream(socket.getOutputStream());
-            dis = new DataInputStream(socket.getInputStream());
+        try {
+            SocketManager socketManager = SocketManager.getInstance();
+            DataOutputStream dos = socketManager.getDataOutputStream();
+            DataInputStream dis = socketManager.getDataInputStream();
 
             dos.writeUTF("showUsers");
             dos.writeUTF(currentUserEmail);
+            dos.flush(); // Ensure data is sent immediately
 
-            username = dis.readUTF();
+            String username = dis.readUTF();
             Platform.runLater(() -> playerName.setText("Hello " + username));
 
             int size = dis.readInt();
             List<String> newPlayerList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                String player = dis.readUTF();
-                newPlayerList.add(player);
+                newPlayerList.add(dis.readUTF());
             }
 
             Platform.runLater(() -> {
@@ -113,10 +110,12 @@ public class ListOfUsers implements Runnable {
     public void logout() {
         if (currentUserEmail == null) return;
         new Thread(() -> {
-            try (Socket socket = new Socket("localhost", 12345)) {
-                dos = new DataOutputStream(socket.getOutputStream());
+            try {
+                SocketManager socketManager = SocketManager.getInstance();
+                DataOutputStream dos = socketManager.getDataOutputStream();
                 dos.writeUTF("offline");
                 dos.writeUTF(currentUserEmail);
+                dos.flush(); // Ensure data is sent immediately
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,15 +125,14 @@ public class ListOfUsers implements Runnable {
     @FXML
     public void inviteBtn(ActionEvent actionEvent) {
         String selectedPlayer = PlayerListView.getSelectionModel().getSelectedItem();
-        if (selectedPlayer != null) {
-            String[] parts = selectedPlayer.split(" ", 2); // Split into at most 2 parts
-            invitedPlayerName = parts[0]; // This will be "jeo"
-            System.out.println(playerName);
-        }
         if (selectedPlayer == null) {
             AlertUtils.showWarningAlert("No Player Selected", null, "Please select a player to invite.");
             return;
         }
+
+        String[] parts = selectedPlayer.split(" ", 2); // Split into at most 2 parts
+        invitedPlayerName = parts[0]; // This will be the username part
+
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
                 "Send Invitation", "Do you want to send an invitation to " + selectedPlayer + "?",
                 "Click 'Yes' to send the invitation or 'Cancel' to cancel."
@@ -146,34 +144,30 @@ public class ListOfUsers implements Runnable {
 
     private void sendInvitation(String selectedPlayer) {
         new Thread(() -> {
-            try (Socket socket = new Socket("localhost", 12345)) {
-                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                DataInputStream dis = new DataInputStream(socket.getInputStream());
+            try {
+                SocketManager socketManager = SocketManager.getInstance();
+                DataOutputStream dos = socketManager.getDataOutputStream();
+                DataInputStream dis = socketManager.getDataInputStream();
 
                 dos.writeUTF("invite");
-                //dos.writeUTF(currentUserEmail);
                 dos.writeUTF(invitedPlayerName);
+                dos.flush(); // Ensure data is sent immediately
 
                 // Handle response from the server
                 String response = dis.readUTF();
-                if (response.equals("online")) {
-                    Platform.runLater(() -> {
+                Platform.runLater(() -> {
+                    if (response.equals("online")) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
-                    });
-                }
-                else
-                {
-                    Platform.runLater(() -> {
-                        AlertUtils.showInformationAlert("Invitation Status", "Invitation was not sent", "The invitation was not sent.");
-                    });
-                }
-
+                        //IMPLEMENT INVITE HERE
+                    } else {
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invitation was not sent.");
+                    }
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
     }
-
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
@@ -187,12 +181,11 @@ public class ListOfUsers implements Runnable {
     @FXML
     public void signOut(ActionEvent actionEvent) {
         // Show confirmation alert
-        Optional<ButtonType> result = showConfirmationAlert(
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
                 "Sign Out",
                 "Are you sure you want to sign out?",
                 "Click 'OK' to proceed or 'Cancel' to stay logged in."
         );
-        // Check if the user clicked the 'Sign Out' button
         if (result.isPresent() && result.get() == ButtonType.OK) {
             logout();
             navController.popScene();

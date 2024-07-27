@@ -1,6 +1,7 @@
 package com.iti.tictactoe.auth;
 
 import com.iti.tictactoe.ListOfUsers;
+import com.iti.tictactoe.SocketManager;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
@@ -14,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
 public class LoginScreen {
 
@@ -27,7 +27,7 @@ public class LoginScreen {
     @FXML
     private TextField passwordTextField;
     @FXML
-    private Label warningTextlabel;
+    private Label warningTextLabel;
     private NavigationController navController;
 
     @FXML
@@ -37,29 +37,34 @@ public class LoginScreen {
     }
 
     public void onBackImageClick(MouseEvent mouseEvent) {
-        if (navController == null) {
-            System.out.println("error in navController");
-        } else {
+        if (navController != null) {
             UiUtils.playSoundEffect();
             navController.popScene();
+        } else {
+            System.out.println("Error: NavigationController is not set.");
         }
     }
 
     public void onLoginBtn(ActionEvent actionEvent) {
         if (emailTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
-            warningTextlabel.setOpacity(1.0);
-            passwordTextField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
-            emailTextField.setStyle("-fx-border-color: red ; -fx-border-width: 3px ; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-image-width: 5;");
+            warningTextLabel.setOpacity(1.0);
+            emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
+            passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
         } else {
-            try (Socket socket = new Socket("localhost", 12345);
-                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                 DataInputStream dis = new DataInputStream(socket.getInputStream())) {
+            try {
+                // Get SocketManager instance
+                SocketManager socketManager = SocketManager.getInstance();
+                DataOutputStream dos = socketManager.getDataOutputStream();
+                DataInputStream dis = socketManager.getDataInputStream();
 
                 dos.writeUTF("login");
-                dos.writeUTF(emailTextField.getText()); // email
+                dos.writeUTF(emailTextField.getText());
                 dos.writeUTF(passwordTextField.getText());
+                dos.flush(); // Ensure data is sent immediately
+
                 ListOfUsers.setCurrentUserEmail(emailTextField.getText());
                 boolean success = dis.readBoolean();
+
                 if (success) {
                     showAlert("Login Successful", "Welcome back!");
                     if (navController != null) {
@@ -74,13 +79,12 @@ public class LoginScreen {
                 } else {
                     showAlert("Login Failed", "Invalid email or password.");
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Connection Error", "Unable to connect to server.");
+                showAlert("Connection Error", "Unable to connect to the server.");
+            } finally {
+                UiUtils.playSoundEffect();
             }
-            UiUtils.playSoundEffect();
-
         }
     }
 
@@ -88,8 +92,8 @@ public class LoginScreen {
         UiUtils.playSoundEffect();
         if (navController != null) {
             navController.pushScene("/com/iti/tictactoe/SignUp.fxml", controller -> {
-                if (controller instanceof SignUp sighUp) {
-                    sighUp.setNavController(navController);
+                if (controller instanceof SignUp signUp) {
+                    signUp.setNavController(navController);
                 }
             });
         }

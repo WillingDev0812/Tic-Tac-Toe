@@ -4,6 +4,7 @@ package com.iti.tictactoe.navigation;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class NavigationController {
             Scene scene = new Scene(root);
             navHistory.pushScene(scene); // push it to be saved in out stack
             stage.setScene(scene);
-            //      stage.setResizable(false);
+            stage.setResizable(true);
+            //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
             stage.setFullScreen(false);
             stage.show();
         } catch (IOException e) {
@@ -44,7 +46,7 @@ public class NavigationController {
             if (currentScene != null) {
                 stage.setScene(currentScene);
                 stage.show();
-                stage.setFullScreen(false);
+                stage.setFullScreen(true);
             } else {
                 System.out.println("No scene available to display."); // will be deleted in the master
             }

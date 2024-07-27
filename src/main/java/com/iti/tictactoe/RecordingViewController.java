@@ -70,9 +70,9 @@ public class RecordingViewController {
     public void initialize(PlayerNames playerNames, List<int[]> moves) {
         isRecording = true;
         this.playerNames = playerNames;
-        clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
-        clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
-        winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
+        clickOSound = new AudioClip(Objects.requireNonNull(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3")).toExternalForm());
+        clickXSound = new AudioClip(Objects.requireNonNull(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3")).toExternalForm());
+        winnerSound = new AudioClip(Objects.requireNonNull(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3")).toExternalForm());
 
         try {
             Image backgroundImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBackground.png").toExternalForm());
