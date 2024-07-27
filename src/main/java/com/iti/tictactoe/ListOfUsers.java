@@ -6,10 +6,8 @@ import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 
@@ -19,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ListOfUsers implements Runnable {
     @FXML
@@ -31,9 +30,6 @@ public class ListOfUsers implements Runnable {
     private ListView<String> PlayerListView;
 
     @FXML
-    private Label invitePlayerWarning;
-
-    @FXML
     private Text playerName;
 
     private String invitedPlayerName;
@@ -41,6 +37,10 @@ public class ListOfUsers implements Runnable {
 
     public static String currentUserEmail;
     private NavigationController navController;
+    private volatile boolean disconnectionHandled = false;
+    private AtomicBoolean keepRefreshing = new AtomicBoolean(true); // Add this flag
+
+
 
     public static void setCurrentUserEmail(String email) {
         currentUserEmail = email;
@@ -54,21 +54,21 @@ public class ListOfUsers implements Runnable {
 
     private void startRefreshingPlayerList() {
         Thread refreshThread = new Thread(() -> {
-            while (true) {
-                refreshPlayerList();
-                try {
+            try {
+                while (keepRefreshing.get()) {
+                    refreshPlayerList();
                     Thread.sleep(3000); // Refresh every 3 seconds
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            } catch (InterruptedException e) {
+                System.out.println("Refresh thread interrupted: " + e.getMessage());
             }
         });
-        refreshThread.setDaemon(true);  // to ensure the thread doesn't block application termination
+        refreshThread.setDaemon(true);  // Ensure the thread doesn't block application termination
         refreshThread.start();
     }
 
     private void refreshPlayerList() {
-        if (currentUserEmail == null) return;
+        if (currentUserEmail == null || !keepRefreshing.get()) return; // Check the flag
 
         try {
             SocketManager socketManager = SocketManager.getInstance();
@@ -103,8 +103,23 @@ public class ListOfUsers implements Runnable {
             });
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Connection to server lost: " + e.getMessage());
+            handleServerDisconnection();
         }
+    }
+
+    private void handleServerDisconnection() {
+        if (disconnectionHandled) {
+            return;
+        }
+        disconnectionHandled = true;
+        keepRefreshing.set(false); // Stop the refresh thread
+
+        Platform.runLater(() -> {
+            AlertUtils.showWarningAlert("Server Disconnected", "Connection to the server was lost.", "You will be returned to the main menu.");
+            navController.popScene();
+            // Add any additional navigation actions needed on disconnection
+        });
     }
 
     public void logout() {

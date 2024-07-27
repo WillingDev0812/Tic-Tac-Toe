@@ -2,6 +2,7 @@ package com.iti.tictactoe.auth;
 
 import com.iti.tictactoe.ListOfUsers;
 import com.iti.tictactoe.SocketManager;
+import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.event.ActionEvent;
@@ -47,7 +48,8 @@ public class LoginScreen {
 
     public void onLoginBtn(ActionEvent actionEvent) {
         if (emailTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
-            warningTextLabel.setOpacity(1.0);
+            AlertUtils.showWarningAlert("error", "error", "error");
+            //  warningTextLabel.setOpacity(1.0);
             emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
             passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;");
         } else {
