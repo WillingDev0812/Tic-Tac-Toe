@@ -32,7 +32,7 @@ public class NavigationController {
             stage.setScene(scene);
             stage.setResizable(true);
             //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-            stage.setFullScreen(false);
+            stage.setFullScreen(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

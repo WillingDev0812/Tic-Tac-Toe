@@ -8,6 +8,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Objects;
 
 public class UiUtils {

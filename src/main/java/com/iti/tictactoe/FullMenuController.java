@@ -37,17 +37,13 @@ public class FullMenuController {
     public void handleOnOnlineButtonClicked(MouseEvent mouseEvent) {
         UiUtils.playSoundEffect();
 
-        // Server connection details
-        String serverHost = "localhost"; // Replace with actual server host
-        int serverPort = 12345; // Replace with actual server port
-
         // Check server availability
-        if (!isServerAvailable(serverHost, serverPort)) {
+        if (!isServerAvailable("localhost", 12345)) {
             showInformationAlert(String.valueOf(Alert.AlertType.ERROR), "Server Error", "The server is down. Please try again later.");
             return; // Exit method if server is down
         }
 
-        // Proceed if server is available
+        // Continue if server is available
         if (navController == null) {
             System.out.println("error in navController \n");
         } else {
@@ -68,8 +64,6 @@ public class FullMenuController {
             return false;
         }
     }
-
-
 
     public void handleOnRecordButtonClicked(MouseEvent mouseEvent) {
         UiUtils.playSoundEffect();
@@ -92,8 +86,6 @@ public class FullMenuController {
         }
     }
 
-
-    // elly hy'rab lel zorar dh hafshakhoo
     public void handleOfflineButtonClicked() {
         UiUtils.playSoundEffect();
         if (navController == null) {

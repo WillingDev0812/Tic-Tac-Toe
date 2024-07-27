@@ -16,7 +16,6 @@ public class SocketManager {
     private final Gson gson = new Gson(); // Gson instance for JSON handling
 
     private SocketManager() {
-        // Initialize the socket connection
         initializeSocket();
     }
 

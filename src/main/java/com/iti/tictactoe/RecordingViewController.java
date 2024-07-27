@@ -116,24 +116,6 @@ public class RecordingViewController {
         }
     }
 
-//    private void stopTimeline() {
-//        if (timeline != null) {
-//            timeline.stop(); // Stop the timeline
-//        }
-//    }
-
-//    private void stopAudioClips() {
-//        if (clickXSound != null) {
-//            clickXSound.stop();
-//        }
-//        if (clickOSound != null) {
-//            clickOSound.stop();
-//        }
-//        if (winnerSound != null) {
-//            winnerSound.stop();
-//        }
-//    }
-
     private void updateButtonGraphic(Button button) {
         ImageView image = new ImageView((isPlayerOneTurn ? cross : circle).getImage());
         image.setFitWidth(110);

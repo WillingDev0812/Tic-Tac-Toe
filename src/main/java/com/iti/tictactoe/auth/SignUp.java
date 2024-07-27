@@ -138,7 +138,7 @@ public class SignUp {
         }
 
         if (feedback.length() > 0) {
-            feedback.setLength(feedback.length() - 2); // Remove trailing comma and space
+            feedback.setLength(feedback.length() - 2); // Remove comma and space
         }
 
         return feedback.toString();

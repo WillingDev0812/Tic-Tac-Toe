@@ -116,7 +116,6 @@ public class ListOfUsers implements Runnable {
                     }
                 }
 
-                // Update UI if needed
                 Platform.runLater(() -> {
                     String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
                     playerList = newPlayerList;
@@ -228,6 +227,6 @@ public class ListOfUsers implements Runnable {
 
     @Override
     public void run() {
-        // Implement Runnable if needed
+
     }
 }

@@ -250,7 +250,6 @@ public class GameBoardController {
         } else {
             board[row][col] = 2;    // Player O
         }
-     //   System.out.println("Player " + (isPlayerOneTurn ? "One (X)" : "Two (O)") + " made a move.");
     }
 
     private int[][] checkWinner() {
@@ -285,10 +284,12 @@ public class GameBoardController {
         //  showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
         String videoPath;
         if(isSinglePlayer && isPlayerOneTurn) {
-            videoPath = "/com/iti/tictactoe/Videos/video2.mp4";
+            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
         }
+        else if(isSinglePlayer)
+            videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
         else
-            videoPath = "/com/iti/tictactoe/Videos/video4.mp4";
+            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //multiplayer
 
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
         pause.setOnFinished(event -> {
@@ -380,7 +381,7 @@ public class GameBoardController {
         AlertUtils.showInformationAlert("Game Over", message, null);
         resetGame();// bat'kd en el game cleared b3d el confirmation
         writingRecordedMoves();
-       record_btn.setDisable(false);
+        record_btn.setDisable(false);
         isRecording = false;
     }
 
@@ -548,7 +549,6 @@ public class GameBoardController {
             return bestScore;
         }
     }
-
 
     //**************************************************************************************************************/
     // implement functionality ya ahmmed ya gamallllll
