@@ -18,4 +18,9 @@
   <li>Recording Game: to make game history for each player.</li>
   <li>Update the score after each game for winner.</li>
 
-
+</li>
+</ul>
+<h2>Installation</h2>
+<ul>
+  <li>Clone this repository or download the ZIP file.</li>
+ <li>Clone the server repository or download the ZIP file.</li>
