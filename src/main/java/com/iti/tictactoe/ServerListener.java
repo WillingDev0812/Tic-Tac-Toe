@@ -20,13 +20,18 @@ public class ServerListener implements Runnable {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             String message;
             while ((message = in.readLine()) != null) {
-                if (message.equals("SERVER_STOPPED")) {
-                    Platform.runLater(() -> showAlert("Server Disconnected", "The server has been stopped."));
-                    break;
-                }
+                handleServerMessage(message);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void handleServerMessage(String message) {
+        if (message.equals("SERVER_STOPPED")) {
+            Platform.runLater(() -> showAlert("Server Disconnected", "The server has been stopped."));
+        } else {
+            // Handle other types of server messages if needed
         }
     }
 
@@ -38,16 +43,13 @@ public class ServerListener implements Runnable {
         alert.showAndWait();
     }
 
-    //  client connects to the server
     public void connectToServer(String host, int port) {
         try {
-            socket = new Socket(host, port);
+            SocketManager.getInstance().reinitializeConnection();
             // Start the listener thread
-            new Thread(new ServerListener(socket)).start();
-            // Other code to handle client functionality...
-        } catch (IOException e) {
+            new Thread(new ServerListener(SocketManager.getInstance().getSocket())).start();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

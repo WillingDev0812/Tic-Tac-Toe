@@ -16,26 +16,18 @@ public class SocketManager {
     private final Gson gson = new Gson(); // Gson instance for JSON handling
 
     private SocketManager() {
-        try {
-            initializeSocket();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // Private constructor to prevent instantiation
     }
 
-    public static synchronized SocketManager getInstance() throws  Exception{
+    public Socket getSocket() {
+        return socket;
+    }
 
-            try {
-                if (instance == null) {
-                    instance = new SocketManager();
-                }
-            } catch (Exception e){
-                instance=null;
-                System.out.println("SocketManager not initialized");
-                System.out.println(e.getMessage());
-                throw e;
-            }
-
+    public static synchronized SocketManager getInstance() throws Exception {
+        if (instance == null) {
+            instance = new SocketManager();
+            instance.initializeSocket(); // Initialize on first access
+        }
         return instance;
     }
 
@@ -51,8 +43,7 @@ public class SocketManager {
             pw = new PrintWriter(socket.getOutputStream(), true);
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            throw e;
+            throw new RuntimeException("Failed to initialize socket: " + e.getMessage(), e);
         }
     }
 
@@ -98,7 +89,7 @@ public class SocketManager {
         try {
             initializeSocket();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to reinitialize connection: " + e.getMessage(), e);
         }
     }
 }
