@@ -551,15 +551,10 @@ public class GameBoardController {
             return bestScore;
         }
     }
-
-    ///
     // implement functionality ya ahmmed ya gamallllll
     public void handleRecordButton(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();
         record_btn.setDisable(true);
-        //remove this 2 lines if u want to change style
-        // record_btn.setStyle("-fx-background-color: #ff0000");
-        // record_btn.setText("Recording");
         record_btn.getStyleClass().add("record-button-recording");
         isRecording = true;
 
@@ -579,9 +574,6 @@ public class GameBoardController {
                 throw new RuntimeException(e);
             }
             record_btn.getStyleClass().add("record-button");
-
-            //record_btn.setStyle(" -fx-background-color: #0012AF");
-            //record_btn.setText("REC");
         }
     }
 }
