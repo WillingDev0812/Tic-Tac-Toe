@@ -80,7 +80,7 @@ public class GameBoardController {
     @FXML
     private Button button22;
 
-    String movesRecorded ="";
+    String movesRecorded = "";
     boolean isRecording = false;
 
     private NavigationController navController;
@@ -189,7 +189,7 @@ public class GameBoardController {
         handleButtonAction(button22, 2, 2);
     }
 
-
+    boolean draw = false;
     @FXML
     private void ExitButton(ActionEvent event) {
         UiUtils.playSoundEffect();
@@ -199,16 +199,18 @@ public class GameBoardController {
                 UiUtils.playSoundEffect();
                 navController.popScene();
                 navController.popScene();
-                record_btn.setDisable(false);
                 winnerSound.stop();    // to stop sound when quit
+                record_btn.setDisable(false);
+                writingRecordedMoves();
+                isRecording = false;
             }
         }
     }
     private void handleButtonAction(Button button, int row, int col) {
         if (button.getGraphic() == null && board[row][col] == 0) {
             record_btn.setDisable(true);
-        if(isRecording)
-            movesRecorded +=row+","+col +"\n";
+            if (isRecording)
+                movesRecorded += row + "," + col + "\n";
             updateButtonGraphic(button);
             playClickSound();
             updateBoardStateForPlayers(row, col);
@@ -285,11 +287,11 @@ public class GameBoardController {
         String videoPath;
         if(isSinglePlayer && isPlayerOneTurn) {
             videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
-        }
-        else if(isSinglePlayer)
+        } else if (isSinglePlayer)
             videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
         else
-            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //multiplayer
+            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
+
 
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
         pause.setOnFinished(event -> {
@@ -550,14 +552,14 @@ public class GameBoardController {
         }
     }
 
-    //**************************************************************************************************************/
+    ///
     // implement functionality ya ahmmed ya gamallllll
     public void handleRecordButton(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();
         record_btn.setDisable(true);
         //remove this 2 lines if u want to change style
-       // record_btn.setStyle("-fx-background-color: #ff0000");
-       // record_btn.setText("Recording");
+        // record_btn.setStyle("-fx-background-color: #ff0000");
+        // record_btn.setText("Recording");
         record_btn.getStyleClass().add("record-button-recording");
         isRecording = true;
 
@@ -572,6 +574,7 @@ public class GameBoardController {
                 rec.write(movesRecorded);
                 rec.close();
                 movesRecorded = "";
+                isRecording = false;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
