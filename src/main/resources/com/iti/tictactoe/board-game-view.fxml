@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<StackPane xmlns:fx="http://javafx.com/fxml" stylesheets="@styles.css"
+           fx:controller="com.iti.tictactoe.muliplayerSingleOffline.GameBoardController">
+
+<ImageView fx:id="gameBackGround" fitWidth="1920" fitHeight="1080"/>
+
+    <BorderPane>
+        <!-- Draw label at the top center -->
+        <top>
+            <HBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+                <Label
+                        stylesheets="@styles.css"
+                        styleClass="playernames"
+                        text="DRAW"/>
+                <Label
+                        fx:id="drawScore"
+                        text="0"
+                        styleClass="draw-placeholder"/>
+            </HBox>
+        </top>
+        <!-- Player One on the left -->
+        <left>
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: -250 0 0 100;">
+                <Label fx:id="playerOne" text="PLAYER NAME" stylesheets="@styles.css" styleClass="playernames" />
+                <ImageView fx:id="cross" fitHeight="120" fitWidth="120"/>
+                <HBox alignment="CENTER" spacing="70" style="-fx-padding: 20;">
+                    <Label fx:id="playerOneScore" text="0" styleClass="playerOne-placeholder" />
+                </HBox>
+            </VBox>
+        </left>
+        <!-- Player Two on the right -->
+        <right>
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: -250 100 0 0;">
+                <Label fx:id="playerTwo" text="PLAYER NAME" stylesheets="@styles.css" styleClass="playernames" />
+                <ImageView fx:id="circle" fitWidth="120" fitHeight="120"/>
+                <HBox alignment="CENTER" spacing="70" style="-fx-padding: 20;">
+                    <Label fx:id="playerTwoScore" text="0" styleClass="playerTwo-placeholder"/>
+                </HBox>
+            </VBox>
+        </right>
+    </BorderPane>
+
+    <!-- Image in the center -->
+    <VBox alignment="CENTER">
+        <ImageView fx:id="gameBoard" fitWidth="780" fitHeight="780"/>
+    </VBox>
+
+    <!-- Buttons grid -->
+    <AnchorPane style="-fx-padding: 20;">
+        <VBox alignment="CENTER" spacing="60" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20"
+              AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <HBox alignment="CENTER" spacing="70">
+                <Button fx:id="button00" onAction="#handleButton00Action" styleClass="neon-button"/>
+                <Button fx:id="button01" onAction="#handleButton01Action" styleClass="neon-button"/>
+                <Button fx:id="button02" onAction="#handleButton02Action" styleClass="neon-button"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="70">
+                <Button fx:id="button10" onAction="#handleButton10Action" styleClass="neon-button"/>
+                <Button fx:id="button11" onAction="#handleButton11Action" styleClass="neon-button"/>
+                <Button fx:id="button12" onAction="#handleButton12Action" styleClass="neon-button"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="70">
+                <Button fx:id="button20" onAction="#handleButton20Action" styleClass="neon-button"/>
+                <Button fx:id="button21" onAction="#handleButton21Action" styleClass="neon-button"/>
+                <Button fx:id="button22" onAction="#handleButton22Action" styleClass="neon-button"/>
+            </HBox>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20"
+              AnchorPane.rightAnchor="20">
+            <Button fx:id="exit_btn" text="QUIT" onAction="#ExitButton" styleClass="exit-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="restart_btn" text="RESTART" onAction="#handleRestartButton" styleClass="restart-button"/>
+            <Button fx:id="record_btn" text="Rec" onAction="#handleRecordButton" styleClass="restart-button"/>
+        </HBox>
+    </AnchorPane>
+
+</StackPane>
