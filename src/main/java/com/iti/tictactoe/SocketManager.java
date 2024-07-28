@@ -80,7 +80,7 @@ public class SocketManager {
                 socket.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Server is down");
         }
     }
 
