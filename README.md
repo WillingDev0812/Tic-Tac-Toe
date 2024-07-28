@@ -24,3 +24,13 @@
 <ul>
   <li>Clone this repository or download the ZIP file.</li>
  <li>Clone the server repository or download the ZIP file.</li>
+
+</ul>
+<h2>Run the application</h2>
+[Server Reopo](https://github.com/Galal-20/Server-Application.git). 
+ <li>Can Run the compiled JAR file: java -jar TicTacToeClient.jar</li>
+  >-jar TicTacToeClient.jar
+<li>client and server both run on the same machine.</li>
+
+<h3>Libraries Used:</h3>
+<li>JSON: to handle Requests and Responses between client and server.</li>
