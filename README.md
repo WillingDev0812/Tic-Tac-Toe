@@ -27,7 +27,7 @@
 
 </ul>
 <h2>Run the application</h2>
-[Server Reopo](https://github.com/Galal-20/Server-Application.git). 
+[Server](https://github.com/Galal-20/Server-Application.git). 
  <li>Can Run the compiled JAR file: java -jar TicTacToeClient.jar</li>
   >-jar TicTacToeClient.jar
 <li>client and server both run on the same machine.</li>
