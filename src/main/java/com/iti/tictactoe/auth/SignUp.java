@@ -33,7 +33,7 @@ public class SignUp {
     private NavigationController navController;
 
     @FXML
-    private void handleSignUp() {
+    private void handleSignUp() throws Exception {
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();

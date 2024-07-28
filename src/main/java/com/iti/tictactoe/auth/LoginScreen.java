@@ -54,7 +54,12 @@ public class LoginScreen {
             emailTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px; -fx-border-radius: 75; -fx-background-radius: 75;");
             passwordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3px;-fx-border-radius: 75;  -fx-background-radius: 75;");
         } else {
-            SocketManager socketManager = SocketManager.getInstance();
+            SocketManager socketManager = null;
+            try {
+                socketManager = SocketManager.getInstance();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             PrintWriter pw = socketManager.getPrintWriter();
             BufferedReader br = socketManager.getBufferedReader();
 

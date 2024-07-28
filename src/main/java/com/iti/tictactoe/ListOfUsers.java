@@ -74,7 +74,12 @@ public class ListOfUsers implements Runnable {
     private void refreshPlayerList() {
         if (currentUserEmail == null) return;
 
-        SocketManager socketManager = SocketManager.getInstance();
+        SocketManager socketManager = null;
+        try {
+            socketManager = SocketManager.getInstance();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         try {
             // Request username from the server
@@ -154,7 +159,12 @@ public class ListOfUsers implements Runnable {
 
     private void sendInvitation(String invitedPlayerName) {
         new Thread(() -> {
-            SocketManager socketManager = SocketManager.getInstance();
+            SocketManager socketManager = null;
+            try {
+                socketManager = SocketManager.getInstance();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
 
             try {
                 // Create JSON object for invite request
@@ -206,7 +216,12 @@ public class ListOfUsers implements Runnable {
         if (currentUserEmail == null) return;
         new Thread(() -> {
             try {
-                SocketManager socketManager = SocketManager.getInstance();
+                SocketManager socketManager = null;
+                try {
+                    socketManager = SocketManager.getInstance();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
                 JsonObject requestJson = new JsonObject();
                 requestJson.addProperty("action", "offline");
                 requestJson.addProperty("email", currentUserEmail);

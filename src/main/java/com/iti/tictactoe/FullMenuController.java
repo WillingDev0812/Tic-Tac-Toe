@@ -57,12 +57,14 @@ public class FullMenuController {
     }
 
     private boolean isServerAvailable(String host, int port) {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(host, port), 1000); // 1 second timeout
+        try {
+            SocketManager socketManager = SocketManager.getInstance();
             return true;
-        } catch (IOException e) {
+        }
+        catch (Exception e) {
             return false;
         }
+
     }
 
     public void handleOnRecordButtonClicked(MouseEvent mouseEvent) {
