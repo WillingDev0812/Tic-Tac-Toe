@@ -87,10 +87,10 @@ public class SignUp {
             // Read and parse the response
             JsonObject jsonResponse = socketManager.receiveJson(JsonObject.class);
 
-            if (jsonResponse == null) {
-                showAlert("Sign-Up Failed", "No response from the server. Please try again later.");
-                return;
-            }
+//            if (jsonResponse == null) {
+//                showAlert("Sign-Up Failed", "No response from the server. Please try again later.");
+//                return;
+//            }
 
             boolean success = jsonResponse.get("success").getAsBoolean();
 
