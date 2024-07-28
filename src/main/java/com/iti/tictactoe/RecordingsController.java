@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,6 +50,8 @@ public class RecordingsController {
             locationNameMap.put("Recording game " + file.substring(file.lastIndexOf(System.getProperty("file.separator") ) + 1 , file.lastIndexOf('.') ),file);
         }
         RecordingListview.getItems().addAll(locationNameMap.keySet());
+        // RecordingListview.getSelectionModel().getSelectedItem();
+        // System.out.println(RecordingListview.getSelectionModel().getSelectedItem());
         UiUtils.addHoverAnimation(deleteRecordingButton);
         UiUtils.addHoverAnimation(playRecordingButton);
     }
@@ -70,7 +71,7 @@ public class RecordingsController {
 
         if (fileLoc == null) {
             DeleteRecordWarning.setOpacity(0.0);
-            PlayRecordWarning.setOpacity(1.0); ////select a file to play
+            PlayRecordWarning.setOpacity(1.0);
             EmptyFileWarning.setOpacity(0.0);
             System.out.println("Please select a path");
         } else {
@@ -79,7 +80,7 @@ public class RecordingsController {
                 // Handle empty file case
                 DeleteRecordWarning.setOpacity(0.0);
                 PlayRecordWarning.setOpacity(0.0);
-                EmptyFileWarning.setOpacity(1.0); // the record is empty
+                EmptyFileWarning.setOpacity(1.0);
                 System.out.println("Selected file is empty");
             } else {
                 PlayerNames playerNames = readPlayerNamesFromFile(fileLoc);
@@ -127,7 +128,7 @@ public class RecordingsController {
             if(RecordingListview.getSelectionModel().getSelectedItem() == null){
                 PlayRecordWarning.setOpacity(0.0);
                 EmptyFileWarning.setOpacity(0.0);
-                DeleteRecordWarning.setOpacity(1.0);    //select a record to delete
+                DeleteRecordWarning.setOpacity(1.0);    //leh md5l4 3la catch???????
                 return;
             }
             String g= locationNameMap.get(RecordingListview.getSelectionModel().getSelectedItem());
@@ -147,4 +148,3 @@ public class RecordingsController {
 
 
 }
-

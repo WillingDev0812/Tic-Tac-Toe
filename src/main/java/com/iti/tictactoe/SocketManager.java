@@ -32,7 +32,6 @@ public class SocketManager {
             if (socket != null && !socket.isClosed()) {
                 close();
             }
-
             // Reinitialize the socket and streams
             socket = new Socket("localhost", 12345);
             pw = new PrintWriter(socket.getOutputStream(), true);

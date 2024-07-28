@@ -19,9 +19,9 @@ public class TicTacToeGame extends Application {
 
     @Override
     public void stop() throws Exception {
-        SocketManager socketManager = SocketManager.getInstance();
+//        SocketManager socketManager = SocketManager.getInstance();
         new ListOfUsers().logout();
-        socketManager.close();
+//        socketManager.close();
         super.stop();
     }
 
@@ -41,6 +41,7 @@ public class TicTacToeGame extends Application {
             stage.setScene(splashScene);
 
             stage.setFullScreen(true);
+            stage.setResizable(true);
             stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
 
             stage.show();
