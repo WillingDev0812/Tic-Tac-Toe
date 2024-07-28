@@ -2,7 +2,6 @@ package com.iti.tictactoe.auth;
 
 import com.google.gson.JsonObject;
 import com.iti.tictactoe.ListOfUsers;
-import com.iti.tictactoe.ServerListener;
 import com.iti.tictactoe.SocketManager;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
@@ -32,7 +31,6 @@ public class LoginScreen {
     @FXML
     private Label warningTextLabel;
     private NavigationController navController;
-    private ServerListener serverListener;
 
 
     @FXML
@@ -95,7 +93,6 @@ public class LoginScreen {
                             });
                             emailTextField.clear();
                             passwordTextField.clear();
-                            //                 serverListener.connectToServer("localhost",12345);
                         }
                     });
                 } else {
