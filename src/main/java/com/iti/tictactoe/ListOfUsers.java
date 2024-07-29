@@ -1,6 +1,9 @@
 package com.iti.tictactoe;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
@@ -39,7 +42,7 @@ public class ListOfUsers {
     public static String currentUserEmail;
     private NavigationController navController;
     private final AtomicBoolean keepRefreshing = new AtomicBoolean(true);
-
+    SocketManager socketManager = SocketManager.getInstance();
     @FXML
     private void initialize() throws IOException, InterruptedException {
         UiUtils.addHoverAnimation(inviteBtn);
@@ -48,6 +51,7 @@ public class ListOfUsers {
         startRefreshingPlayerList();
     }
     private void setUsername() throws IOException, InterruptedException {
+
         JsonObject usernameRequest = new JsonObject();
         usernameRequest.addProperty("action", "getUsername");
         usernameRequest.addProperty("email", currentUserEmail);
