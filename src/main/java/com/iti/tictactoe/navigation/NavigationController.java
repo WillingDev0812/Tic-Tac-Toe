@@ -65,6 +65,5 @@ public class NavigationController {
         while (navHistory.size() > 2) {
             popScene();
         }
-
     }
 }

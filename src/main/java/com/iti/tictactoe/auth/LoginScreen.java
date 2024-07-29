@@ -30,7 +30,6 @@ public class LoginScreen {
     @FXML
     private Label warningTextLabel;
     private NavigationController navController;
-   public static SocketManager socketManager;
     @FXML
     private void initialize() {
         UiUtils.addHoverAnimation(loginBtn);
@@ -58,10 +57,11 @@ public class LoginScreen {
                 jsonRequest.addProperty("action", "login");
                 jsonRequest.addProperty("email", emailTextField.getText());
                 jsonRequest.addProperty("password", passwordTextField.getText());
+                SocketManager socketManager;
 
-                 socketManager = SocketManager.getInstance();
+                socketManager = SocketManager.getInstance();
                 socketManager.connectCheck();
-                ListOfUsers.currentUserEmail=emailTextField.getText();
+                ListOfUsers.currentUserEmail = emailTextField.getText();
                 // Send JSON request
                 SocketManager.getInstance().sendJson(jsonRequest);
 
