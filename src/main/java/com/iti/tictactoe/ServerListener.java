@@ -2,6 +2,7 @@ package com.iti.tictactoe;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
 
@@ -45,8 +46,11 @@ public class ServerListener implements Runnable {
                         }
                     });
                     break;
-                }else{
-
+                }else if ("INVITE".equals(message)){
+                    System.out.println("a7aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                    Platform.runLater(() -> {
+                           AlertUtils.showConfirmationAlert("invitation","do u want to play",null);
+                   });
                 }
             }
         } catch (IOException e) {

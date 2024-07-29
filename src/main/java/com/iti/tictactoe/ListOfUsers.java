@@ -49,6 +49,8 @@ public class ListOfUsers {
         UiUtils.addHoverAnimation(signOut);
         setUsername();
         startRefreshingPlayerList();
+       // refreshPlayerList();
+
     }
     private void setUsername() throws IOException, InterruptedException {
 
@@ -160,7 +162,7 @@ public class ListOfUsers {
     }
 
     private void sendInvitation(String invitedPlayerName) {
-        new Thread(() -> {
+      //  new Thread(() -> {
             SocketManager socketManager = SocketManager.getInstance();
             try {
                 // Create JSON object for invite request
@@ -189,7 +191,7 @@ public class ListOfUsers {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }).start();
+       // }).start();
     }
 
     @FXML
