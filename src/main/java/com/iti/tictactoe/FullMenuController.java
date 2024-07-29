@@ -4,15 +4,8 @@ import com.iti.tictactoe.auth.LoginScreen;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-
-import static com.iti.tictactoe.models.AlertUtils.showInformationAlert;
 
 public class FullMenuController {
     @FXML
@@ -36,12 +29,11 @@ public class FullMenuController {
 
     public void handleOnOnlineButtonClicked(MouseEvent mouseEvent) {
         UiUtils.playSoundEffect();
-
         // Check server availability
-        if (!isServerAvailable("localhost", 12345)) {
+    /*    if (!isServerAvailable("localhost", 12345)) {
             showInformationAlert(String.valueOf(Alert.AlertType.ERROR), "Server Error", "The server is down. Please try again later.");
             return; // Exit method if server is down
-        }
+        }*/
 
         // Continue if server is available
         if (navController == null) {
@@ -57,10 +49,16 @@ public class FullMenuController {
     }
 
     private boolean isServerAvailable(String host, int port) {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(host, port), 1000); // 1 second timeout
-            return true;
-        } catch (IOException e) {
+        try {
+            // Attempt to connect using SocketManager
+            SocketManager socketManager = null;
+            try {
+                socketManager = SocketManager.getInstance();
+            } catch (Exception e) {
+                return false;
+            }
+            return socketManager.connect(host, port);
+        } catch (Exception e) {
             return false;
         }
     }
