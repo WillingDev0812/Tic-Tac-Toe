@@ -17,13 +17,13 @@ import java.io.IOException;
 public class TicTacToeGame extends Application {
     private NavigationController navController;
 
-    @Override
+  /*  @Override
     public void stop() throws Exception {
-//        SocketManager socketManager = SocketManager.getInstance();
+        SocketManager socketManager = SocketManager.getInstance();
         new ListOfUsers().logout();
-//        socketManager.close();
+        socketManager.close();
         super.stop();
-    }
+    }*/
 
     @Override
     public void start(Stage stage) {
@@ -40,7 +40,7 @@ public class TicTacToeGame extends Application {
             Scene splashScene = new Scene(root);
             stage.setScene(splashScene);
 
-            stage.setFullScreen(true);
+            stage.setFullScreen(false);
             stage.setResizable(true);
             stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
 

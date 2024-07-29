@@ -1,7 +1,7 @@
 package com.iti.tictactoe;
 
+import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,44 +10,49 @@ import java.net.Socket;
 
 public class ServerListener implements Runnable {
     private Socket socket;
+    private BufferedReader in;
+    private NavigationController navController;
 
-    public ServerListener(Socket socket) {
+    public ServerListener(Socket socket, NavigationController navController) {
         this.socket = socket;
-    }
-
-    @Override
-    public void run() {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            String message;
-            while ((message = in.readLine()) != null) {
-                if (message.equals("SERVER_STOPPED")) {
-                    Platform.runLater(() -> showAlert("Server Disconnected", "The server has been stopped."));
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    //  client connects to the server
-    public void connectToServer(String host, int port) {
+        this.navController = navController;
         try {
-            socket = new Socket(host, port);
-            // Start the listener thread
-            new Thread(new ServerListener(socket)).start();
-            // Other code to handle client functionality...
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void run() {
+        try {
+            String message;
+            while ((message = in.readLine()) != null) {
+                if ("SERVER_STOPPED".equals(message)) {
+                    Platform.runLater(() -> {
+                        if (navController != null) {
+                            navController.handleServerStop();
+                        } else {
+                            System.err.println("NavigationController is null in ServerListener.");
+                        }
+                    });
+                    break;
+                }
+                // Handle other server messages here...
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (socket != null && !socket.isClosed()) {
+                    socket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
