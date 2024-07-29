@@ -17,13 +17,11 @@ import java.io.IOException;
 public class TicTacToeGame extends Application {
     private NavigationController navController;
 
-  /*  @Override
+    @Override
     public void stop() throws Exception {
-        SocketManager socketManager = SocketManager.getInstance();
         new ListOfUsers().logout();
-        socketManager.close();
         super.stop();
-    }*/
+    }
 
     @Override
     public void start(Stage stage) {

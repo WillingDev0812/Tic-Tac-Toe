@@ -48,10 +48,9 @@ public class ServerListener implements Runnable {
                 }else{
 
                 }
-                // Handle other server messages here...
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         } finally {
             try {
                 if (in != null) {
@@ -61,7 +60,7 @@ public class ServerListener implements Runnable {
                     socket.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                //    e.printStackTrace();
             }
         }
     }

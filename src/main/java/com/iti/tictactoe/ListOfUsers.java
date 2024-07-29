@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static com.iti.tictactoe.ServerListener.message;
-import static com.iti.tictactoe.auth.LoginScreen.socketManager;
 
-public class ListOfUsers implements Runnable {
+import static com.iti.tictactoe.ServerListener.message;
+
+public class ListOfUsers {
     @FXML
     private Button signOut;
 
@@ -39,10 +39,6 @@ public class ListOfUsers implements Runnable {
     public static String currentUserEmail;
     private NavigationController navController;
     private final AtomicBoolean keepRefreshing = new AtomicBoolean(true);
-
-    public static void setCurrentUserEmail(String email) {
-        currentUserEmail = email;
-    }
 
     @FXML
     private void initialize() throws IOException, InterruptedException {
@@ -76,7 +72,7 @@ public class ListOfUsers implements Runnable {
             while (keepRefreshing.get()) {
                 try {
                     refreshPlayerList();
-                    Thread.sleep(3000); // Refresh every 3 seconds
+                    Thread.sleep(4000); // Refresh every 3 seconds
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupt status
                     System.out.println("Refresh thread interrupted: " + e.getMessage());
@@ -97,21 +93,21 @@ public class ListOfUsers implements Runnable {
             return;
         }
 
-      //  SocketManager socketManager = SocketManager.getInstance();
         try {
 
-
             // Create JSON object for showUsers request
+
             JsonObject jsonRequest = new JsonObject();
             jsonRequest.addProperty("action", "showUsers");
             jsonRequest.addProperty("email", currentUserEmail);
 
             // Send JSON request
             socketManager.sendJson(jsonRequest);
+
             System.out.println("the json request senttt =  "+ jsonRequest);
             Thread.sleep(100);
-            // Read and parse the response
 
+            // Read and parse the response
             Gson gson = new Gson();
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
             if (jsonResponseArray != null) {
@@ -125,7 +121,6 @@ public class ListOfUsers implements Runnable {
                         newPlayerList.add(username + "                          " + status);
                     }
                 }
-
                 Platform.runLater(() -> {
                     String selectedItem = PlayerListView.getSelectionModel().getSelectedItem();
                     playerList = newPlayerList;
@@ -162,14 +157,13 @@ public class ListOfUsers implements Runnable {
 
     private void sendInvitation(String invitedPlayerName) {
         new Thread(() -> {
-            //SocketManager socketManager = SocketManager.getInstance();
-
+            SocketManager socketManager = SocketManager.getInstance();
             try {
                 // Create JSON object for invite request
                 JsonObject jsonRequest = new JsonObject();
                 jsonRequest.addProperty("action", "invite");
                 jsonRequest.addProperty("player", invitedPlayerName);
-                System.out.println(jsonRequest+" the sent json request");
+                System.out.println(jsonRequest + " the sent json request");
                 // Send JSON request
                 socketManager.sendJson(jsonRequest);
                 Thread.sleep(1000);
@@ -194,7 +188,6 @@ public class ListOfUsers implements Runnable {
         }).start();
     }
 
-
     @FXML
     public void signOut(ActionEvent actionEvent) {
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
@@ -203,9 +196,9 @@ public class ListOfUsers implements Runnable {
                 "Click 'OK' to proceed or 'Cancel' to stay logged in."
         );
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            stopRefreshingPlayerList();
             logout();
             if (navController != null) {
-                stopRefreshingPlayerList(); // Ensure refreshing stops
                 navController.popScene();
                 navController.popScene();
             }
@@ -213,30 +206,31 @@ public class ListOfUsers implements Runnable {
     }
 
     public void logout() {
-        if (currentUserEmail == null) return;
-        new Thread(() -> {
-            try {
-              //  SocketManager socketManager = SocketManager.getInstance();
-                JsonObject requestJson = new JsonObject();
-                requestJson.addProperty("action", "offline");
-                requestJson.addProperty("email", currentUserEmail);
-
-                // Send JSON request
-                socketManager.sendJson(requestJson);
-                socketManager.reinitializeConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
+        System.out.println("test");
+        if (currentUserEmail == null) {
+            return;
+        }
+        try {
+            SocketManager socketManager = SocketManager.getInstance();
+            if (socketManager == null) {
+                System.out.println("SocketManager instance is null");
+                return;
             }
-        }).start();
+            JsonObject logoutRequest = new JsonObject();
+            logoutRequest.addProperty("action", "offline");
+            logoutRequest.addProperty("email", currentUserEmail);
+            System.out.println("Attempting to send logout request...");
+            socketManager.sendJson(logoutRequest);
+            System.out.println("Logout request sent: " + logoutRequest);
+            socketManager.reinitializeConnection();
+        } catch (IOException e) {
+            e.printStackTrace(); // Print stack trace to help with debugging
+            throw new RuntimeException("IOException during sign out: " + e.getMessage(), e);
+        }
     }
-
 
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
 
-    @Override
-    public void run() {
-
-    }
 }
