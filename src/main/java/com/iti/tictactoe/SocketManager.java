@@ -43,7 +43,8 @@ public class SocketManager {
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println("Socket initialized: " + socket);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error initializing socket: " + e.getMessage());
+            //    e.printStackTrace();
             // Consider throwing a custom exception or handling it more gracefully
         }
     }
