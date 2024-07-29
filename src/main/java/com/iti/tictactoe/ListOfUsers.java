@@ -78,6 +78,7 @@ public class ListOfUsers {
 
         try {
              //Request username from the server
+/*           SocketManager socketManager =SocketManager.getInstance();
             JsonObject usernameRequest = new JsonObject();
             usernameRequest.addProperty("action", "getUsername");
             usernameRequest.addProperty("email", currentUserEmail);
@@ -92,10 +93,11 @@ public class ListOfUsers {
                 Platform.runLater(() -> playerName.setText("Hello " + username));
             } else {
                 Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
-            }
+            }*/
 
             // Create JSON object for showUsers request
-            SocketManager socketManager = SocketManager.getInstance();
+            SocketManager socketManager;
+            socketManager = SocketManager.getInstance();
             JsonObject jsonRequest = new JsonObject();
             jsonRequest.addProperty("action", "showUsers");
             jsonRequest.addProperty("email", currentUserEmail);
@@ -106,11 +108,7 @@ public class ListOfUsers {
             Thread.sleep(1000);
 
             // Read and parse the response
-
-           
-
-            gson = new Gson();
-
+            Gson gson = new Gson();
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
             if (jsonResponseArray != null) {
                 List<String> newPlayerList = new ArrayList<>();
