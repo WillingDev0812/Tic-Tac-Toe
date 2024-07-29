@@ -78,26 +78,22 @@ public class ListOfUsers {
 
         try {
              //Request username from the server
-/*           SocketManager socketManager =SocketManager.getInstance();
+            SocketManager socketManager;
+            socketManager = SocketManager.getInstance();
             JsonObject usernameRequest = new JsonObject();
             usernameRequest.addProperty("action", "getUsername");
             usernameRequest.addProperty("email", currentUserEmail);
             socketManager.sendJson(usernameRequest);
-            Gson gson = new Gson();
-            System.out.println(message);
-//          JsonObject usernameResponse = gson.fromJson(message, JsonObject.class); //walahi ma3raf mesh sh3'ala leh
-//          //Read username response
             JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
             if (usernameResponse.get("success").getAsBoolean()) {
                 String username = usernameResponse.get("message").getAsString();
                 Platform.runLater(() -> playerName.setText("Hello " + username));
             } else {
                 Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
-            }*/
+            }
 
             // Create JSON object for showUsers request
-            SocketManager socketManager;
-            socketManager = SocketManager.getInstance();
+
             JsonObject jsonRequest = new JsonObject();
             jsonRequest.addProperty("action", "showUsers");
             jsonRequest.addProperty("email", currentUserEmail);
