@@ -77,21 +77,22 @@ public class ListOfUsers {
         }
 
         try {
-            //request user from database nourrrr
-//             //Request username from the server
-//            JsonObject usernameRequest = new JsonObject();
-//            usernameRequest.addProperty("action", "getUsername");
-//            usernameRequest.addProperty("email", "gg");
-//            socketManager.sendJson(usernameRequest);
-//
-//             //Read username response
-//            JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
-//            if (usernameResponse.get("success").getAsBoolean()) {
-//                String username = usernameResponse.get("message").getAsString();
-//                Platform.runLater(() -> playerName.setText("Hello " + username));
-//            } else {
-//                Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
-//            }
+             //Request username from the server
+            JsonObject usernameRequest = new JsonObject();
+            usernameRequest.addProperty("action", "getUsername");
+            usernameRequest.addProperty("email", currentUserEmail);
+            socketManager.sendJson(usernameRequest);
+            Gson gson = new Gson();
+            System.out.println(message);
+//          JsonObject usernameResponse = gson.fromJson(message, JsonObject.class); //walahi ma3raf mesh sh3'ala leh
+//          //Read username response
+            JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
+            if (usernameResponse.get("success").getAsBoolean()) {
+                String username = usernameResponse.get("message").getAsString();
+                Platform.runLater(() -> playerName.setText("Hello " + username));
+            } else {
+                Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
+            }
 
             // Create JSON object for showUsers request
             SocketManager socketManager = SocketManager.getInstance();
@@ -105,7 +106,11 @@ public class ListOfUsers {
             Thread.sleep(1000);
 
             // Read and parse the response
-            Gson gson = new Gson();
+
+           
+
+            gson = new Gson();
+
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
             if (jsonResponseArray != null) {
                 List<String> newPlayerList = new ArrayList<>();
