@@ -9,10 +9,13 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class ServerListener implements Runnable {
-    private Socket socket;
-    private BufferedReader in;
-    private NavigationController navController;
 
+
+    private Socket socket;
+    public static BufferedReader in;
+    private NavigationController navController;
+    public static String message;
+    public static volatile String a7a;
     public ServerListener(Socket socket, NavigationController navController) {
         this.socket = socket;
         this.navController = navController;
@@ -26,8 +29,8 @@ public class ServerListener implements Runnable {
     @Override
     public void run() {
         try {
-            String message;
-            while ((message = in.readLine()) != null) {
+        //    String message;
+            while ((message = in.readLine())!= null) {
                 if ("SERVER_STOPPED".equals(message)) {
                     Platform.runLater(() -> {
                         if (navController != null) {
@@ -37,6 +40,9 @@ public class ServerListener implements Runnable {
                         }
                     });
                     break;
+                }else{
+
+                  //   a7a=message;
                 }
                 // Handle other server messages here...
             }

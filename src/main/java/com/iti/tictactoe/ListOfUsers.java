@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import static com.iti.tictactoe.ServerListener.message;
+import static com.iti.tictactoe.auth.LoginScreen.socketManager;
 
 public class ListOfUsers implements Runnable {
     @FXML
@@ -72,25 +75,28 @@ public class ListOfUsers implements Runnable {
     }
 
     private void refreshPlayerList() {
-        if (currentUserEmail == null) return;
+        if (currentUserEmail == null) {
+            System.out.println("username==null");
+            return;
+        }
 
-        SocketManager socketManager = SocketManager.getInstance();
-
+      //  SocketManager socketManager = SocketManager.getInstance();
         try {
-            // Request username from the server
-            JsonObject usernameRequest = new JsonObject();
-            usernameRequest.addProperty("action", "getUsername");
-            usernameRequest.addProperty("email", currentUserEmail);
-            socketManager.sendJson(usernameRequest);
-
-            // Read username response
-            JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
-            if (usernameResponse.get("success").getAsBoolean()) {
-                String username = usernameResponse.get("message").getAsString();
-                Platform.runLater(() -> playerName.setText("Hello " + username));
-            } else {
-                Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
-            }
+            //request user from database nourrrr
+//             //Request username from the server
+//            JsonObject usernameRequest = new JsonObject();
+//            usernameRequest.addProperty("action", "getUsername");
+//            usernameRequest.addProperty("email", "gg");
+//            socketManager.sendJson(usernameRequest);
+//
+//             //Read username response
+//            JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
+//            if (usernameResponse.get("success").getAsBoolean()) {
+//                String username = usernameResponse.get("message").getAsString();
+//                Platform.runLater(() -> playerName.setText("Hello " + username));
+//            } else {
+//                Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
+//            }
 
             // Create JSON object for showUsers request
             JsonObject jsonRequest = new JsonObject();
@@ -99,12 +105,16 @@ public class ListOfUsers implements Runnable {
 
             // Send JSON request
             socketManager.sendJson(jsonRequest);
+            System.out.println("the json request senttt =  "+ jsonRequest);
+            Thread.sleep(1000);
+            //String response = a7a;
+           // System.out.println("the response = "+response);
 
             // Read and parse the response
-            JsonElement jsonResponse = socketManager.receiveJson(JsonElement.class);
 
-            if (jsonResponse.isJsonArray()) {
-                JsonArray jsonResponseArray = jsonResponse.getAsJsonArray();
+            Gson gson = new Gson();
+            JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
+            if (jsonResponseArray != null) {
                 List<String> newPlayerList = new ArrayList<>();
 
                 for (JsonElement element : jsonResponseArray) {
@@ -128,6 +138,8 @@ public class ListOfUsers implements Runnable {
             }
         } catch (IOException e) {
             System.err.println("Connection to server lost: " + e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -154,7 +166,7 @@ public class ListOfUsers implements Runnable {
 
     private void sendInvitation(String invitedPlayerName) {
         new Thread(() -> {
-            SocketManager socketManager = SocketManager.getInstance();
+            //SocketManager socketManager = SocketManager.getInstance();
 
             try {
                 // Create JSON object for invite request
@@ -206,7 +218,7 @@ public class ListOfUsers implements Runnable {
         if (currentUserEmail == null) return;
         new Thread(() -> {
             try {
-                SocketManager socketManager = SocketManager.getInstance();
+              //  SocketManager socketManager = SocketManager.getInstance();
                 JsonObject requestJson = new JsonObject();
                 requestJson.addProperty("action", "offline");
                 requestJson.addProperty("email", currentUserEmail);
