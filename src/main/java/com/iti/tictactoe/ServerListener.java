@@ -1,8 +1,12 @@
 package com.iti.tictactoe;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +19,7 @@ public class ServerListener implements Runnable {
     public static BufferedReader in;
     private NavigationController navController;
     public static String message;
+    public static volatile JsonObject gg;
     public static volatile String a7a;
     public ServerListener(Socket socket, NavigationController navController) {
         this.socket = socket;
@@ -42,7 +47,6 @@ public class ServerListener implements Runnable {
                     break;
                 }else{
 
-                  //   a7a=message;
                 }
             }
         } catch (IOException e) {

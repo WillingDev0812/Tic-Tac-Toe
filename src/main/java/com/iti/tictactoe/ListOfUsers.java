@@ -1,9 +1,6 @@
 package com.iti.tictactoe;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
@@ -44,12 +41,32 @@ public class ListOfUsers {
     private final AtomicBoolean keepRefreshing = new AtomicBoolean(true);
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException, InterruptedException {
         UiUtils.addHoverAnimation(inviteBtn);
         UiUtils.addHoverAnimation(signOut);
+        setUsername();
         startRefreshingPlayerList();
     }
+    private void setUsername() throws IOException, InterruptedException {
+        JsonObject usernameRequest = new JsonObject();
+        usernameRequest.addProperty("action", "getUsername");
+        usernameRequest.addProperty("email", currentUserEmail);
+        socketManager.sendJson(usernameRequest);
+        Thread.sleep(100);
+        Gson gson = new Gson();
+        JsonObject usernameResponse = gson.fromJson(message, JsonObject.class);
+        // String usernameResponse = reponse.get("message").getAsString();
+        //Read username response
+        //  JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
+        if (usernameResponse.get("success").getAsBoolean()) {
+            String username = usernameResponse.get("message").getAsString();
+            Platform.runLater(() -> playerName.setText("Hello " + username));
+        } else {
+            Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
+        }
 
+
+    }
     private void startRefreshingPlayerList() {
         Thread refreshThread = new Thread(() -> {
             while (keepRefreshing.get()) {
@@ -77,20 +94,6 @@ public class ListOfUsers {
         }
 
         try {
-             //Request username from the server
-            SocketManager socketManager;
-            socketManager = SocketManager.getInstance();
-//            JsonObject usernameRequest = new JsonObject();
-//            usernameRequest.addProperty("action", "getUsername");
-//            usernameRequest.addProperty("email", currentUserEmail);
-//            socketManager.sendJson(usernameRequest);
-//            JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
-//            if (usernameResponse.get("success").getAsBoolean()) {
-//                String username = usernameResponse.get("message").getAsString();
-//                Platform.runLater(() -> playerName.setText("Hello " + username));
-//            } else {
-//                Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
-//            }
 
             // Create JSON object for showUsers request
 
@@ -100,8 +103,9 @@ public class ListOfUsers {
 
             // Send JSON request
             socketManager.sendJson(jsonRequest);
-            System.out.println("the json request senttt =  " + jsonRequest);
-            Thread.sleep(1000);
+
+            System.out.println("the json request senttt =  "+ jsonRequest);
+            Thread.sleep(100);
 
             // Read and parse the response
             Gson gson = new Gson();
@@ -142,14 +146,10 @@ public class ListOfUsers {
             AlertUtils.showWarningAlert("No Player Selected", null, "Please select a player to invite.");
             return;
         }
-
         String[] parts = selectedPlayer.split(" ", 2);
         invitedPlayerName = parts[0];
         System.out.println("Invitingggg : " + invitedPlayerName);
-        Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
-                "Send Invitation", "Do you want to send an invitation to " + selectedPlayer + "?",
-                "Click 'Yes' to send the invitation or 'Cancel' to cancel."
-        );
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Send Invitation", "Do you want to send an invitation to " + invitedPlayerName + "?", "Click 'Yes' to send the invitation or 'Cancel' to cancel.");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             sendInvitation(invitedPlayerName);
         }
@@ -166,15 +166,15 @@ public class ListOfUsers {
                 System.out.println(jsonRequest + " the sent json request");
                 // Send JSON request
                 socketManager.sendJson(jsonRequest);
-
-                // Read and parse the response
-                JsonObject jsonResponse = socketManager.receiveJson(JsonObject.class);
-                String response = jsonResponse.get("message").getAsString();
-                System.out.println("Invitation response: " + response);
+                Thread.sleep(1000);
+                Gson gson = new Gson();
+                JsonObject reponse = gson.fromJson(message, JsonObject.class);
+                String invitationResponse = reponse.get("message").getAsString();
+                System.out.println("Invitation response: " + invitationResponse);
                 Platform.runLater(() -> {
-                    if ("online".equals(response)) {
+                    if ("online".equals(invitationResponse)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
-                    } else if ("offline".equals(response)) {
+                    } else if ("offline".equals(invitationResponse)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
@@ -182,6 +182,8 @@ public class ListOfUsers {
                 });
             } catch (IOException e) {
                 System.out.printf("Error: %s\n", e.getMessage());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }).start();
     }
