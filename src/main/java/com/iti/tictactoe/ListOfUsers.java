@@ -43,15 +43,17 @@ public class ListOfUsers {
     private NavigationController navController;
     private final AtomicBoolean keepRefreshing = new AtomicBoolean(true);
     SocketManager socketManager = SocketManager.getInstance();
+
     @FXML
     private void initialize() throws IOException, InterruptedException {
         UiUtils.addHoverAnimation(inviteBtn);
         UiUtils.addHoverAnimation(signOut);
         setUsername();
         startRefreshingPlayerList();
-       // refreshPlayerList();
+        // refreshPlayerList();
 
     }
+
     private void setUsername() throws IOException, InterruptedException {
 
         JsonObject usernameRequest = new JsonObject();
@@ -73,12 +75,13 @@ public class ListOfUsers {
 
 
     }
+
     private void startRefreshingPlayerList() {
         Thread refreshThread = new Thread(() -> {
             while (keepRefreshing.get()) {
                 try {
                     refreshPlayerList();
-                    Thread.sleep(4000); // Refresh every 3 seconds
+                    Thread.sleep(10000); // Refresh every 3 seconds
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupt status
                     System.out.println("Refresh thread interrupted: " + e.getMessage());
@@ -110,7 +113,7 @@ public class ListOfUsers {
             // Send JSON request
             socketManager.sendJson(jsonRequest);
 
-            System.out.println("the json request senttt =  "+ jsonRequest);
+            System.out.println("the json request senttt =  " + jsonRequest);
             Thread.sleep(100);
 
             // Read and parse the response
@@ -162,17 +165,18 @@ public class ListOfUsers {
     }
 
     private void sendInvitation(String invitedPlayerName) {
-      //  new Thread(() -> {
-            SocketManager socketManager = SocketManager.getInstance();
-            try {
-                // Create JSON object for invite request
-                JsonObject jsonRequest = new JsonObject();
-                jsonRequest.addProperty("action", "invite");
-                jsonRequest.addProperty("player", invitedPlayerName);
-                System.out.println(jsonRequest + " the sent json request");
-                // Send JSON request
-                socketManager.sendJson(jsonRequest);
-                Thread.sleep(1000);
+//        new Thread(() -> {
+        SocketManager socketManager = SocketManager.getInstance();
+        try {
+            // Create JSON object for invite request
+            JsonObject jsonRequest = new JsonObject();
+            jsonRequest.addProperty("action", "invite");
+            jsonRequest.addProperty("player", invitedPlayerName);
+            System.out.println(jsonRequest + " the sent json request");
+            // Send JSON request
+            socketManager.sendJson(jsonRequest);
+            Thread.sleep(500);
+            if (message != null) {
                 Gson gson = new Gson();
                 JsonObject reponse = gson.fromJson(message, JsonObject.class);
                 String invitationResponse = reponse.get("message").getAsString();
@@ -186,12 +190,13 @@ public class ListOfUsers {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
                     }
                 });
-            } catch (IOException e) {
-                System.out.printf("Error: %s\n", e.getMessage());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
-       // }).start();
+        } catch (IOException e) {
+            System.out.printf("Error: %s\n", e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+//        }).start();
     }
 
     @FXML
