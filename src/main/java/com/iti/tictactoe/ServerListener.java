@@ -1,17 +1,16 @@
 package com.iti.tictactoe;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
+import javafx.scene.control.ButtonType;
 
-import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Optional;
 
 public class ServerListener implements Runnable {
 
@@ -22,6 +21,7 @@ public class ServerListener implements Runnable {
     public static String message;
     public static volatile JsonObject gg;
     public static volatile String a7a;
+
     public ServerListener(Socket socket, NavigationController navController) {
         this.socket = socket;
         this.navController = navController;
@@ -35,8 +35,8 @@ public class ServerListener implements Runnable {
     @Override
     public void run() {
         try {
-        //    String message;
-            while ((message = in.readLine())!= null) {
+            //    String message;
+            while ((message = in.readLine()) != null) {
                 if ("SERVER_STOPPED".equals(message)) {
                     Platform.runLater(() -> {
                         if (navController != null) {
@@ -46,11 +46,20 @@ public class ServerListener implements Runnable {
                         }
                     });
                     break;
-                }else if ("INVITE".equals(message)){
-                    System.out.println("a7aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                } else if ("INVITE".equals(message)) {
                     Platform.runLater(() -> {
-                           AlertUtils.showConfirmationAlert("invitation","do u want to play",null);
-                   });
+                        Optional<ButtonType> result = AlertUtils.showConfirmationAlert(
+                                "Invitation",
+                                "Do You Want To Play",
+                                null
+                        );
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
+                            System.out.println("Invitation Accepted");
+                        } else {
+                            System.out.println("Invitation Rejected");
+                        }
+                    });
+                    message = null;
                 }
             }
         } catch (IOException e) {
