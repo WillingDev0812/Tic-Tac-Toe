@@ -102,10 +102,13 @@ public class GameBoardController {
     private AudioClip clickOSound;
     private AudioClip winnerSound;
 
-    public void initialize(PlayerNames playerName, boolean isSinglePlayer, int difficultyFlag) {
+    public void initialize(PlayerNames playerName, boolean isSinglePlayer, int difficultyFlag, int score1 ,int score2) {
         this.playerName = playerName;
         this.isSinglePlayer = isSinglePlayer;
-
+        playerOneScore.setText(String.valueOf(score1));
+        playerTwoScore.setText(String.valueOf(score2));
+        playerOneScoreCount = score1;
+        playerTwoScoreCount = score2;
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
         winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());

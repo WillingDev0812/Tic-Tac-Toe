@@ -41,10 +41,10 @@ public class ListOfUsers {
 
     public static String currentUserEmail;
     private NavigationController navController;
-    //private AtomicBoolean keepRefreshing = new AtomicBoolean(true);
     public static boolean keepRefreshing=true;
     SocketManager socketManager = SocketManager.getInstance();
 
+    public static String username;
     @FXML
     private void initialize() throws IOException, InterruptedException {
         UiUtils.addHoverAnimation(inviteBtn);
@@ -68,7 +68,7 @@ public class ListOfUsers {
         //Read username response
         //  JsonObject usernameResponse = socketManager.receiveJson(JsonObject.class);
         if (usernameResponse.get("success").getAsBoolean()) {
-            String username = usernameResponse.get("message").getAsString();
+            username = usernameResponse.get("message").getAsString();
             Platform.runLater(() -> playerName.setText("Hello " + username));
         } else {
             Platform.runLater(() -> playerName.setText("Hello Player")); // Fallback if username retrieval fails
@@ -171,6 +171,7 @@ public class ListOfUsers {
             // Create JSON object for invite request
             JsonObject jsonRequest = new JsonObject();
             jsonRequest.addProperty("action", "invite");
+            jsonRequest.addProperty("player1", playerName.getText());
             jsonRequest.addProperty("player", invitedPlayerName);
             System.out.println(jsonRequest + " the sent json request");
             // Send JSON request
@@ -217,7 +218,6 @@ public class ListOfUsers {
     }
 
     public void logout() {
-        System.out.println("test");
         if (currentUserEmail == null) {
             return;
         }
