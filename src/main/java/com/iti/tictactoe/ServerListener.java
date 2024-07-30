@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Optional;
 
+import static com.iti.tictactoe.ListOfUsers.keepRefreshing;
+
+
 public class ServerListener implements Runnable {
 
 
@@ -38,9 +41,12 @@ public class ServerListener implements Runnable {
             //    String message;
             while ((message = in.readLine()) != null) {
                 if ("SERVER_STOPPED".equals(message)) {
+                    keepRefreshing = false;
                     Platform.runLater(() -> {
                         if (navController != null) {
                             navController.handleServerStop();
+                            message = null;
+
                         } else {
                             System.err.println("NavigationController is null in ServerListener.");
                         }

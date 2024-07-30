@@ -41,7 +41,8 @@ public class ListOfUsers {
 
     public static String currentUserEmail;
     private NavigationController navController;
-    private final AtomicBoolean keepRefreshing = new AtomicBoolean(true);
+    //private AtomicBoolean keepRefreshing = new AtomicBoolean(true);
+    public static boolean keepRefreshing=true;
     SocketManager socketManager = SocketManager.getInstance();
 
     @FXML
@@ -78,10 +79,10 @@ public class ListOfUsers {
 
     private void startRefreshingPlayerList() {
         Thread refreshThread = new Thread(() -> {
-            while (keepRefreshing.get()) {
+            while (keepRefreshing) {
                 try {
                     refreshPlayerList();
-                    Thread.sleep(10000); // Refresh every 3 seconds
+                    Thread.sleep(2000); // Refresh every 3 seconds
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupt status
                     System.out.println("Refresh thread interrupted: " + e.getMessage());
@@ -93,7 +94,8 @@ public class ListOfUsers {
     }
 
     private void stopRefreshingPlayerList() {
-        keepRefreshing.set(false);
+       // keepRefreshing.set(false);
+        keepRefreshing=false;
     }
 
     private void refreshPlayerList() {
@@ -114,13 +116,11 @@ public class ListOfUsers {
             socketManager.sendJson(jsonRequest);
 
             System.out.println("the json request senttt =  " + jsonRequest);
-            Thread.sleep(100);
-
-            // Read and parse the response
+            Thread.sleep(300);
             Gson gson = new Gson();
+            if (message != null) {
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
-            if (jsonResponseArray != null) {
-                List<String> newPlayerList = new ArrayList<>();
+            List<String> newPlayerList = new ArrayList<>();
 
                 for (JsonElement element : jsonResponseArray) {
                     if (element.isJsonObject()) {
