@@ -16,8 +16,7 @@ import java.net.Socket;
 import java.util.Optional;
 
 import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
-import static com.iti.tictactoe.ListOfUsers.keepRefreshing;
-import static com.iti.tictactoe.ListOfUsers.username;
+import static com.iti.tictactoe.ListOfUsers.*;
 
 
 public class ServerListener implements Runnable {
@@ -45,6 +44,11 @@ public class ServerListener implements Runnable {
     public void run() {
         try {
             //    String message;
+            if(socket.isClosed())
+            {
+                return;
+            }
+            else{
             while ((message = in.readLine()) != null) {
                 System.out.println("ServerListener: " + message);
                 if ("SERVER_STOPPED".equals(message)) {
@@ -75,6 +79,7 @@ public class ServerListener implements Runnable {
                             response = "INVITE_ACCEPTED";
                             PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
                             Platform.runLater(() -> {
+                                stopRefreshingPlayerList();
                                 navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
                                     if (controller instanceof OnlineController onlinecont) {
                                         onlinecont.setNavController(navController);
@@ -106,6 +111,7 @@ public class ServerListener implements Runnable {
                     invitedPlayer = parts.length > 1 ? parts[1] : "No additional message";
                     System.out.println("tmm");
                     PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
+                    stopRefreshingPlayerList();
                     Platform.runLater(() -> {
                         navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
                             if (controller instanceof OnlineController onlinecont) {
@@ -123,6 +129,7 @@ public class ServerListener implements Runnable {
 
                 // Handle other server messages here...
             }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -136,6 +143,7 @@ public class ServerListener implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 }
