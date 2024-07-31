@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.PlayerNames;
@@ -398,7 +399,7 @@ String res;
         return null;    //return null if draw
     }
 
-    private void handleWinnerState(int[][] coloredButtons) {
+    private void handleWinnerState(int[][] coloredButtons) throws IOException {
         checkHighlightWinningButtons(coloredButtons);
         updateScore();
         winnerSound.play();
@@ -407,6 +408,15 @@ String res;
         String videoPath;
         if(  isPlayerOneTurn) {
             videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
+            System.out.println(playerOneScore.getText());
+            //add
+            JsonObject jsonRequest = new JsonObject();
+            jsonRequest.addProperty("action", "incrementScore");
+            jsonRequest.addProperty("username", playerName.getPlayerOne());
+            jsonRequest.addProperty("score", Integer.parseInt(playerOneScore.getText()));
+            System.out.println(jsonRequest + " the sent json request");
+            // Send JSON request
+            socketManager.sendJson(jsonRequest);
         } else
             videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
 
@@ -540,6 +550,42 @@ String res;
             isRecording = false;
         }
     }
+    /*public void handleRestartButton(ActionEvent actionEvent) throws IOException, InterruptedException {
+        UiUtils.playSoundEffect();
+//        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
+//        if (result.isPresent() && result.get() == ButtonType.OK) {
+//            resetGame();
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("action", "invite");
+        jsonRequest.addProperty("player1", playerName.getPlayerOne());
+        jsonRequest.addProperty("player", playerName.getPlayerTwo());
+        System.out.println(jsonRequest + " the sent json request");
+        // Send JSON request
+        socketManager.sendJson(jsonRequest);
+        Thread.sleep(300);
+        if (message != null) {
+            Gson gson = new Gson();
+            JsonObject reponse = gson.fromJson(message, JsonObject.class);
+            String invitationResponse = reponse.get("message").getAsString();
+            System.out.println("Invitation response: " + invitationResponse);
+            Platform.runLater(() -> {
+                if ("online".equals(invitationResponse)) {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
+                } else if ("offline".equals(invitationResponse)) {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
+                } else {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "The invited player is current in game");
+                }
+            });
+        }
+
+
+           setButtonDisabledToPreventUserAtComputerTurns(false);
+            record_btn.setDisable(false);
+            writingRecordedMoves();
+            isRecording = false;
+        }*/
+
 
     private void setButtonDisabledToPreventUserAtComputerTurns(boolean disabled) {
         button00.setDisable(disabled);

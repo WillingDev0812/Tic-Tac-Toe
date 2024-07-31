@@ -93,7 +93,6 @@ public class LoginScreen {
                     Platform.runLater(() -> AlertUtils.showInformationAlert("Login Failed", "Invalid email or password.", null));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
                 SocketManager.getInstance();
                 Platform.runLater(() -> AlertUtils.showInformationAlert("Connection Error", "Unable to connect to the server.", null));
             }

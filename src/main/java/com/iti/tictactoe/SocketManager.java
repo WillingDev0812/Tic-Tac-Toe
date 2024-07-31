@@ -68,6 +68,14 @@ public class SocketManager {
         pw.flush();
         System.out.println("Sent JSON: " + json);
     }
+    /*public synchronized void sendMessage(String message) throws IOException {
+        if (pw == null) {
+            throw new IOException("PrintWriter is not initialized.");
+        }
+        pw.println(message);
+        pw.flush();
+        System.out.println("Sent message: " + message);
+    }*/
 
     public synchronized <T> T receiveJson(Class<T> clazz) throws IOException {
         if (br == null) {
