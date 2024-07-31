@@ -93,7 +93,7 @@ public class ListOfUsers {
         refreshThread.start();
     }
 
-    private void stopRefreshingPlayerList() {
+    public static void stopRefreshingPlayerList() {
        // keepRefreshing.set(false);
         keepRefreshing=false;
     }
@@ -118,7 +118,7 @@ public class ListOfUsers {
          //   System.out.println("the json request senttt =  " + jsonRequest);
             Thread.sleep(500);
             Gson gson = new Gson();
-            if (message != null) {
+            if (message != null&&message.startsWith("[{")) {
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
             List<String> newPlayerList = new ArrayList<>();
 

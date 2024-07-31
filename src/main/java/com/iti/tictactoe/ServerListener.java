@@ -16,8 +16,7 @@ import java.net.Socket;
 import java.util.Optional;
 
 import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
-import static com.iti.tictactoe.ListOfUsers.keepRefreshing;
-import static com.iti.tictactoe.ListOfUsers.username;
+import static com.iti.tictactoe.ListOfUsers.*;
 
 
 public class ServerListener implements Runnable {
@@ -112,6 +111,7 @@ public class ServerListener implements Runnable {
                             if (controller instanceof OnlineController onlinecont) {
                                 onlinecont.setNavController(navController);
                                 onlinecont.initialize(playerNames, 1,1);
+                                stopRefreshingPlayerList();
                             }
 
                         });
@@ -120,7 +120,6 @@ public class ServerListener implements Runnable {
                 else if (message.startsWith("PlayerMoved")){
 
                 }
-
 
                 // Handle other server messages here...
             }
