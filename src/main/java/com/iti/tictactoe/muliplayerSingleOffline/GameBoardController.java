@@ -5,6 +5,7 @@ import com.iti.tictactoe.models.PlayerNames;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -302,32 +303,38 @@ public class GameBoardController {
         });
         pause.play();
     }
-
     public void showVideo(String videoPath) {
-        Media media = new Media(getClass().getResource(videoPath).toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        MediaView mediaView = new MediaView(mediaPlayer);
+        try {
+            Media media = new Media(getClass().getResource(videoPath).toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mediaPlayer);
 
-        StackPane root = new StackPane();
-        root.getChildren().add(mediaView);
+            StackPane root = new StackPane();
+            root.getChildren().add(mediaView);
 
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.setFullScreen(true); // Make the stage full screen
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-        stage.setScene(scene);
-        stage.show();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+            stage.setScene(scene);
 
-        mediaPlayer.play();
+            Platform.runLater(() -> {
+                stage.show();
+                mediaPlayer.play();
+            });
 
-        // Hide the video after 3 seconds
-        PauseTransition delay = new PauseTransition(Duration.seconds(3));
-        delay.setOnFinished(event -> {
-            mediaPlayer.stop();
-            stage.close();
-        });
-        delay.play();
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                mediaPlayer.stop();
+                stage.close();
+            });
+            delay.play();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception, possibly logging or showing an alert to the user
+        }
     }
 
     private void handleDrawState() {
