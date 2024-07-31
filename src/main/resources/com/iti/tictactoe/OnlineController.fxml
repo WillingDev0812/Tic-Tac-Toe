@@ -77,7 +77,7 @@
             <Button fx:id="exit_btn" onAction="#ExitButton" styleClass="exit-button" text="QUIT" />
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="restart_btn" onAction="#handleRestartButton" styleClass="restart-button" text="RESTART" />
-            <Button fx:id="record_btn" onAction="#handleRecordButton" styleClass="restart-button" text="Rec" />
+            <Button fx:id="record_btn" onAction="#handleRecordButton" styleClass="record-button" text="Rec" />
         </HBox>
     </AnchorPane>
 
