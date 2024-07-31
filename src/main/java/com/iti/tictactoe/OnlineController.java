@@ -100,13 +100,15 @@ public class OnlineController {
 
     private final int[][] board = new int[3][3];   // board game
     private PlayerNames playerName;
-    private boolean isPlayerOneTurn = true;
+    public static boolean isPlayerOneTurn ;
 
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
 
     public void initialize(PlayerNames playerName, int score1 ,int score2) {
+if(!isPlayerOneTurn)
+    setButtonDisabledToPreventUserAtComputerTurns(true);
 
         this.playerName = playerName;
         playerOneScore.setText(String.valueOf(score1));
@@ -138,7 +140,6 @@ public class OnlineController {
                 try {
                     // Check if a message indicating a player move has been received
                     if (message != null && message.startsWith("PlayerMoved")) {
-                        System.out.println("Player moved in thread");
                         String[] parts = message.split("\\s+");
                         int row = Integer.parseInt(parts[1].substring(0, 1));
                         int col = Integer.parseInt(parts[1].substring(1));
@@ -348,32 +349,7 @@ String res;
             }
         }
     }
-//    Thread refreshThread = new Thread(() -> {
-//            try {
-//                if (message.startsWith("PlayerMoved")){
-//                    String msg = message;
-//                    showmove(msg);
-//                }
-//                Thread.sleep(2000); // Refresh every 3 seconds
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//    });
-//
-//        public  void showmove(String returnedmove) throws IOException {
-//            String[] parts = message.split("\\s+");
-//            int row = Integer.parseInt(parts[1].substring(0, 1));
-//            int col = Integer.parseInt(parts[1].substring(1));
-//
-//            System.out.println(row + " row&col " + col);
-//            `Button button = getButtonAt(row, col);
-//            assert button != null;
-//            handleButtonAction(button, row, col);`
-//
-//        }
+
 
     private void playClickSound() {
         if (isPlayerOneTurn) {
@@ -429,12 +405,11 @@ String res;
         // these line to prevent the aler to be popped when someone wins to see the highlighted buttons
         //  showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
         String videoPath;
-        if(isSinglePlayer && isPlayerOneTurn) {
+        if(  isPlayerOneTurn) {
             videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
-        } else if (isSinglePlayer)
+        } else
             videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
-        else
-            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
+
 
 
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));

@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
 import static com.iti.tictactoe.ListOfUsers.*;
+import static com.iti.tictactoe.OnlineController.isPlayerOneTurn;
 
 
 public class ServerListener implements Runnable {
@@ -44,12 +45,9 @@ public class ServerListener implements Runnable {
     public void run() {
         try {
             //    String message;
-            if(socket.isClosed())
-            {
-                return;
-            }
-            else{
-            while ((message = in.readLine()) != null) {
+
+
+            while ((message = in.readLine()) != null&&!socket.isClosed()) {
                 System.out.println("ServerListener: " + message);
                 if ("SERVER_STOPPED".equals(message)) {
                     keepRefreshing = false;
@@ -78,6 +76,7 @@ public class ServerListener implements Runnable {
                         if (result.isPresent() && result.get().getText().equals("Accept")) {
                             response = "INVITE_ACCEPTED";
                             PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
+                            isPlayerOneTurn=true;
                             Platform.runLater(() -> {
                                 stopRefreshingPlayerList();
                                 navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
@@ -90,6 +89,7 @@ public class ServerListener implements Runnable {
                             });
                         } else if (result.isPresent() && result.get().getText().equals("Decline")) {
                             response = "INVITE_DECLINED";
+                            keepRefreshing=true;
                         }
 
                         SocketManager socketManager = SocketManager.getInstance();
@@ -98,6 +98,7 @@ public class ServerListener implements Runnable {
                         jsonRequest.addProperty("action", response);
                         jsonRequest.addProperty("player",invitedPlayer);
                         jsonRequest.addProperty("player2", username);
+                        keepRefreshing=false;
                         try {
                             socketManager.sendJson(jsonRequest);
                         } catch (IOException e) {
@@ -112,6 +113,7 @@ public class ServerListener implements Runnable {
                     System.out.println("tmm");
                     PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
                     stopRefreshingPlayerList();
+                    isPlayerOneTurn=false;
                     Platform.runLater(() -> {
                         navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
                             if (controller instanceof OnlineController onlinecont) {
@@ -125,10 +127,10 @@ public class ServerListener implements Runnable {
                 else if (message.startsWith("PlayerMoved")){
 
                 }
-
+             //   else if (message.startsWith(""))
 
                 // Handle other server messages here...
-            }
+
             }
         } catch (IOException e) {
             e.printStackTrace();

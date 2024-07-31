@@ -38,6 +38,7 @@ public class SocketManager {
         close(); // Ensure previous resources are closed
         try {
             // Initialize the socket and streams
+            //socket = new Socket("10.145.19.172", 12345);
             socket = new Socket("localhost", 12345);
             pw = new PrintWriter(socket.getOutputStream(), true);
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
