@@ -292,6 +292,7 @@ public class OnlineController {
                 "This will move you to lose");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             sendExitGameRequest();
+
             // Handle UI updates and other actions
 
             handleExitAction();

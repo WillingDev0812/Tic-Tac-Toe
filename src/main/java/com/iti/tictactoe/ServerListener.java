@@ -114,22 +114,20 @@ public class ServerListener implements Runnable {
                             AlertUtils.showInformationAlert("Exit Notification",
                                     null, username + " has exited the game");
 
-                            navController.popScene();
-
                             // Retrieve current user's email
-                            String userEmail = currentUserEmail; // Ensure this retrieves the user's email correctly
 
                             SocketManager socketManager = SocketManager.getInstance();
                             com.google.gson.JsonObject jsonRequest = new com.google.gson.JsonObject();
-                            jsonRequest.addProperty("action", "online");
-                            jsonRequest.addProperty("email", userEmail);
-                            exitNotificationDisplayed = true; // Set flag to true to prevent repeated notifications
+                            jsonRequest.addProperty("action", "exitgame");
+                            jsonRequest.addProperty("email", currentUserEmail);
+                            navController.popScene();
                             try {
                                 socketManager.sendJson(jsonRequest);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         });
+                        exitNotificationDisplayed = true; // Set flag to true to prevent repeated notifications
                     }
                 }
                 // Handle other server messages here...
