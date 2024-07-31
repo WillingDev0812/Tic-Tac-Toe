@@ -50,7 +50,7 @@ public class ServerListener implements Runnable {
             while ((message = in.readLine()) != null&&!socket.isClosed()) {
                 System.out.println("ServerListener: " + message);
                 if ("SERVER_STOPPED".equals(message)) {
-                    keepRefreshing = false;
+                    //keepRefreshing = false;
                     Platform.runLater(() -> {
                         if (navController != null) {
                             navController.handleServerStop();

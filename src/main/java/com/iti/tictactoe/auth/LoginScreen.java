@@ -72,12 +72,13 @@ public class LoginScreen {
                     return;
                 }
                 boolean success = jsonResponse.get("success").getAsBoolean();
+                String responsemessage = jsonResponse.get("message").getAsString();
                 if (success) {
                     Platform.runLater(() -> {
                         System.out.println(jsonResponse);
                         System.out.println(jsonResponse);
                         new Thread(new ServerListener(socketManager.getSocket(), navController)).start();
-                        AlertUtils.showInformationAlert("Login Successful", "Welcome back!", null);
+                        AlertUtils.showInformationAlert("Login Successful", responsemessage, null);
                         // Navigate to the next screen if needed
                         if (navController != null) {
                             navController.pushScene("/com/iti/tictactoe/listOfUsers.fxml", controller -> {
@@ -90,7 +91,7 @@ public class LoginScreen {
                         }
                     });
                 } else {
-                    Platform.runLater(() -> AlertUtils.showInformationAlert("Login Failed", "Invalid email or password.", null));
+                    Platform.runLater(() -> AlertUtils.showInformationAlert("Login Failed", responsemessage, null));
                 }
             } catch (IOException e) {
                 SocketManager.getInstance();
