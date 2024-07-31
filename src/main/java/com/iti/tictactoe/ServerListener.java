@@ -46,6 +46,7 @@ public class ServerListener implements Runnable {
         try {
             //    String message;
             while ((message = in.readLine()) != null) {
+                System.out.println("ServerListener: " + message);
                 if ("SERVER_STOPPED".equals(message)) {
                     keepRefreshing = false;
                     Platform.runLater(() -> {
@@ -62,8 +63,7 @@ public class ServerListener implements Runnable {
                     //String[] parts = message.split(" ", 5); // Split into at most 3 parts
                     String[] parts = message.split(" ", 3); // Split into at most 3 parts
                     invitedPlayer = parts.length > 2 ? parts[2] : "No additional message";
-//                    int score2 = parts.length > 3 ? Integer.parseInt(parts[3]) : 0;
-//                    int score1 = parts.length > 4 ? Integer.parseInt(parts[4]) : 0;
+
                     Platform.runLater(() -> {
                         Optional<ButtonType> result = AlertUtils.showCustomConfirmationAlert(
                                 "Invitation",
@@ -71,17 +71,16 @@ public class ServerListener implements Runnable {
                                 invitedPlayer + " has invited you to play a game."
                         );
 
-                        String response = "gg";
+                        String response = "";
                         if (result.isPresent() && result.get().getText().equals("Accept")) {
                             response = "INVITE_ACCEPTED";
-                            //plauer2 el et3mlo el invite
                             PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
                             Platform.runLater(() -> {
-                                navController.pushScene("/com/iti/tictactoe/board-game-view.fxml", controller -> {
-                                    if (controller instanceof GameBoardController gameBoardController) {
-                                        gameBoardController.setNavController(navController);
+                                navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
+                                    if (controller instanceof OnlineController onlinecont) {
+                                        onlinecont.setNavController(navController);
                                         //gameBoardController.initialize(playerNames, false, flag,score1,score2);
-                                        gameBoardController.initialize(playerNames, false, flag,1,1);
+                                        onlinecont.initialize(playerNames,1,1);
                                     }
                                 });
                             });
@@ -109,17 +108,17 @@ public class ServerListener implements Runnable {
                     System.out.println("tmm");
                     PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
                     Platform.runLater(() -> {
-                        navController.pushScene("/com/iti/tictactoe/board-game-view.fxml", controller -> {
-                            if (controller instanceof GameBoardController gameBoardController) {
-                                gameBoardController.setNavController(navController);
-                                gameBoardController.initialize(playerNames, false, flag,1,1);
+                        navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
+                            if (controller instanceof OnlineController onlinecont) {
+                                onlinecont.setNavController(navController);
+                                onlinecont.initialize(playerNames, 1,1);
                             }
-                            else
-                            {
-                                System.out.println("a7a");
-                            }
+
                         });
                     });
+                }
+                else if (message.startsWith("PlayerMoved")){
+
                 }
 
 
