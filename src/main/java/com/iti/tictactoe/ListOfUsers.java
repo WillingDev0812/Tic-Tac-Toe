@@ -207,7 +207,7 @@ public class ListOfUsers {
                 "Click 'OK' to proceed or 'Cancel' to stay logged in."
         );
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            //  stopRefreshingPlayerList();
+            stopRefreshingPlayerList();
             logout();
             if (navController != null) {
                 navController.popScene();

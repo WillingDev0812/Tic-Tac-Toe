@@ -78,6 +78,7 @@ public class LoginScreen {
                         System.out.println(jsonResponse);
                         System.out.println(jsonResponse);
                         new Thread(new ServerListener(socketManager.getSocket(), navController)).start();
+                        ListOfUsers.keepRefreshing = true;
                         AlertUtils.showInformationAlert("Login Successful", responsemessage, null);
                         // Navigate to the next screen if needed
                         if (navController != null) {

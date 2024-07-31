@@ -1,6 +1,5 @@
 package com.iti.tictactoe;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.PlayerNames;
@@ -339,7 +338,6 @@ if(!isPlayerOneTurn)
             System.err.println("PrintWriter is not initialized.");
         }
     }
-
 
     private String getUserEmail() {
         return currentUserEmail;
