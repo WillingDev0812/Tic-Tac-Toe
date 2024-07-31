@@ -60,10 +60,9 @@ public class ServerListener implements Runnable {
                     });
                     break;
                 } else if (message.startsWith("INVITE")) {
-                    //String[] parts = message.split(" ", 5); // Split into at most 3 parts
-                    String[] parts = message.split(" ", 3); // Split into at most 3 parts
+                    String[] parts = message.split(" ", 5); // Split into at most 3 parts
+                    //String[] parts = message.split(" ", 3); // Split into at most 3 parts
                     invitedPlayer = parts.length > 2 ? parts[2] : "No additional message";
-
                     Platform.runLater(() -> {
                         Optional<ButtonType> result = AlertUtils.showCustomConfirmationAlert(
                                 "Invitation",
@@ -80,7 +79,7 @@ public class ServerListener implements Runnable {
                                     if (controller instanceof OnlineController onlinecont) {
                                         onlinecont.setNavController(navController);
                                         //gameBoardController.initialize(playerNames, false, flag,score1,score2);
-                                        onlinecont.initialize(playerNames,1,1);
+                                        onlinecont.initialize(playerNames,Integer.parseInt(parts[4]),Integer.parseInt(parts[3]));
                                     }
                                 });
                             });
@@ -103,7 +102,7 @@ public class ServerListener implements Runnable {
                     message = null;
                 } else if(message.startsWith("TMAM"))
                 {
-                    String[] parts = message.split(" ", 2); // Split into at most 3 parts
+                    String[] parts = message.split(" ", 4); // Split into at most 3 parts
                     invitedPlayer = parts.length > 1 ? parts[1] : "No additional message";
                     System.out.println("tmm");
                     PlayerNames playerNames = new PlayerNames(username, invitedPlayer);
@@ -111,7 +110,7 @@ public class ServerListener implements Runnable {
                         navController.pushScene("/com/iti/tictactoe/OnlineController.fxml", controller -> {
                             if (controller instanceof OnlineController onlinecont) {
                                 onlinecont.setNavController(navController);
-                                onlinecont.initialize(playerNames, 1,1);
+                                onlinecont.initialize(playerNames, Integer.parseInt(parts[2]),Integer.parseInt(parts[3]));
                             }
 
                         });
