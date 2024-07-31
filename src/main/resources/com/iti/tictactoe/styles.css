@@ -431,3 +431,18 @@
     -fx-font-size: 30.0px;
     -fx-font-weight: bold;
 }
+.record-button {
+    -fx-background-color: RED;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-border-color: transparent;
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-min-width: 100px; /* Ensures the button is a circle */
+    -fx-min-height: 100px;
+    -fx-max-width: 100px;
+    -fx-max-height: 100px;
+    -fx-alignment: center;
+}

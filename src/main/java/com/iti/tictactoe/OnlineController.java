@@ -1,5 +1,7 @@
-package com.iti.tictactoe.muliplayerSingleOffline;
+package com.iti.tictactoe;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.PlayerNames;
 import com.iti.tictactoe.models.UiUtils;
@@ -27,24 +29,22 @@ import javafx.util.Duration;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.Random;
 
-import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
+import static com.iti.tictactoe.ListOfUsers.currentUserEmail;
+import static com.iti.tictactoe.ServerListener.message;
 
-
-public class GameBoardController {
+public class OnlineController {
     @FXML
     private ImageView gameBackGround;
     @FXML
     private ImageView gameBoard;
-
     @FXML
     private Label drawScore;
     private int drawCounter = 0;
-
     @FXML
     private Label playerOne;
     @FXML
@@ -52,7 +52,6 @@ public class GameBoardController {
     @FXML
     private Label playerOneScore;
     private int playerOneScoreCount = 0;
-
     @FXML
     private Label playerTwo;
     @FXML
@@ -61,7 +60,7 @@ public class GameBoardController {
     private Label playerTwoScore;
     private int playerTwoScoreCount = 0;
     @FXML
-    Button record_btn;
+    private Button record_btn;
     @FXML
     private Button button00;
     @FXML
@@ -83,29 +82,24 @@ public class GameBoardController {
 
     String movesRecorded = "";
     boolean isRecording = false;
-
     private NavigationController navController;
-
     private boolean isSinglePlayer = false;
-
-
+    SocketManager socketManager = SocketManager.getInstance();
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
-
-
-
     private final int[][] board = new int[3][3];   // board game
     private PlayerNames playerName;
-    private boolean isPlayerOneTurn = true;
-
+    public static boolean isPlayerOneTurn ;
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
 
-    public void initialize(PlayerNames playerName, boolean isSinglePlayer, int difficultyFlag, int score1 ,int score2) {
+    public void initialize(PlayerNames playerName, int score1 ,int score2) {
+if(!isPlayerOneTurn)
+    setButtonDisabledToPreventUserAtComputerTurns(true);
+
         this.playerName = playerName;
-        this.isSinglePlayer = isSinglePlayer;
         playerOneScore.setText(String.valueOf(score1));
         playerTwoScore.setText(String.valueOf(score2));
         playerOneScoreCount = score1;
@@ -113,24 +107,49 @@ public class GameBoardController {
         clickOSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/OTone.mp3").toExternalForm());
         clickXSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/xTone.mp3").toExternalForm());
         winnerSound = new AudioClip(getClass().getResource("/com/iti/tictactoe/Sounds/win.mp3").toExternalForm());
-
         try {
             Image backgroundImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBackground.png").toExternalForm());
             gameBackGround.setImage(backgroundImage);
-
             Image boardImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBoard.png").toExternalForm());
             gameBoard.setImage(boardImage);
-
             Image xPhoto = new Image(getClass().getResource("/com/iti/tictactoe/assets/Cross.png").toExternalForm());
             cross.setImage(xPhoto);
-
             Image oPlayer = new Image(getClass().getResource("/com/iti/tictactoe/assets/Circle.png").toExternalForm());
             circle.setImage(oPlayer);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         setPlayerNames();
+        Thread refreshThread = new Thread(() -> {
+            while (true) { // Keep the thread running
+                try {
+                    // Check if a message indicating a player move has been received
+                    if (message != null && message.startsWith("PlayerMoved")) {
+                        String[] parts = message.split("\\s+");
+                        int row = Integer.parseInt(parts[1].substring(0, 1));
+                        int col = Integer.parseInt(parts[1].substring(1));
+                        Platform.runLater(() -> {
+                            try {
+                                Button button = getButtonAt(row, col);
+                                if (button != null) {
+                                    handleButtonAction(button, row, col);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        message=null;
+                        setButtonDisabledToPreventUserAtComputerTurns(false);
+                    }
+                    Thread.sleep(1000); // Adjust sleep time as needed
+                } catch (InterruptedException e) {
+                    // Handle interruption
+                    System.out.println("Thread interrupted: " + e.getMessage());
+                }
+            }
+        });
+        refreshThread.setDaemon(true); // Allow thread to be terminated with the application
+        refreshThread.start();
     }
 
     private void setPlayerNames() {
@@ -155,62 +174,178 @@ public class GameBoardController {
         playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
     }
 
-
     @FXML
     private void handleButton00Action(ActionEvent event) {
-        handleButtonAction(button00, 0, 0);
+        try {
+            handleButtonAction(button00, 0, 0);
+            JsonObject move = new JsonObject();
+            move.addProperty("action", "PlayerMove");
+            move.addProperty("player", playerTwo.getText());
+            move.addProperty("move",  0+""+0);
+            System.out.println("Sending moveeeeeeeee    " + move);
+            socketManager.sendJson(move);
+            setButtonDisabledToPreventUserAtComputerTurns(true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void handleButton01Action(ActionEvent actionEvent) {
-        handleButtonAction(button01, 0, 1);
+    public void handleButton01Action(ActionEvent actionEvent){
+        try {
+            handleButtonAction(button01, 0, 1);
+            JsonObject move = new JsonObject();
+            move.addProperty("action", "PlayerMove");
+            move.addProperty("player", playerTwo.getText());
+            move.addProperty("move",  0+""+1);
+            System.out.println("Sending moveeeeeeeee    " + move);
+            socketManager.sendJson(move);
+            setButtonDisabledToPreventUserAtComputerTurns(true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void handleButton02Action(ActionEvent actionEvent) {
-        handleButtonAction(button02, 0, 2);
+        try {
+            handleButtonAction(button02, 0, 2);
+            JsonObject move = new JsonObject();
+            move.addProperty("action", "PlayerMove");
+            move.addProperty("player", playerTwo.getText());
+            move.addProperty("move",  0+""+2);
+            System.out.println("Sending moveeeeeeeee    " + move);
+            setButtonDisabledToPreventUserAtComputerTurns(true);
+            socketManager.sendJson(move);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void handleButton10Action(ActionEvent actionEvent) {
+    public void handleButton10Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button10, 1, 0);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  1+""+0);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    public void handleButton11Action(ActionEvent actionEvent) {
+    public void handleButton11Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button11, 1, 1);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  1+""+1);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    public void handleButton12Action(ActionEvent actionEvent) {
+    public void handleButton12Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button12, 1, 2);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  1+""+2);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    public void handleButton20Action(ActionEvent actionEvent) {
+    public void handleButton20Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button20, 2, 0);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  2+""+0);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    public void handleButton21Action(ActionEvent actionEvent) {
+    public void handleButton21Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button21, 2, 1);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  2+""+1);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    public void handleButton22Action(ActionEvent actionEvent) {
+    public void handleButton22Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button22, 2, 2);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  2+""+2);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    boolean draw = false;
     @FXML
     private void ExitButton(ActionEvent event) {
         UiUtils.playSoundEffect();
-        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game", "Are you sure you want to quit playing and leave the game?", "This will moves you to the lobby");
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game",
+                "Are you sure you want to quit playing and leave the game?",
+                "This will move you to lose");
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (navController != null) {
-                UiUtils.playSoundEffect();
-                navController.popScene();
-                navController.popScene();
-                winnerSound.stop();    // to stop sound when quit
-                record_btn.setDisable(false);
-                writingRecordedMoves();
-                isRecording = false;
-            }
+            sendExitGameRequest();
+
+            // Handle UI updates and other actions
+
+            handleExitAction();
         }
     }
-    private void handleButtonAction(Button button, int row, int col) {
+
+    private void handleExitAction() {
+        winnerSound.stop();
+
+        // Re-enable the record button
+        record_btn.setDisable(false);
+
+        // Write recorded moves if recording is active
+        writingRecordedMoves();
+
+        // Set isRecording to false
+        isRecording = false;
+
+        // Navigate back to the previous scene
+        if (navController != null) {
+            UiUtils.playSoundEffect(); // Optional: play sound effect on navigation
+            navController.popScene();
+        }
+    }
+
+    private void sendExitGameRequest() {
+        // Construct the exit game JSON request
+        String userEmail = getUserEmail(); // Ensure this method retrieves the user's email correctly
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("action", "exitgame");
+        jsonRequest.addProperty("email", userEmail);
+
+        // Send the JSON request to the server
+        SocketManager socketManager = SocketManager.getInstance();
+        socketManager.connectCheck(); // Ensure connection is checked
+        PrintWriter out = socketManager.getPrintWriter();
+
+        if (out != null) {
+            out.println(jsonRequest.toString());
+            out.flush();
+        } else {
+            System.err.println("PrintWriter is not initialized.");
+        }
+    }
+
+
+    private String getUserEmail() {
+        return currentUserEmail;
+    }
+
+    private void handleButtonAction(Button button, int row, int col) throws IOException {
         if (button.getGraphic() == null && board[row][col] == 0) {
             record_btn.setDisable(true);
             if (isRecording)
@@ -227,14 +362,12 @@ public class GameBoardController {
                 isPlayerOneTurn = !isPlayerOneTurn;
                 if (!isPlayerOneTurn && isSinglePlayer) {
                     setButtonDisabledToPreventUserAtComputerTurns(true);
-                    delayComputerMove();
                 } else {
                     setButtonDisabledToPreventUserAtComputerTurns(false);
                 }
             }
         }
     }
-
     private void playClickSound() {
         if (isPlayerOneTurn) {
             clickXSound.play();
@@ -282,36 +415,40 @@ public class GameBoardController {
         return null;    //return null if draw
     }
 
-    private void handleWinnerState(int[][] coloredButtons) {
+    private void handleWinnerState(int[][] coloredButtons) throws IOException {
         checkHighlightWinningButtons(coloredButtons);
         updateScore();
         winnerSound.play();
         // these line to prevent the aler to be popped when someone wins to see the highlighted buttons
         //  showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
         String videoPath;
-        if(isSinglePlayer && isPlayerOneTurn) {
+        if(  isPlayerOneTurn) {
             videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
-        } else if (isSinglePlayer)
+            System.out.println(playerOneScore.getText());
+            //add
+            JsonObject jsonRequest = new JsonObject();
+            jsonRequest.addProperty("action", "incrementScore");
+            jsonRequest.addProperty("username", playerName.getPlayerOne());
+            jsonRequest.addProperty("score", Integer.parseInt(playerOneScore.getText()));
+            System.out.println(jsonRequest + " the sent json request");
+            // Send JSON request
+            socketManager.sendJson(jsonRequest);
+        } else
             videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
-        else
-            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
-
-
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
         pause.setOnFinished(event -> {
             showVideo(videoPath);
         });
         pause.play();
     }
+
     public void showVideo(String videoPath) {
         try {
             Media media = new Media(getClass().getResource(videoPath).toExternalForm());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             MediaView mediaView = new MediaView(mediaPlayer);
-
             StackPane root = new StackPane();
             root.getChildren().add(mediaView);
-
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
@@ -323,7 +460,6 @@ public class GameBoardController {
                 stage.show();
                 mediaPlayer.play();
             });
-
             PauseTransition delay = new PauseTransition(Duration.seconds(3));
             delay.setOnFinished(event -> {
                 mediaPlayer.stop();
@@ -333,7 +469,6 @@ public class GameBoardController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle the exception, possibly logging or showing an alert to the user
         }
     }
 
@@ -342,7 +477,6 @@ public class GameBoardController {
         updateDrawCount(); // Increment draw counter
         showResultAlert("It's a draw!"); // Display draw message
     }
-
     private void checkHighlightWinningButtons(int[][] winningButtons) {
         for (int i = 0; i < winningButtons.length; i++) {
             int row = winningButtons[i][0];
@@ -369,7 +503,6 @@ public class GameBoardController {
         if (row == 2 & col == 2) return button22;
         return null;
     }
-
     private void updateScore() {
         if (isPlayerOneTurn) {
             updatePlayerOneScore();
@@ -388,7 +521,6 @@ public class GameBoardController {
         }
         return true;
     }
-
     private void showResultAlert(String message) {
         AlertUtils.showInformationAlert("Game Over", message, null);
         resetGame();// bat'kd en el game cleared b3d el confirmation
@@ -431,6 +563,41 @@ public class GameBoardController {
             isRecording = false;
         }
     }
+  
+    /*public void handleRestartButton(ActionEvent actionEvent) throws IOException, InterruptedException {
+        UiUtils.playSoundEffect();
+//        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
+//        if (result.isPresent() && result.get() == ButtonType.OK) {
+//            resetGame();
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("action", "invite");
+        jsonRequest.addProperty("player1", playerName.getPlayerOne());
+        jsonRequest.addProperty("player", playerName.getPlayerTwo());
+        System.out.println(jsonRequest + " the sent json request");
+        // Send JSON request
+        socketManager.sendJson(jsonRequest);
+        Thread.sleep(300);
+        if (message != null) {
+            Gson gson = new Gson();
+            JsonObject reponse = gson.fromJson(message, JsonObject.class);
+            String invitationResponse = reponse.get("message").getAsString();
+            System.out.println("Invitation response: " + invitationResponse);
+            Platform.runLater(() -> {
+                if ("online".equals(invitationResponse)) {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
+                } else if ("offline".equals(invitationResponse)) {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
+                } else {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "The invited player is current in game");
+                }
+            });
+        }
+           setButtonDisabledToPreventUserAtComputerTurns(false);
+            record_btn.setDisable(false);
+            writingRecordedMoves();
+            isRecording = false;
+        }*/
+
 
     private void setButtonDisabledToPreventUserAtComputerTurns(boolean disabled) {
         button00.setDisable(disabled);
@@ -443,129 +610,10 @@ public class GameBoardController {
         button21.setDisable(disabled);
         button22.setDisable(disabled);
     }
-
-    private void delayComputerMove() {
-        Duration duration = switch (flag) {
-            case 1 -> Duration.seconds(0.5);
-            case 2 -> Duration.seconds(0.7);
-            case 3 -> Duration.seconds(1);
-            default -> null;
-        };
-
-        PauseTransition delay = new PauseTransition(duration);
-        delay.setOnFinished(event -> {
-            if (flag == 1) {
-                easyMove();
-            } else if (flag == 2) {
-                medMove();
-            } else if (flag == 3) {
-                hardMove();
-            }
-        });
-        delay.play();
-    }
-
-    private void easyMove() {
-        Random random = new Random();
-        int row, col;
-        do {
-            row = random.nextInt(3);
-            col = random.nextInt(3);
-        } while (board[row][col] != 0);
-        Button button = getButtonAt(row, col);
-        assert button != null;
-        handleButtonAction(button, row, col);
-    }
-
-    private void medMove() {
-        Random random = new Random();
-        if(random.nextInt(100)<70) //Medium Level : 70% random 30% minimax algorithm
-        {
-            easyMove();
-        }
-        else
-        {
-            minimaxMove();
-        }
-    }
-
-    private void hardMove()
-    {
-        minimaxMove();
-    }
-
-    private void minimaxMove() {
-        int bestScore = Integer.MIN_VALUE;
-        int bestRow = -1;
-        int bestCol = -1;
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (board[row][col] == 0) {
-                    board[row][col] = 2; // Computer's move
-                    int score = minimax(board, 0, false);
-                    board[row][col] = 0; // Undo move
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestRow = row;
-                        bestCol = col;
-                    }
-                }
-            }
-        }
-        if (bestRow != -1 && bestCol != -1) {
-            Button button = getButtonAt(bestRow, bestCol);
-            assert button != null;
-            handleButtonAction(button, bestRow, bestCol);
-        }
-    }
-
-    private int minimax(int[][] board, int depth, boolean isMaximizing) {
-        int[][] winningCombo = checkWinner();
-        if (winningCombo != null) {
-            if (isMaximizing) {
-                return -10 + depth; // If maximizing, minimize the score
-            } else {
-                return 10 - depth; // If minimizing, maximize the score
-            }
-        }
-
-        if (isBoardFull()) {
-            return 0; // Draw
-        }
-
-        if (isMaximizing) {
-            int bestScore = Integer.MIN_VALUE;
-            for (int row = 0; row < 3; row++) {
-                for (int col = 0; col < 3; col++) {
-                    if (board[row][col] == 0) {
-                        board[row][col] = 2; // Computer's move
-                        int score = minimax(board, depth + 1, false);
-                        board[row][col] = 0; // Undo move
-                        bestScore = Math.max(score, bestScore);
-                    }
-                }
-            }
-            return bestScore;
-        } else {
-            int bestScore = Integer.MAX_VALUE;
-            for (int row = 0; row < 3; row++) {
-                for (int col = 0; col < 3; col++) {
-                    if (board[row][col] == 0) {
-                        board[row][col] = 1; // Player's move
-                        int score = minimax(board, depth + 1, true);
-                        board[row][col] = 0; // Undo move
-                        bestScore = Math.min(score, bestScore);
-                    }
-                }
-            }
-            return bestScore;
-        }
-    }
     // implement functionality ya ahmmed ya gamallllll
     public void handleRecordButton(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();
         record_btn.setDisable(true);
-       // record_btn.getStyleClass().add("record-button-recording");
         record_btn.setStyle(" -fx-background-color: white;\n" +
                 "    -fx-background-radius: 50%;\n" +
                 "    -fx-border-radius: 50%;\n" +
@@ -579,9 +627,11 @@ public class GameBoardController {
                 "    -fx-max-width: 100px;\n" +
                 "    -fx-max-height: 100px;\n" +
                 "    -fx-alignment: center;");
+       // record_btn.getStyleClass().add("record-button-recording");
         isRecording = true;
 
     }
+  
     public void writingRecordedMoves() {
         if (isRecording) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy' @'HH','mm");

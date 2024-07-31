@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.iti.tictactoe.ServerListener.message;
 
@@ -51,8 +50,6 @@ public class ListOfUsers {
         UiUtils.addHoverAnimation(signOut);
         setUsername();
         startRefreshingPlayerList();
-        // refreshPlayerList();
-
     }
 
     private void setUsername() throws IOException, InterruptedException {
@@ -61,7 +58,7 @@ public class ListOfUsers {
         usernameRequest.addProperty("action", "getUsername");
         usernameRequest.addProperty("email", currentUserEmail);
         socketManager.sendJson(usernameRequest);
-        Thread.sleep(100);
+        Thread.sleep(300);
         Gson gson = new Gson();
         JsonObject usernameResponse = gson.fromJson(message, JsonObject.class);
         // String usernameResponse = reponse.get("message").getAsString();
@@ -82,7 +79,7 @@ public class ListOfUsers {
             while (keepRefreshing) {
                 try {
                     refreshPlayerList();
-                    Thread.sleep(2000); // Refresh every 3 seconds
+                    Thread.sleep(3000); // Refresh every 3 seconds
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupt status
                     System.out.println("Refresh thread interrupted: " + e.getMessage());
@@ -93,7 +90,9 @@ public class ListOfUsers {
         refreshThread.start();
     }
 
-    private void stopRefreshingPlayerList() {
+
+
+    public static void stopRefreshingPlayerList() {
        // keepRefreshing.set(false);
         keepRefreshing=false;
     }
@@ -115,10 +114,10 @@ public class ListOfUsers {
             // Send JSON request
             socketManager.sendJson(jsonRequest);
 
-            System.out.println("the json request senttt =  " + jsonRequest);
-            Thread.sleep(300);
+         //   System.out.println("the json request senttt =  " + jsonRequest);
+            Thread.sleep(500);
             Gson gson = new Gson();
-            if (message != null) {
+            if (message != null&&message.startsWith("[{")) {
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
             List<String> newPlayerList = new ArrayList<>();
 
@@ -176,7 +175,7 @@ public class ListOfUsers {
             System.out.println(jsonRequest + " the sent json request");
             // Send JSON request
             socketManager.sendJson(jsonRequest);
-            Thread.sleep(500);
+            Thread.sleep(300);
             if (message != null) {
                 Gson gson = new Gson();
                 JsonObject reponse = gson.fromJson(message, JsonObject.class);
@@ -188,7 +187,7 @@ public class ListOfUsers {
                     } else if ("offline".equals(invitationResponse)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
-                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "The invited player is current in game");
                     }
                 });
             }
@@ -208,7 +207,7 @@ public class ListOfUsers {
                 "Click 'OK' to proceed or 'Cancel' to stay logged in."
         );
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            stopRefreshingPlayerList();
+            //  stopRefreshingPlayerList();
             logout();
             if (navController != null) {
                 navController.popScene();
