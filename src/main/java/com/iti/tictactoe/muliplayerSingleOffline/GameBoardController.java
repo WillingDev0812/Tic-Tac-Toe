@@ -558,7 +558,20 @@ public class GameBoardController {
     public void handleRecordButton(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();
         record_btn.setDisable(true);
-        record_btn.getStyleClass().add("record-button-recording");
+       // record_btn.getStyleClass().add("record-button-recording");
+        record_btn.setStyle(" -fx-background-color: white;\n" +
+                "    -fx-background-radius: 50%;\n" +
+                "    -fx-border-radius: 50%;\n" +
+                "    -fx-border-color: transparent;\n" +
+                "    -fx-font-family: \"Comic Sans MS\";\n" +
+                "    -fx-text-fill: RED;\n" +
+                "    -fx-font-size: 30px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-min-width: 100px; /* Ensures the button is a circle */\n" +
+                "    -fx-min-height: 100px;\n" +
+                "    -fx-max-width: 100px;\n" +
+                "    -fx-max-height: 100px;\n" +
+                "    -fx-alignment: center;");
         isRecording = true;
 
     }
