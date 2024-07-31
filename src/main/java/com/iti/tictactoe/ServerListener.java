@@ -2,6 +2,7 @@ package com.iti.tictactoe;
 
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.PlayerNames;
+import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.application.Platform;
 import javafx.scene.control.ButtonType;
@@ -142,7 +143,13 @@ public class ServerListener implements Runnable {
                         exitNotificationDisplayed = true; // Set flag to true to prevent repeated notifications
                     }
                 }
-                else if (message.startsWith("PlayerMoved")){
+                else if(message.startsWith("Quit")){
+                    System.out.println("quittttttttttttttttttttttttttt");
+                    Platform.runLater(() -> {
+                        AlertUtils.showInformationAlert("Game Over", "The other player has left the game", null);
+                        navController.popScene();
+                    });
+                    keepRefreshing=true;
                 }
             
                 // Handle other server messages here...
