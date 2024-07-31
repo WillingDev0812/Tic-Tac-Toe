@@ -188,7 +188,7 @@ public class ListOfUsers {
                     } else if ("offline".equals(invitationResponse)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
-                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "The invited player is current in game");
                     }
                 });
             }
