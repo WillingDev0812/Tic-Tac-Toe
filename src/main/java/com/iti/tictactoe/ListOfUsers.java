@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.iti.tictactoe.ServerListener.message;
 
@@ -51,8 +50,6 @@ public class ListOfUsers {
         UiUtils.addHoverAnimation(signOut);
         setUsername();
         startRefreshingPlayerList();
-       //  refreshPlayerList();
-
     }
 
     private void setUsername() throws IOException, InterruptedException {
@@ -92,6 +89,8 @@ public class ListOfUsers {
         refreshThread.setDaemon(true);
         refreshThread.start();
     }
+
+
 
     public static void stopRefreshingPlayerList() {
        // keepRefreshing.set(false);
@@ -208,7 +207,7 @@ public class ListOfUsers {
                 "Click 'OK' to proceed or 'Cancel' to stay logged in."
         );
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            //stopRefreshingPlayerList();
+            //  stopRefreshingPlayerList();
             logout();
             if (navController != null) {
                 navController.popScene();

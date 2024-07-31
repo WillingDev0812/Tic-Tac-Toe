@@ -29,12 +29,11 @@ import javafx.util.Duration;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.Random;
 
-import static com.iti.tictactoe.AIGame.SinglePlayerMenuController.flag;
 import static com.iti.tictactoe.ListOfUsers.currentUserEmail;
 import static com.iti.tictactoe.ServerListener.message;
 
@@ -43,11 +42,9 @@ public class OnlineController {
     private ImageView gameBackGround;
     @FXML
     private ImageView gameBoard;
-
     @FXML
     private Label drawScore;
     private int drawCounter = 0;
-
     @FXML
     private Label playerOne;
     @FXML
@@ -55,7 +52,6 @@ public class OnlineController {
     @FXML
     private Label playerOneScore;
     private int playerOneScoreCount = 0;
-
     @FXML
     private Label playerTwo;
     @FXML
@@ -64,7 +60,7 @@ public class OnlineController {
     private Label playerTwoScore;
     private int playerTwoScoreCount = 0;
     @FXML
-    Button record_btn;
+    private Button record_btn;
     @FXML
     private Button button00;
     @FXML
@@ -86,23 +82,15 @@ public class OnlineController {
 
     String movesRecorded = "";
     boolean isRecording = false;
-
     private NavigationController navController;
-
     private boolean isSinglePlayer = false;
-
     SocketManager socketManager = SocketManager.getInstance();
-
     public void setNavController(NavigationController navController) {
         this.navController = navController;
     }
-
-
-
     private final int[][] board = new int[3][3];   // board game
     private PlayerNames playerName;
     public static boolean isPlayerOneTurn ;
-
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
@@ -122,19 +110,15 @@ if(!isPlayerOneTurn)
         try {
             Image backgroundImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBackground.png").toExternalForm());
             gameBackGround.setImage(backgroundImage);
-
             Image boardImage = new Image(getClass().getResource("/com/iti/tictactoe/assets/gameBoard.png").toExternalForm());
             gameBoard.setImage(boardImage);
-
             Image xPhoto = new Image(getClass().getResource("/com/iti/tictactoe/assets/Cross.png").toExternalForm());
             cross.setImage(xPhoto);
-
             Image oPlayer = new Image(getClass().getResource("/com/iti/tictactoe/assets/Circle.png").toExternalForm());
             circle.setImage(oPlayer);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         setPlayerNames();
         Thread refreshThread = new Thread(() -> {
             while (true) { // Keep the thread running
@@ -154,7 +138,6 @@ if(!isPlayerOneTurn)
                                 e.printStackTrace();
                             }
                         });
-
                         message=null;
                         setButtonDisabledToPreventUserAtComputerTurns(false);
                     }
@@ -167,7 +150,6 @@ if(!isPlayerOneTurn)
         });
         refreshThread.setDaemon(true); // Allow thread to be terminated with the application
         refreshThread.start();
-
     }
 
     private void setPlayerNames() {
@@ -192,7 +174,6 @@ if(!isPlayerOneTurn)
         playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
     }
 
-String res;
     @FXML
     private void handleButton00Action(ActionEvent event) {
         try {
@@ -305,28 +286,66 @@ String res;
         setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
-    boolean draw = false;
     @FXML
     private void ExitButton(ActionEvent event) {
-//        UiUtils.playSoundEffect();
-//        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game", "Are you sure you want to quit playing and leave the game?", "This will moves you to the lobby");
-//        if (result.isPresent() && result.get() == ButtonType.OK) {
-//            if (navController != null) {
-//                UiUtils.playSoundEffect();
-//                navController.popScene();
-//                navController.popScene();
-//                winnerSound.stop();    // to stop sound when quit
-//                record_btn.setDisable(false);
-//                writingRecordedMoves();
-//                isRecording = false;
-//            }
-//        }
+        UiUtils.playSoundEffect();
+        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game",
+                "Are you sure you want to quit playing and leave the game?",
+                "This will move you to lose");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            sendExitGameRequest();
+
+            // Handle UI updates and other actions
+
+            handleExitAction();
+        }
+    }
+
+    private void handleExitAction() {
+        winnerSound.stop();
+
+        // Re-enable the record button
+        record_btn.setDisable(false);
+
+        // Write recorded moves if recording is active
+        writingRecordedMoves();
+
+        // Set isRecording to false
+        isRecording = false;
+
+        // Navigate back to the previous scene
+        if (navController != null) {
+            UiUtils.playSoundEffect(); // Optional: play sound effect on navigation
+            navController.popScene();
+        }
+    }
+
+    private void sendExitGameRequest() {
+        // Construct the exit game JSON request
+        String userEmail = getUserEmail(); // Ensure this method retrieves the user's email correctly
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("action", "exitgame");
+        jsonRequest.addProperty("email", userEmail);
+
+        // Send the JSON request to the server
+        SocketManager socketManager = SocketManager.getInstance();
+        socketManager.connectCheck(); // Ensure connection is checked
+        PrintWriter out = socketManager.getPrintWriter();
+
+        if (out != null) {
+            out.println(jsonRequest.toString());
+            out.flush();
+        } else {
+            System.err.println("PrintWriter is not initialized.");
+        }
+    }
+
+
+    private String getUserEmail() {
+        return currentUserEmail;
     }
 
     private void handleButtonAction(Button button, int row, int col) throws IOException {
-
-
-
         if (button.getGraphic() == null && board[row][col] == 0) {
             record_btn.setDisable(true);
             if (isRecording)
@@ -343,15 +362,12 @@ String res;
                 isPlayerOneTurn = !isPlayerOneTurn;
                 if (!isPlayerOneTurn && isSinglePlayer) {
                     setButtonDisabledToPreventUserAtComputerTurns(true);
-
                 } else {
                     setButtonDisabledToPreventUserAtComputerTurns(false);
                 }
             }
         }
     }
-
-
     private void playClickSound() {
         if (isPlayerOneTurn) {
             clickXSound.play();
@@ -419,9 +435,6 @@ String res;
             socketManager.sendJson(jsonRequest);
         } else
             videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
-
-
-
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
         pause.setOnFinished(event -> {
             showVideo(videoPath);
@@ -434,10 +447,8 @@ String res;
             Media media = new Media(getClass().getResource(videoPath).toExternalForm());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             MediaView mediaView = new MediaView(mediaPlayer);
-
             StackPane root = new StackPane();
             root.getChildren().add(mediaView);
-
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
@@ -449,7 +460,6 @@ String res;
                 stage.show();
                 mediaPlayer.play();
             });
-
             PauseTransition delay = new PauseTransition(Duration.seconds(3));
             delay.setOnFinished(event -> {
                 mediaPlayer.stop();
@@ -459,7 +469,6 @@ String res;
 
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle the exception, possibly logging or showing an alert to the user
         }
     }
 
@@ -468,7 +477,6 @@ String res;
         updateDrawCount(); // Increment draw counter
         showResultAlert("It's a draw!"); // Display draw message
     }
-
     private void checkHighlightWinningButtons(int[][] winningButtons) {
         for (int i = 0; i < winningButtons.length; i++) {
             int row = winningButtons[i][0];
@@ -495,7 +503,6 @@ String res;
         if (row == 2 & col == 2) return button22;
         return null;
     }
-
     private void updateScore() {
         if (isPlayerOneTurn) {
             updatePlayerOneScore();
@@ -514,7 +521,6 @@ String res;
         }
         return true;
     }
-
     private void showResultAlert(String message) {
         AlertUtils.showInformationAlert("Game Over", message, null);
         resetGame();// bat'kd en el game cleared b3d el confirmation
@@ -557,6 +563,7 @@ String res;
             isRecording = false;
         }
     }
+  
     /*public void handleRestartButton(ActionEvent actionEvent) throws IOException, InterruptedException {
         UiUtils.playSoundEffect();
 //        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
@@ -585,8 +592,6 @@ String res;
                 }
             });
         }
-
-
            setButtonDisabledToPreventUserAtComputerTurns(false);
             record_btn.setDisable(false);
             writingRecordedMoves();
@@ -626,6 +631,7 @@ String res;
         isRecording = true;
 
     }
+  
     public void writingRecordedMoves() {
         if (isRecording) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy' @'HH','mm");
