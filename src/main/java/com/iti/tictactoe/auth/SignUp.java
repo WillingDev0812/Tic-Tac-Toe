@@ -69,9 +69,6 @@ public class SignUp {
             return;
         }
         else{
-        SocketManager socketManager = SocketManager.getInstance();
-        PrintWriter pw = socketManager.getPrintWriter();
-        BufferedReader br = socketManager.getBufferedReader();
 
         try {
             // Create JSON object for signup request
@@ -82,6 +79,10 @@ public class SignUp {
             jsonRequest.addProperty("password", password);
 
             // Send JSON request
+            SocketManager socketManager;
+
+            socketManager = SocketManager.getInstance();
+            socketManager.connectCheck();
             socketManager.sendJson(jsonRequest);
 
             // Read and parse the response

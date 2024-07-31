@@ -1,5 +1,6 @@
 package com.iti.tictactoe;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.PlayerNames;
@@ -89,12 +90,14 @@ public class OnlineController {
     }
     private final int[][] board = new int[3][3];   // board game
     private PlayerNames playerName;
-    private boolean isPlayerOneTurn = true;
+    public static boolean isPlayerOneTurn ;
     private AudioClip clickXSound;
     private AudioClip clickOSound;
     private AudioClip winnerSound;
 
     public void initialize(PlayerNames playerName, int score1 ,int score2) {
+if(!isPlayerOneTurn)
+    setButtonDisabledToPreventUserAtComputerTurns(true);
 
         this.playerName = playerName;
         playerOneScore.setText(String.valueOf(score1));
@@ -122,7 +125,6 @@ public class OnlineController {
                 try {
                     // Check if a message indicating a player move has been received
                     if (message != null && message.startsWith("PlayerMoved")) {
-                        System.out.println("Player moved in thread");
                         String[] parts = message.split("\\s+");
                         int row = Integer.parseInt(parts[1].substring(0, 1));
                         int col = Integer.parseInt(parts[1].substring(1));
@@ -413,21 +415,26 @@ public class OnlineController {
         return null;    //return null if draw
     }
 
-    private void handleWinnerState(int[][] coloredButtons) {
+    private void handleWinnerState(int[][] coloredButtons) throws IOException {
         checkHighlightWinningButtons(coloredButtons);
         updateScore();
         winnerSound.play();
         // these line to prevent the aler to be popped when someone wins to see the highlighted buttons
         //  showResultAlert(isPlayerOneTurn ? playerName.getPlayerOne() + " wins" : playerName.getPlayerTwo() + " wins");
         String videoPath;
-        if(isSinglePlayer && isPlayerOneTurn) {
+        if(  isPlayerOneTurn) {
             videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
-        } else if (isSinglePlayer)
+            System.out.println(playerOneScore.getText());
+            //add
+            JsonObject jsonRequest = new JsonObject();
+            jsonRequest.addProperty("action", "incrementScore");
+            jsonRequest.addProperty("username", playerName.getPlayerOne());
+            jsonRequest.addProperty("score", Integer.parseInt(playerOneScore.getText()));
+            System.out.println(jsonRequest + " the sent json request");
+            // Send JSON request
+            socketManager.sendJson(jsonRequest);
+        } else
             videoPath = "/com/iti/tictactoe/Videos/video4.mp4"; //lose
-        else
-            videoPath = "/com/iti/tictactoe/Videos/video2.mp4"; //win
-
-
         PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
         pause.setOnFinished(event -> {
             showVideo(videoPath);
@@ -436,30 +443,33 @@ public class OnlineController {
     }
 
     public void showVideo(String videoPath) {
-        Media media = new Media(getClass().getResource(videoPath).toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        MediaView mediaView = new MediaView(mediaPlayer);
+        try {
+            Media media = new Media(getClass().getResource(videoPath).toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mediaPlayer);
+            StackPane root = new StackPane();
+            root.getChildren().add(mediaView);
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+            stage.setScene(scene);
 
-        StackPane root = new StackPane();
-        root.getChildren().add(mediaView);
+            Platform.runLater(() -> {
+                stage.show();
+                mediaPlayer.play();
+            });
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(event -> {
+                mediaPlayer.stop();
+                stage.close();
+            });
+            delay.play();
 
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.initStyle(StageStyle.UNDECORATED);
-        stage.setFullScreen(true); // Make the stage full screen
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH); // Disable ESC to exit full-screen
-        stage.setScene(scene);
-        stage.show();
-
-        mediaPlayer.play();
-
-        // Hide the video after 3 seconds
-        PauseTransition delay = new PauseTransition(Duration.seconds(3));
-        delay.setOnFinished(event -> {
-            mediaPlayer.stop();
-            stage.close();
-        });
-        delay.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleDrawState() {
@@ -467,7 +477,6 @@ public class OnlineController {
         updateDrawCount(); // Increment draw counter
         showResultAlert("It's a draw!"); // Display draw message
     }
-
     private void checkHighlightWinningButtons(int[][] winningButtons) {
         for (int i = 0; i < winningButtons.length; i++) {
             int row = winningButtons[i][0];
@@ -494,7 +503,6 @@ public class OnlineController {
         if (row == 2 & col == 2) return button22;
         return null;
     }
-
     private void updateScore() {
         if (isPlayerOneTurn) {
             updatePlayerOneScore();
@@ -513,7 +521,6 @@ public class OnlineController {
         }
         return true;
     }
-
     private void showResultAlert(String message) {
         AlertUtils.showInformationAlert("Game Over", message, null);
         resetGame();// bat'kd en el game cleared b3d el confirmation
@@ -556,6 +563,41 @@ public class OnlineController {
             isRecording = false;
         }
     }
+  
+    /*public void handleRestartButton(ActionEvent actionEvent) throws IOException, InterruptedException {
+        UiUtils.playSoundEffect();
+//        Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Restart Game", "Are you sure you want to restart the game?", "This will clear the current game state.");
+//        if (result.isPresent() && result.get() == ButtonType.OK) {
+//            resetGame();
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("action", "invite");
+        jsonRequest.addProperty("player1", playerName.getPlayerOne());
+        jsonRequest.addProperty("player", playerName.getPlayerTwo());
+        System.out.println(jsonRequest + " the sent json request");
+        // Send JSON request
+        socketManager.sendJson(jsonRequest);
+        Thread.sleep(300);
+        if (message != null) {
+            Gson gson = new Gson();
+            JsonObject reponse = gson.fromJson(message, JsonObject.class);
+            String invitationResponse = reponse.get("message").getAsString();
+            System.out.println("Invitation response: " + invitationResponse);
+            Platform.runLater(() -> {
+                if ("online".equals(invitationResponse)) {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Sent", "The invitation has been successfully sent.");
+                } else if ("offline".equals(invitationResponse)) {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
+                } else {
+                    AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "The invited player is current in game");
+                }
+            });
+        }
+           setButtonDisabledToPreventUserAtComputerTurns(false);
+            record_btn.setDisable(false);
+            writingRecordedMoves();
+            isRecording = false;
+        }*/
+
 
     private void setButtonDisabledToPreventUserAtComputerTurns(boolean disabled) {
         button00.setDisable(disabled);
@@ -572,10 +614,24 @@ public class OnlineController {
     public void handleRecordButton(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();
         record_btn.setDisable(true);
-        record_btn.getStyleClass().add("record-button-recording");
+        record_btn.setStyle(" -fx-background-color: white;\n" +
+                "    -fx-background-radius: 50%;\n" +
+                "    -fx-border-radius: 50%;\n" +
+                "    -fx-border-color: transparent;\n" +
+                "    -fx-font-family: \"Comic Sans MS\";\n" +
+                "    -fx-text-fill: RED;\n" +
+                "    -fx-font-size: 30px;\n" +
+                "    -fx-font-weight: bold;\n" +
+                "    -fx-min-width: 100px; /* Ensures the button is a circle */\n" +
+                "    -fx-min-height: 100px;\n" +
+                "    -fx-max-width: 100px;\n" +
+                "    -fx-max-height: 100px;\n" +
+                "    -fx-alignment: center;");
+       // record_btn.getStyleClass().add("record-button-recording");
         isRecording = true;
 
     }
+  
     public void writingRecordedMoves() {
         if (isRecording) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy' @'HH','mm");

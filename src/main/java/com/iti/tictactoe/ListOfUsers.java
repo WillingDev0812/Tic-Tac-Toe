@@ -90,7 +90,10 @@ public class ListOfUsers {
         refreshThread.start();
     }
 
-    private void stopRefreshingPlayerList() {
+
+
+    public static void stopRefreshingPlayerList() {
+       // keepRefreshing.set(false);
         keepRefreshing=false;
     }
 
@@ -114,7 +117,7 @@ public class ListOfUsers {
          //   System.out.println("the json request senttt =  " + jsonRequest);
             Thread.sleep(500);
             Gson gson = new Gson();
-            if (message != null) {
+            if (message != null&&message.startsWith("[{")) {
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
             List<String> newPlayerList = new ArrayList<>();
 
@@ -184,7 +187,7 @@ public class ListOfUsers {
                     } else if ("offline".equals(invitationResponse)) {
                         AlertUtils.showInformationAlert("Invitation Status", "Invitation Not Sent", "The invited player is currently offline.");
                     } else {
-                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "Failed to send invitation.");
+                        AlertUtils.showInformationAlert("Invitation Status", "Invitation Error", "The invited player is current in game");
                     }
                 });
             }
