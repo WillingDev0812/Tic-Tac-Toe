@@ -51,7 +51,7 @@ public class ListOfUsers {
         UiUtils.addHoverAnimation(signOut);
         setUsername();
         startRefreshingPlayerList();
-        // refreshPlayerList();
+       //  refreshPlayerList();
 
     }
 
@@ -61,7 +61,7 @@ public class ListOfUsers {
         usernameRequest.addProperty("action", "getUsername");
         usernameRequest.addProperty("email", currentUserEmail);
         socketManager.sendJson(usernameRequest);
-        Thread.sleep(100);
+        Thread.sleep(300);
         Gson gson = new Gson();
         JsonObject usernameResponse = gson.fromJson(message, JsonObject.class);
         // String usernameResponse = reponse.get("message").getAsString();
@@ -82,7 +82,7 @@ public class ListOfUsers {
             while (keepRefreshing) {
                 try {
                     refreshPlayerList();
-                    Thread.sleep(2000); // Refresh every 3 seconds
+                    Thread.sleep(3000); // Refresh every 3 seconds
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore interrupt status
                     System.out.println("Refresh thread interrupted: " + e.getMessage());
@@ -115,8 +115,8 @@ public class ListOfUsers {
             // Send JSON request
             socketManager.sendJson(jsonRequest);
 
-            System.out.println("the json request senttt =  " + jsonRequest);
-            Thread.sleep(300);
+         //   System.out.println("the json request senttt =  " + jsonRequest);
+            Thread.sleep(500);
             Gson gson = new Gson();
             if (message != null) {
             JsonArray jsonResponseArray = gson.fromJson(message, JsonArray.class);
@@ -176,7 +176,7 @@ public class ListOfUsers {
             System.out.println(jsonRequest + " the sent json request");
             // Send JSON request
             socketManager.sendJson(jsonRequest);
-            Thread.sleep(500);
+            Thread.sleep(300);
             if (message != null) {
                 Gson gson = new Gson();
                 JsonObject reponse = gson.fromJson(message, JsonObject.class);

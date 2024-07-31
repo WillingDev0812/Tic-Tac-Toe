@@ -6,6 +6,7 @@ import com.iti.tictactoe.models.PlayerNames;
 import com.iti.tictactoe.models.UiUtils;
 import com.iti.tictactoe.navigation.NavigationController;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -87,7 +88,7 @@ public class OnlineController {
 
     private NavigationController navController;
 
-    private boolean isSinglePlayer = true;
+    private boolean isSinglePlayer = false;
 
     SocketManager socketManager = SocketManager.getInstance();
 
@@ -106,6 +107,7 @@ public class OnlineController {
     private AudioClip winnerSound;
 
     public void initialize(PlayerNames playerName, int score1 ,int score2) {
+
         this.playerName = playerName;
         playerOneScore.setText(String.valueOf(score1));
         playerTwoScore.setText(String.valueOf(score2));
@@ -131,6 +133,39 @@ public class OnlineController {
         }
 
         setPlayerNames();
+        Thread refreshThread = new Thread(() -> {
+            while (true) { // Keep the thread running
+                try {
+                    // Check if a message indicating a player move has been received
+                    if (message != null && message.startsWith("PlayerMoved")) {
+                        System.out.println("Player moved in thread");
+                        String[] parts = message.split("\\s+");
+                        int row = Integer.parseInt(parts[1].substring(0, 1));
+                        int col = Integer.parseInt(parts[1].substring(1));
+                        Platform.runLater(() -> {
+                            try {
+                                Button button = getButtonAt(row, col);
+                                if (button != null) {
+                                    handleButtonAction(button, row, col);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                        message=null;
+                        setButtonDisabledToPreventUserAtComputerTurns(false);
+                    }
+                    Thread.sleep(1000); // Adjust sleep time as needed
+                } catch (InterruptedException e) {
+                    // Handle interruption
+                    System.out.println("Thread interrupted: " + e.getMessage());
+                }
+            }
+        });
+        refreshThread.setDaemon(true); // Allow thread to be terminated with the application
+        refreshThread.start();
+
     }
 
     private void setPlayerNames() {
@@ -155,24 +190,48 @@ public class OnlineController {
         playerTwoScore.setText(String.valueOf(playerTwoScoreCount));
     }
 
-
+String res;
     @FXML
     private void handleButton00Action(ActionEvent event) {
         try {
             handleButtonAction(button00, 0, 0);
-
+            JsonObject move = new JsonObject();
+            move.addProperty("action", "PlayerMove");
+            move.addProperty("player", playerTwo.getText());
+            move.addProperty("move",  0+""+0);
+            System.out.println("Sending moveeeeeeeee    " + move);
+            socketManager.sendJson(move);
+            setButtonDisabledToPreventUserAtComputerTurns(true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void handleButton01Action(ActionEvent actionEvent) throws IOException {
-        handleButtonAction(button01, 0, 1);
+    public void handleButton01Action(ActionEvent actionEvent){
+        try {
+            handleButtonAction(button01, 0, 1);
+            JsonObject move = new JsonObject();
+            move.addProperty("action", "PlayerMove");
+            move.addProperty("player", playerTwo.getText());
+            move.addProperty("move",  0+""+1);
+            System.out.println("Sending moveeeeeeeee    " + move);
+            socketManager.sendJson(move);
+            setButtonDisabledToPreventUserAtComputerTurns(true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void handleButton02Action(ActionEvent actionEvent) {
         try {
             handleButtonAction(button02, 0, 2);
+            JsonObject move = new JsonObject();
+            move.addProperty("action", "PlayerMove");
+            move.addProperty("player", playerTwo.getText());
+            move.addProperty("move",  0+""+2);
+            System.out.println("Sending moveeeeeeeee    " + move);
+            setButtonDisabledToPreventUserAtComputerTurns(true);
+            socketManager.sendJson(move);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -180,26 +239,68 @@ public class OnlineController {
 
     public void handleButton10Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button10, 1, 0);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  1+""+0);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
     public void handleButton11Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button11, 1, 1);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  1+""+1);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
     public void handleButton12Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button12, 1, 2);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  1+""+2);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
     public void handleButton20Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button20, 2, 0);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  2+""+0);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
     public void handleButton21Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button21, 2, 1);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  2+""+1);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
     public void handleButton22Action(ActionEvent actionEvent) throws IOException {
         handleButtonAction(button22, 2, 2);
+        JsonObject move = new JsonObject();
+        move.addProperty("action", "PlayerMove");
+        move.addProperty("player", playerTwo.getText());
+        move.addProperty("move",  2+""+2);
+        System.out.println("Sending moveeeeeeeee    " + move);
+        socketManager.sendJson(move);
+        setButtonDisabledToPreventUserAtComputerTurns(true);
     }
 
     boolean draw = false;
@@ -222,12 +323,7 @@ public class OnlineController {
 
     private void handleButtonAction(Button button, int row, int col) throws IOException {
 
-        JsonObject move = new JsonObject();
-        move.addProperty("action", "PlayerMove");
-        move.addProperty("player", playerTwo.getText());
-        move.addProperty("move",  row+""+col);
-        System.out.println("Sending moveeeeeeeee    " + move);
-        socketManager.sendJson(move);
+
 
         if (button.getGraphic() == null && board[row][col] == 0) {
             record_btn.setDisable(true);
@@ -246,37 +342,36 @@ public class OnlineController {
                 if (!isPlayerOneTurn && isSinglePlayer) {
                     setButtonDisabledToPreventUserAtComputerTurns(true);
 
-                    //delayComputerMove();
                 } else {
                     setButtonDisabledToPreventUserAtComputerTurns(false);
                 }
             }
         }
     }
-    Thread refreshThread = new Thread(() -> {
-            try {
-                if (message.startsWith("PlayerMoved")){
-                    String msg = message;
-                    showmove(msg);
-                }
-                Thread.sleep(2000); // Refresh every 3 seconds
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-    });
-
+//    Thread refreshThread = new Thread(() -> {
+//            try {
+//                if (message.startsWith("PlayerMoved")){
+//                    String msg = message;
+//                    showmove(msg);
+//                }
+//                Thread.sleep(2000); // Refresh every 3 seconds
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//    });
+//
 //        public  void showmove(String returnedmove) throws IOException {
 //            String[] parts = message.split("\\s+");
 //            int row = Integer.parseInt(parts[1].substring(0, 1));
 //            int col = Integer.parseInt(parts[1].substring(1));
 //
 //            System.out.println(row + " row&col " + col);
-//            Button button = getButtonAt(row, col);
+//            `Button button = getButtonAt(row, col);
 //            assert button != null;
-//            handleButtonAction(button, row, col);
+//            handleButtonAction(button, row, col);`
 //
 //        }
 
@@ -482,30 +577,6 @@ public class OnlineController {
         button21.setDisable(disabled);
         button22.setDisable(disabled);
     }
-
-//    private void delayComputerMove() {
-//        Duration duration = switch (flag) {
-//            case 1 -> Duration.seconds(0.5);
-//            case 2 -> Duration.seconds(0.7);
-//            case 3 -> Duration.seconds(1);
-//            default -> null;
-//        };
-//
-//        PauseTransition delay = new PauseTransition(duration);
-//        delay.setOnFinished(event -> {
-//            if (flag == 1) {
-//                //easyMove();
-//            } else if (flag == 2) {
-//                medMove();
-//            } else if (flag == 3) {
-//                hardMove();
-//            }
-//        });
-//        delay.play();
-//    }
-
-
-
     // implement functionality ya ahmmed ya gamallllll
     public void handleRecordButton(ActionEvent actionEvent) {
         UiUtils.playSoundEffect();

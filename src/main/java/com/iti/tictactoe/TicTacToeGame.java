@@ -28,7 +28,7 @@ public class TicTacToeGame extends Application {
         try {
             // Initialize Navigation Controller
             navController = new NavigationController(stage);
-            UiUtils.playBackgroundMusic();
+          //  UiUtils.playBackgroundMusic();
 
             // Load and display the splash screen
             FXMLLoader splashLoader = new FXMLLoader(TicTacToeGame.class.getResource("/com/iti/tictactoe/splash.fxml"));
