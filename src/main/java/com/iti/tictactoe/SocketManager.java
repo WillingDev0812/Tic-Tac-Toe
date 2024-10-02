@@ -38,6 +38,7 @@ public class SocketManager {
         close(); // Ensure previous resources are closed
         try {
             // Initialize the socket and streams
+            //socket = new Socket("10.145.19.172", 12345);
             socket = new Socket("localhost", 12345);
             pw = new PrintWriter(socket.getOutputStream(), true);
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -67,6 +68,14 @@ public class SocketManager {
         pw.flush();
         System.out.println("Sent JSON: " + json);
     }
+    /*public synchronized void sendMessage(String message) throws IOException {
+        if (pw == null) {
+            throw new IOException("PrintWriter is not initialized.");
+        }
+        pw.println(message);
+        pw.flush();
+        System.out.println("Sent message: " + message);
+    }*/
 
     public synchronized <T> T receiveJson(Class<T> clazz) throws IOException {
         if (br == null) {

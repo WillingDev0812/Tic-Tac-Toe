@@ -55,14 +55,14 @@ public class NameController {
             navController.pushScene("/com/iti/tictactoe/board-game-view.fxml", controller -> {
                 if (controller instanceof GameBoardController gameBoardController) {
                     gameBoardController.setNavController(navController);
-                    gameBoardController.initialize(playerNames, true, difficultyLevel);
+                    gameBoardController.initialize(playerNames, true, difficultyLevel,0,0);
                 }
             });
         } else {
             navController.pushScene("/com/iti/tictactoe/board-game-view.fxml", controller -> {
                 if (controller instanceof GameBoardController gameBoardController) {
                     gameBoardController.setNavController(navController);
-                    gameBoardController.initialize(playerNames, false, flag);
+                    gameBoardController.initialize(playerNames, false, flag,0,0);
                 }
             });
         }
