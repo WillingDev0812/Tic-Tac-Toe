@@ -1,6 +1,5 @@
 package com.iti.tictactoe;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.iti.tictactoe.models.AlertUtils;
 import com.iti.tictactoe.models.PlayerNames;
@@ -287,7 +286,7 @@ if(!isPlayerOneTurn)
     }
 
     @FXML
-    private void ExitButton(ActionEvent event) {
+    private void ExitButton(ActionEvent event) throws IOException {
         UiUtils.playSoundEffect();
         Optional<ButtonType> result = AlertUtils.showConfirmationAlert("Leave Game",
                 "Are you sure you want to quit playing and leave the game?",
@@ -308,7 +307,7 @@ if(!isPlayerOneTurn)
         record_btn.setDisable(false);
 
         // Write recorded moves if recording is active
-        writingRecordedMoves();
+       // writingRecordedMoves();
 
         // Set isRecording to false
         isRecording = false;
@@ -320,26 +319,32 @@ if(!isPlayerOneTurn)
         }
     }
 
-    private void sendExitGameRequest() {
+    private void sendExitGameRequest() throws IOException {
         // Construct the exit game JSON request
-        String userEmail = getUserEmail(); // Ensure this method retrieves the user's email correctly
+//        String userEmail = getUserEmail(); // Ensure this method retrieves the user's email correctly
+//        JsonObject jsonRequest = new JsonObject();
+//        jsonRequest.addProperty("action", "exitgame");
+//        jsonRequest.addProperty("email", userEmail);
+//
+//        // Send the JSON request to the server
+//        SocketManager socketManager = SocketManager.getInstance();
+//        if(message.startsWith("Status"))
         JsonObject jsonRequest = new JsonObject();
         jsonRequest.addProperty("action", "exitgame");
-        jsonRequest.addProperty("email", userEmail);
+            jsonRequest.addProperty("email", playerName.getPlayerTwo());
+            jsonRequest.addProperty("email2", playerName.getPlayerOne());
+            socketManager.sendJson(jsonRequest);
 
-        // Send the JSON request to the server
-        SocketManager socketManager = SocketManager.getInstance();
-        socketManager.connectCheck(); // Ensure connection is checked
-        PrintWriter out = socketManager.getPrintWriter();
-
-        if (out != null) {
-            out.println(jsonRequest.toString());
-            out.flush();
-        } else {
-            System.err.println("PrintWriter is not initialized.");
-        }
+//        socketManager.connectCheck(); // Ensure connection is checked
+//        PrintWriter out = socketManager.getPrintWriter();
+//
+//        if (out != null) {
+//            out.println(jsonRequest.toString());
+//            out.flush();
+//        } else {
+//            System.err.println("PrintWriter is not initialized.");
+//        }
     }
-
 
     private String getUserEmail() {
         return currentUserEmail;
@@ -622,7 +627,7 @@ if(!isPlayerOneTurn)
                 "    -fx-text-fill: RED;\n" +
                 "    -fx-font-size: 30px;\n" +
                 "    -fx-font-weight: bold;\n" +
-                "    -fx-min-width: 100px; /* Ensures the button is a circle */\n" +
+                "    -fx-min-width: 100px; " +
                 "    -fx-min-height: 100px;\n" +
                 "    -fx-max-width: 100px;\n" +
                 "    -fx-max-height: 100px;\n" +
